@@ -10,7 +10,7 @@
 .idea/**/tasks.xml
 .idea/misc.xml
 .idea/dictionaries
-*/META-INF/MANIFEST.MF
+target/gosafe/META-INF/MANIFEST.MF
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
