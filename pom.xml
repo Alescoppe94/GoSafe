@@ -48,7 +48,7 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
         </dependency>
-        <!--Aggiungo dipendenze javax deprecate:javax.xml.blind e javax.activation -->
+        <!--Aggiungo dipendenze javax deprecate:javax.xml.blind e javax.activation  -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
