@@ -6,4 +6,6 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("gestionemappe")
 public class GestioneMappe extends Application {
 
+    
+
 }
