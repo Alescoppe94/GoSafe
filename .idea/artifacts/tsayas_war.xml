@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="tsayas:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="tsayas.war">
+      <element id="artifact" artifact-name="tsayas:war exploded" />
+    </root>
+  </artifact>
+</component>
