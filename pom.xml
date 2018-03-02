@@ -19,6 +19,18 @@
       <artifactId>jersey-media-moxy</artifactId>
       <version>2.26</version>
     </dependency>
+    <!--Aggiungo dipendenze javax deprecate:javax.xml.blind e javax.activation-->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <!--Fine dipendenze aggiunte-->
   </dependencies>
 
   <build>

@@ -11,7 +11,8 @@
 .idea/misc.xml
 .idea/dictionaries
 GoSafe.iml
-target/gosafe/META-INF/MANIFEST.MF
+target/
+log/
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
