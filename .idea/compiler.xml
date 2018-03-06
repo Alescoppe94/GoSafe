@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GoSafe" />
+        <module name="tsayas" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="GoSafe" target="1.7" />
+      <module name="GoSafe" target="1.8" />
+      <module name="tsayas" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

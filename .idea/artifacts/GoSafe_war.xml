@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="GoSafe:war">
     <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="gosafe.war">
+    <root id="archive" name="GoSafe.war">
       <element id="artifact" artifact-name="GoSafe:war exploded" />
     </root>
   </artifact>

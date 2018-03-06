@@ -1,4 +1,4 @@
-package org.teamids;
+package org.teamids.gestionemappe.control;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
