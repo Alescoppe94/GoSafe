@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.boundary;
 
+import org.teamids.gestionemappe.control.GestioneMappe;
 import org.teamids.gestionemappe.model.Corridoio;
 import org.teamids.gestionemappe.model.Notifica;
 import org.teamids.gestionemappe.model.Percorso;
@@ -10,20 +11,19 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/gestionemappe")
+@Path("/mappe")
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.APPLICATION_JSON)
-public class GestioneMappe{
+public class GestioneMappeBoundary {
 
-    public GestioneMappe() {
-    }
 
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
     public String calcoloPercorso(@PathParam("beaconPart") int beaconPart,
                                   @PathParam("beaconArr") int beaconArr) {
         // Calcolo del percorso con il codice del tizio
-       return "Ciao"+beaconArr;
+        GestioneMappe gestionemappe = new GestioneMappe();
+        return gestionemappe.calcoloPercorso(beaconPart, beaconArr);
 
     }
 
