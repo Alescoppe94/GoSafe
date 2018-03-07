@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.boundary;
 
+import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneMappe;
 import org.teamids.gestionemappe.model.Corridoio;
 import org.teamids.gestionemappe.model.Notifica;
@@ -8,6 +9,7 @@ import org.teamids.gestionemappe.model.Tappa;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +37,15 @@ public class GestioneMappeBoundary {
 
     }
 
-    @POST
+    @GET
+    @Path("lanciaemergenza")
     public void lanciaEmergenza(){
+
+        try {
+            GestioneDB connection = new GestioneDB();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
