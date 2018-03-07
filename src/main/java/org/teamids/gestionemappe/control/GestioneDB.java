@@ -7,21 +7,23 @@ import java.sql.SQLException;
 public class GestioneDB {
 
     //private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String JDBC_URL = "jdbc:derby:ringhiera;create=true";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/grp_50_db";
 
     Connection conn;
 
     public GestioneDB() throws SQLException {
 
         try {
-            DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
-            this.conn = DriverManager.getConnection(JDBC_URL);
+            Class.forName("com.mysql.jdbc.Driver");
+            this.conn = DriverManager.getConnection(JDBC_URL, "root", "");
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         if(this.conn != null) {
             System.out.println("connected to database");
-            createTable();
+           // createTable();
         }
 
     }
