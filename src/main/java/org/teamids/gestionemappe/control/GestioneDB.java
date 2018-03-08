@@ -41,7 +41,6 @@ public class GestioneDB {
     }
 
     public void aggiornaDB(Object object){
-
     }
 
 }
