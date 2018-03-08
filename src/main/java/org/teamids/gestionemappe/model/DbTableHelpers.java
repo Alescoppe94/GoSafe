@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class DbTable {
+public class DbTableHelpers {
 
     protected String name;
     protected String sql;
