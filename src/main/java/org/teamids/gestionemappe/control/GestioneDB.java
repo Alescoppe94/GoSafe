@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class GestioneDB {
 
     //private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/grp_50_db";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gosafe";
 
     Connection conn;
 
