@@ -1,4 +1,4 @@
-package org.teamids.gestionemappe.model;
+package org.teamids.gestionemappe.model.entity;
 
 public class Utente {
 
