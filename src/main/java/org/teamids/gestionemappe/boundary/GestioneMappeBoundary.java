@@ -2,16 +2,11 @@ package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneMappe;
-import org.teamids.gestionemappe.model.Corridoio;
-import org.teamids.gestionemappe.model.Notifica;
-import org.teamids.gestionemappe.model.Percorso;
-import org.teamids.gestionemappe.model.Tappa;
+import org.teamids.gestionemappe.model.entity.Percorso;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/mappe")
 @Produces(MediaType.TEXT_PLAIN)
