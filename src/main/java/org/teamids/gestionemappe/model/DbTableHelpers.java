@@ -32,8 +32,8 @@ public class DbTableHelpers {
         sql = sql + "ORDER BY " + clausola;
     }
 
-    /*public boolean execute(){
-        Connector connector= new Connector();
+    public boolean execute(){
+        ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         boolean check = false;
         sql = sql + ";";
@@ -49,7 +49,7 @@ public class DbTableHelpers {
         return check;
     }
 
-    public ResultSet fetch(){
+    /*public ResultSet fetch(){
 
         ResultSet risultato=null;
         Connector connector= new Connector();

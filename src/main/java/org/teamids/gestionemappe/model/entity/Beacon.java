@@ -17,9 +17,13 @@ public class Beacon {
         return id;
     }
 
+    public void setId(int id) { this.id = id; }
+
     public float getLos() {
         return los;
     }
+
+    public void setLos(float los) { this.los = los;}
 
     public float getV() {
         return v;
