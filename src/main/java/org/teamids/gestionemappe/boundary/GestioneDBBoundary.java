@@ -1,22 +1,23 @@
 package org.teamids.gestionemappe.boundary;
 
-
+import org.teamids.gestionemappe.model.DAO.BeaconDAO;
 import org.teamids.gestionemappe.model.entity.Beacon;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.SQLException;
 
 @Path("/db")
-//@Produces(MediaType.TEXT_PLAIN)
-//@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class GestioneDBBoundary {
 
     @PUT
-    public void aggiornaDB(Beacon beacon){
-
+    @Path("/beacons/{beaconId}")
+    public void aggiornaDB(@PathParam("beaconId") int id, Beacon beacon){
+        beacon.setId(id);
+        BeaconDAO beaconDAO = new BeaconDAO();
+        beaconDAO.updateBeacon(beacon);
     }
 
 }
