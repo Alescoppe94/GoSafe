@@ -16,7 +16,7 @@ public class GestioneDBBoundary {
 
     @PUT
     public void aggiornaDB(Beacon beacon){
-
+        
     }
 
 }
