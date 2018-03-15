@@ -30,4 +30,8 @@ public class GestioneUtente {
             esito = "{\"esito\": \"ERROR: UtenteEntity non trovato\"}";
         return esito;
     }
+
+    public void autenticazioneUtente(UtenteEntity utente){
+        
+    }
 }
