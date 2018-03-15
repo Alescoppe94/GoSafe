@@ -49,10 +49,10 @@ public class DbTableHelpers {
         return check;
     }
 
-    /*public ResultSet fetch(){
+    public ResultSet fetch(){
 
         ResultSet risultato=null;
-        Connector connector= new Connector();
+        ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         sql = sql + ";";
         try {
@@ -62,5 +62,5 @@ public class DbTableHelpers {
             System.out.println(e);
         }
         return risultato;
-    }*/
+    }
 }

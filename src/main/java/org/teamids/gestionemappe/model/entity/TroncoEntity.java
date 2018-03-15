@@ -1,14 +1,14 @@
 package org.teamids.gestionemappe.model.entity;
 
-public class Tronco {
+public class TroncoEntity {
 
     private int id;
     private int beaconId;
     private boolean agibile;
     private float costo;
-    private Piano piano;
+    private PianoEntity piano;
 
-    public Tronco(int beaconId, boolean agibile, Piano piano) {
+    public TroncoEntity(int beaconId, boolean agibile, PianoEntity piano) {
         this.beaconId = beaconId;
         this.agibile = agibile;
         this.piano = piano;
@@ -42,11 +42,11 @@ public class Tronco {
         this.costo = costo;
     }
 
-    public Piano getPiano() {
+    public PianoEntity getPiano() {
         return piano;
     }
 
-    public void setPiano(Piano piano) {
+    public void setPiano(PianoEntity piano) {
         this.piano = piano;
     }
 }
