@@ -1,11 +1,11 @@
 package org.teamids.gestionemappe.model.entity;
 
-public class Tappa {
+public class TappaEntity {
 
     private int id;
-    private Tronco tronco;
+    private TroncoEntity tronco;
 
-    public Tappa(Tronco tronco) {
+    public TappaEntity(TroncoEntity tronco) {
         this.tronco = tronco;
     }
 
@@ -13,11 +13,11 @@ public class Tappa {
         return id;
     }
 
-    public Tronco getTronco() {
+    public TroncoEntity getTronco() {
         return tronco;
     }
 
-    public void setTronco(Tronco tronco) {
+    public void setTronco(TroncoEntity tronco) {
         this.tronco = tronco;
     }
 }

@@ -32,6 +32,19 @@ public class DbTableHelpers {
         sql = sql + "ORDER BY " + clausola;
     }
 
+    public int count(ResultSet risultato){
+        int i=0;
+        try {
+            while (risultato.next()) {
+                i++;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return i;
+    }
+
     public boolean execute(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -49,10 +62,10 @@ public class DbTableHelpers {
         return check;
     }
 
-    /*public ResultSet fetch(){
+    public ResultSet fetch(){
 
         ResultSet risultato=null;
-        Connector connector= new Connector();
+        ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         sql = sql + ";";
         try {
@@ -62,5 +75,5 @@ public class DbTableHelpers {
             System.out.println(e);
         }
         return risultato;
-    }*/
+    }
 }

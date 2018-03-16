@@ -2,7 +2,7 @@ package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneMappe;
-import org.teamids.gestionemappe.model.entity.Percorso;
+import org.teamids.gestionemappe.model.entity.PercorsoEntity;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,7 +26,7 @@ public class GestioneMappeBoundary {
 
     @GET
     @Path("generanotifiche")
-    public String generaNotifiche(Percorso percorso) {
+    public String generaNotifiche(PercorsoEntity percorso) {
         //Fa partire il calcolo del percorso nel controller+
         return "bro";
 
