@@ -13,13 +13,13 @@ import java.sql.SQLException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneMappeBoundary {
 
+    GestioneMappe gestionemappe = new GestioneMappe();
 
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
     public String calcoloPercorso(@PathParam("beaconPart") int beaconPart,
                                   @PathParam("beaconArr") int beaconArr) {
         // Calcolo del percorso con il codice del tizio
-        GestioneMappe gestionemappe = new GestioneMappe();
         return gestionemappe.calcoloPercorso(beaconPart, beaconArr);
 
     }
