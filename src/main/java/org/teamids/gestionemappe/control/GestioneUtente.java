@@ -33,6 +33,15 @@ public class GestioneUtente {
         UtenteDAO utenteDAO = new UtenteDAO();
         boolean isAutenticato = utenteDAO.findUserByCredential(utente.getUsername(),utente.getPassword());
         return isAutenticato;
-
     }
+
+    public String registrazioneUtente(UtenteEntity utente){
+        UtenteDAO utenteDAO = new UtenteDAO();
+
+        String esito = "ci";
+
+        return esito;
+    }
+
+
 }

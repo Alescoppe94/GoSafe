@@ -14,11 +14,18 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneUtenteBoundary {
 
+    GestioneUtente gestioneutente = new GestioneUtente();
+
     @POST
     @Path("login")
-    public String loginUtente(UtenteEntity utente) {
-        GestioneUtente gestioneutente = new GestioneUtente();
+    public String loginUtente(UtenteEntity utente){
         return gestioneutente.loginUtente(utente);
+    }
+    @POST
+    @Path("registrazione")
+    public String registrazioneUtente(UtenteEntity utente){
+        return gestioneutente.registrazioneUtente(utente);
+
     }
 
 

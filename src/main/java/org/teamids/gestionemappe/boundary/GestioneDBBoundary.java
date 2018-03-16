@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.boundary;
 
+import com.google.gson.JsonObject;
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.DAO.BeaconDAO;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
@@ -19,13 +20,13 @@ public class GestioneDBBoundary {
         BeaconDAO beaconDAO = new BeaconDAO();
         beaconDAO.updateBeacon(beacon);
     }
-    @GET
+    @POST
     @Path("tokentest")
-    public void tokenUpdater(@QueryParam("token") String token){
+    public void tokenUpdater(javax.json.JsonObject token){
 
         try {
             GestioneDB gestionedb = new GestioneDB();
-            gestionedb.tokenUpdater(token);
+            gestionedb.tokenUpdater(token.getString("token"));
         }catch(Exception e){
             e.printStackTrace();
         }
