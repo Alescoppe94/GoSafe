@@ -32,6 +32,19 @@ public class DbTableHelpers {
         sql = sql + "ORDER BY " + clausola;
     }
 
+    public int count(ResultSet risultato){
+        int i=0;
+        try {
+            while (risultato.next()) {
+                i++;
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return i;
+    }
+
     public boolean execute(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();

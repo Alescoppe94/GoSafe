@@ -18,20 +18,21 @@ public class GestioneUtente {
                 utente.setId(utentedb.getId());
                 utente.setNome(utentedb.getNome());
                 utente.setCognome(utentedb.getCognome());
-                //this.is_autenticato = true;
-                //utenteDAO.update(utente);
                 Gson gson = new Gson();
-                esito = gson.toJson(this);
+                esito = gson.toJson(utente);
             }
             else
                 esito = "{\"esito\": \"ERROR: Password errata\"}";
         }
         else
-            esito = "{\"esito\": \"ERROR: UtenteEntity non trovato\"}";
+            esito = "{\"esito\": \"ERROR: Utente non trovato\"}";
         return esito;
     }
 
-    public void autenticazioneUtente(UtenteEntity utente){
-        
+    public boolean autenticazioneUtente(UtenteEntity utente){
+        UtenteDAO utenteDAO = new UtenteDAO();
+        boolean isAutenticato = utenteDAO.findUserByCredential(utente.getUsername(),utente.getPassword());
+        return isAutenticato;
+
     }
 }
