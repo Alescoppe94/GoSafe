@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import org.teamids.gestionemappe.model.DAO.UtenteDAO;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
+import java.util.HashMap;
+
+import static java.sql.Types.NULL;
+
 public class GestioneUtente {
 
     public GestioneUtente() {
@@ -37,11 +41,22 @@ public class GestioneUtente {
 
     public String registrazioneUtente(UtenteEntity utente){
         UtenteDAO utenteDAO = new UtenteDAO();
-
-        String esito = "ci";
-
+        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername());
+        String esito;
+        if(isUserInDb) {
+            esito = "{\"esito\": \"Username in uso\"}";
+        }
+        else{
+            utenteDAO.insertUser(utente);
+            int id_utente = utenteDAO.getUserByUsername(utente.getUsername()).getId();
+            esito = "{\"id_utente\": \""+ id_utente +"\"}";
+        }
         return esito;
     }
 
+    public void logoutUtente(UtenteEntity utente){
+        UtenteDAO utenteDAO = new UtenteDAO();
+        utenteDAO.logout(utente.getUsername());
+    }
 
 }

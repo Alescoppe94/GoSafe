@@ -20,6 +20,7 @@ public class GestioneDBBoundary {
         BeaconDAO beaconDAO = new BeaconDAO();
         beaconDAO.updateBeacon(beacon);
     }
+
     @POST
     @Path("tokentest")
     public void tokenUpdater(javax.json.JsonObject token){
