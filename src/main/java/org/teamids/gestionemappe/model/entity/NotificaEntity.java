@@ -2,15 +2,15 @@ package org.teamids.gestionemappe.model.entity;
 
 import java.util.Date;
 
-public class Notifica {
+public class NotificaEntity {
 
     private int id;
     private int utenteId;
-    private Percorso percorso;
+    private PercorsoEntity percorso;
     private Date orario;
     private String messaggio;
 
-    public Notifica(int utenteId, Percorso percorso, String messaggio) {
+    public NotificaEntity(int utenteId, PercorsoEntity percorso, String messaggio) {
         this.utenteId = utenteId;
         this.percorso = percorso;
         this.messaggio = messaggio;
@@ -28,11 +28,11 @@ public class Notifica {
         this.utenteId = utenteId;
     }
 
-    public Percorso getPercorso() {
+    public PercorsoEntity getPercorso() {
         return percorso;
     }
 
-    public void setPercorso(Percorso percorso) {
+    public void setPercorso(PercorsoEntity percorso) {
         this.percorso = percorso;
     }
 
