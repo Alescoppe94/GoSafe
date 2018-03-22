@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
 
 @Path("/mappe")
-@Produces(MediaType.TEXT_PLAIN)
+@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneMappeBoundary {
 
@@ -17,7 +17,7 @@ public class GestioneMappeBoundary {
 
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
-    public String calcoloPercorsoNoEmergenza(@PathParam("beaconPart") int beaconPart,
+    public PercorsoEntity calcoloPercorsoNoEmergenza(@PathParam("beaconPart") int beaconPart,
                                              @PathParam("beaconArr") int beaconArr) {
         // Calcolo del percorso con il codice del tizio
         return gestionemappe.calcoloPercorsoNoEmergenza(beaconPart, beaconArr);

@@ -1,12 +1,15 @@
 package org.teamids.gestionemappe.model.entity;
 
+import java.util.LinkedList;
+
 public class PercorsoEntity {
 
     private int id;
-    private TappaEntity[] tappe;
+    private LinkedList<TappaEntity> tappe;
     private BeaconEntity beaconPartenzaId;
 
-    public PercorsoEntity(TappaEntity[] tappe, BeaconEntity beaconPartenzaId) {
+    public PercorsoEntity(int id, LinkedList<TappaEntity> tappe, BeaconEntity beaconPartenzaId) {
+        this.id = id;
         this.tappe = tappe;
         this.beaconPartenzaId = beaconPartenzaId;
     }
@@ -15,11 +18,13 @@ public class PercorsoEntity {
         return id;
     }
 
-      public TappaEntity[] getTappe() {
+    public void setId(int id) { this.id = id;}
+
+    public LinkedList<TappaEntity> getTappe() {
         return tappe;
     }
 
-    public void setTappe(TappaEntity[] tappe) {
+    public void setTappe(LinkedList<TappaEntity> tappe) {
         this.tappe = tappe;
     }
 
@@ -30,4 +35,6 @@ public class PercorsoEntity {
     public void setBeaconPartenzaId(BeaconEntity beaconPartenzaId) {
         this.beaconPartenzaId = beaconPartenzaId;
     }
+
+
 }

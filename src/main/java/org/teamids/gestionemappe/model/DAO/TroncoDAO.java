@@ -42,4 +42,31 @@ public class TroncoDAO {
         }
         return allTronchiEdificio;
     }
+
+    public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
+
+        tabella.select();
+        tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "'" );
+        ResultSet rs = tabella.fetch();
+        try{
+            rs.next();
+            Set<BeaconEntity> estremiTronco = new HashSet<>();
+            estremiTronco.add(beaconB);
+            estremiTronco.add(beaconA);
+            TroncoEntity tronco = new TroncoEntity(
+                    rs.getInt("id"),
+                    rs.getBoolean("agibile"),
+                    rs.getFloat("costo"),
+                    estremiTronco,
+                    rs.getFloat("lunghezza")
+            );
+            return tronco;
+        }
+        catch (Exception e){
+            System.out.println("Errore" + e);
+            return null;
+        }
+
+    }
+
 }

@@ -1,8 +1,13 @@
 package org.teamids.gestionemappe.control;
 
 import org.teamids.gestionemappe.model.DAO.BeaconDAO;
+import org.teamids.gestionemappe.model.DAO.PercorsoDAO;
+import org.teamids.gestionemappe.model.DAO.TappaDAO;
 import org.teamids.gestionemappe.model.DAO.TroncoDAO;
+import org.teamids.gestionemappe.model.DbTable.Tronco;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
+import org.teamids.gestionemappe.model.entity.PercorsoEntity;
+import org.teamids.gestionemappe.model.entity.TappaEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
 import javax.ws.rs.ApplicationPath;
@@ -17,12 +22,12 @@ public class GestioneMappe extends Application {
     }
 
     //2 parametro
-    public String calcoloPercorsoNoEmergenza(int beaconPart, int beaconArr){
+    public PercorsoEntity calcoloPercorsoNoEmergenza(int beaconPart, int beaconArr){
         BeaconDAO beaconDAO = new BeaconDAO();
         BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         BeaconEntity arrivo = beaconDAO.getBeaconById(beaconArr);
-
         TroncoDAO troncoDAO = new TroncoDAO();
+        PercorsoEntity percorso;
 
         if (partenza != null && arrivo != null) {
             Map<LinkedList<BeaconEntity>, Float> costi_percorsi = new HashMap<>();
@@ -136,13 +141,23 @@ public class GestioneMappe extends Application {
                 percorso_ottimo_parziale = percorso_scelto;
                 costo_percorso_ottimo_parziale = costo_percorso_scelto;
             }
-            this.percorso_ottimo = percorso_ottimo_parziale;
+
+            LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
+            TappaDAO tappaDAO = new TappaDAO();
+            PercorsoDAO percorsoDAO = new PercorsoDAO(); //TODO settare il percorso su utente
+            int idPercorso =  percorsoDAO.insertPercorso(partenza);
+
+            for(int i = 0; i < percorso_ottimo_parziale.size()-1; i++) {
+                TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_ottimo_parziale.get(i), percorso_ottimo_parziale.get(i+1));
+                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
+                tappeOttime.add(tappaOttima);
+                tappaDAO.insertTappa(tappaOttima);
+            }
+            percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
+        }else{
+            percorso = null;
         }
-
-
-
-
-        return "Ciao"+beaconArr+beaconPart;
+        return percorso;
     }
 
     //2 parametri

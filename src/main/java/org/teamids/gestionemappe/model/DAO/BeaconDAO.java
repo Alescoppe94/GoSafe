@@ -22,7 +22,7 @@ public class BeaconDAO {
 
     public BeaconEntity getBeaconById(int beaconId){
         tabella.select();
-        tabella.where("beaconId = '" + beaconId + "'" );
+        tabella.where("id = '" + beaconId + "'" );
         ResultSet risultato = tabella.fetch();
         try{
             risultato.next();
