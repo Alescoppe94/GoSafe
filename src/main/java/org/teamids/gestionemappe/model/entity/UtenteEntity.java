@@ -9,6 +9,8 @@ public class UtenteEntity {
     private String cognome;
     private int beaconId;
     private PercorsoEntity percorso;
+    private boolean is_autenticato;
+    private String token;
 
     public UtenteEntity(){
 
@@ -65,5 +67,21 @@ public class UtenteEntity {
 
     public void setPercorso(PercorsoEntity percorso) {
         this.percorso = percorso;
+    }
+
+    public boolean is_autenticato() {
+        return is_autenticato;
+    }
+
+    public void setIs_autenticato(boolean is_autenticato) {
+        this.is_autenticato = is_autenticato;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

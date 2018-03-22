@@ -4,11 +4,11 @@ public class PercorsoEntity {
 
     private int id;
     private TappaEntity[] tappe;
-    private CorridoioEntity[] corridoi;
+    private BeaconEntity beaconPartenzaId;
 
-    public PercorsoEntity(TappaEntity[] tappe, CorridoioEntity[] corridoi) {
+    public PercorsoEntity(TappaEntity[] tappe, BeaconEntity beaconPartenzaId) {
         this.tappe = tappe;
-        this.corridoi = corridoi;
+        this.beaconPartenzaId = beaconPartenzaId;
     }
 
     public int getId() {
@@ -23,11 +23,11 @@ public class PercorsoEntity {
         this.tappe = tappe;
     }
 
-    public CorridoioEntity[] getCorridoi() {
-        return corridoi;
+    public BeaconEntity getBeaconPartenzaId() {
+        return beaconPartenzaId;
     }
 
-    public void setCorridoi(CorridoioEntity[] corridoi) {
-        this.corridoi = corridoi;
+    public void setBeaconPartenzaId(BeaconEntity beaconPartenzaId) {
+        this.beaconPartenzaId = beaconPartenzaId;
     }
 }

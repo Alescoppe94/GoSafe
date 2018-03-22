@@ -1,29 +1,28 @@
 package org.teamids.gestionemappe.model.entity;
 
+import org.teamids.gestionemappe.model.entity.BeaconEntity;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class TroncoEntity {
 
     private int id;
-    private int beaconId;
     private boolean agibile;
     private float costo;
-    private PianoEntity piano;
+    private Set<BeaconEntity> beaconEstremi;
+    private float lunghezza;
 
-    public TroncoEntity(int beaconId, boolean agibile, PianoEntity piano) {
-        this.beaconId = beaconId;
+    public TroncoEntity(int id,boolean agibile, float costo, Set<BeaconEntity> beaconEstremi, float lunghezza) {
+        this.id = id;
         this.agibile = agibile;
-        this.piano = piano;
+        this.costo = costo;
+        this.beaconEstremi = beaconEstremi;
+        this.lunghezza = lunghezza;
     }
 
     public int getId() {
         return id;
-    }
-
-    public int getBeaconId() {
-        return beaconId;
-    }
-
-    public void setBeaconId(int beaconId) {
-        this.beaconId = beaconId;
     }
 
     public boolean isAgibile() {
@@ -42,11 +41,19 @@ public class TroncoEntity {
         this.costo = costo;
     }
 
-    public PianoEntity getPiano() {
-        return piano;
+    public Set<BeaconEntity> getBeaconEstremi() {
+        return beaconEstremi;
     }
 
-    public void setPiano(PianoEntity piano) {
-        this.piano = piano;
+    public void setBeaconEstremi(Set<BeaconEntity> beaconEstremi) {
+        this.beaconEstremi = beaconEstremi;
+    }
+
+    public float getLunghezza() {
+        return lunghezza;
+    }
+
+    public void setLunghezza(float lunghezza) {
+        this.lunghezza = lunghezza;
     }
 }
