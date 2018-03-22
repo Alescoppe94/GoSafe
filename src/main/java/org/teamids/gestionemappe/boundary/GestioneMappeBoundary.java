@@ -17,10 +17,10 @@ public class GestioneMappeBoundary {
 
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
-    public String calcoloPercorso(@PathParam("beaconPart") int beaconPart,
-                                  @PathParam("beaconArr") int beaconArr) {
+    public String calcoloPercorsoNoEmergenza(@PathParam("beaconPart") int beaconPart,
+                                             @PathParam("beaconArr") int beaconArr) {
         // Calcolo del percorso con il codice del tizio
-        return gestionemappe.calcoloPercorso(beaconPart, beaconArr);
+        return gestionemappe.calcoloPercorsoNoEmergenza(beaconPart, beaconArr);
 
     }
 
