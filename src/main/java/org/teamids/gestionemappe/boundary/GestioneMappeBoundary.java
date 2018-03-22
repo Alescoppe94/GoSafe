@@ -14,6 +14,7 @@ import java.sql.SQLException;
 public class GestioneMappeBoundary {
 
 
+
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
     public String calcoloPercorso(@PathParam("beaconPart") int beaconPart,
