@@ -50,12 +50,12 @@ public class GestioneMappe extends Application {
                     TroncoEntity tronco = i.next();
                     //Log.d("tronco", String.valueOf(tronco.getId_arco()));
                     Set<BeaconEntity> beacons = tronco.getBeaconEstremi();
-                    if (beacons.contains(beacon_controllato)) {
+                    if (containsMod(beacons, beacon_controllato)) {
                         boolean tronco_visitato = false;
                         Iterator<BeaconEntity> j = beacons.iterator();
                         while (j.hasNext()) {
                             BeaconEntity beacon = j.next();
-                            if (beacon_visitati.contains(beacon))
+                            if (containsMod(beacon_visitati, beacon))
                                 tronco_visitato = true;
                         }
                         if (!tronco_visitato)
@@ -160,7 +160,16 @@ public class GestioneMappe extends Application {
         return percorso;
     }
 
-    //2 parametri
+    private boolean containsMod(Set<BeaconEntity> beacons, BeaconEntity x){
+        boolean esito = false;
+        for (Iterator<BeaconEntity> it = beacons.iterator(); it.hasNext();) {
+            BeaconEntity beacon = it.next();
+            if(beacon.getId() == x.getId()){
+                esito = true;
+            }
+        }
+        return esito;
+    }
 
 
     private void calcoloDijkstra(){
