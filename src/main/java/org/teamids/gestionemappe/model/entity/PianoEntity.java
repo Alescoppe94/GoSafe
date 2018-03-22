@@ -1,13 +1,13 @@
 package org.teamids.gestionemappe.model.entity;
 
-public class Piano {
+public class PianoEntity {
 
     private int id;
     private String immagine;
     private int piano;
-    private Tronco[] tronchi;
+    private TroncoEntity[] tronchi;
 
-    public Piano(String immagine, int piano, Tronco[] tronchi) {
+    public PianoEntity(String immagine, int piano, TroncoEntity[] tronchi) {
         this.immagine = immagine;
         this.piano = piano;
         this.tronchi = tronchi;
@@ -33,11 +33,11 @@ public class Piano {
         this.piano = piano;
     }
 
-    public Tronco[] getTronchi() {
+    public TroncoEntity[] getTronchi() {
         return tronchi;
     }
 
-    public void setTronchi(Tronco[] tronchi) {
+    public void setTronchi(TroncoEntity[] tronchi) {
         this.tronchi = tronchi;
     }
 }

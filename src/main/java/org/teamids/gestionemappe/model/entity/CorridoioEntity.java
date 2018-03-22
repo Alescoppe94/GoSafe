@@ -1,11 +1,11 @@
 package org.teamids.gestionemappe.model.entity;
 
-public class Corridoio {
+public class CorridoioEntity {
 
     private int id;
-    private Piano piano;
+    private PianoEntity piano;
 
-    public Corridoio(Piano piano) {
+    public CorridoioEntity(PianoEntity piano) {
         this.piano = piano;
     }
 
@@ -13,11 +13,11 @@ public class Corridoio {
         return id;
     }
 
-    public Piano getPiano() {
+    public PianoEntity getPiano() {
         return piano;
     }
 
-    public void setPiano(Piano piano) {
+    public void setPiano(PianoEntity piano) {
         this.piano = piano;
     }
 }

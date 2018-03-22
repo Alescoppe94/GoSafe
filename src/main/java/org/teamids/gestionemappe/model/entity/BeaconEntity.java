@@ -1,6 +1,6 @@
 package org.teamids.gestionemappe.model.entity;
 
-public class Beacon {
+public class BeaconEntity {
 
     private int id;
     private float los;
@@ -10,16 +10,20 @@ public class Beacon {
     private float l;
     private float area;
 
-    public Beacon() {
+    public BeaconEntity() {
     }
 
     public int getId() {
         return id;
     }
 
+    public void setId(int id) { this.id = id; }
+
     public float getLos() {
         return los;
     }
+
+    public void setLos(float los) { this.los = los;}
 
     public float getV() {
         return v;
