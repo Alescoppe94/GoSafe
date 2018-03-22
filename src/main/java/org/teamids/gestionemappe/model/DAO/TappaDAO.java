@@ -13,9 +13,9 @@ public class TappaDAO {
 
     public void insertTappa(TappaEntity tappa){
 
-        String dati= String.valueOf(tappa.getId());
+        String dati= "0";
         dati=dati+",'"+ tappa.getPercorsoId()+"'";
-        dati=dati+",'"+ tappa.getTronco()+"'";
+        dati=dati+",'"+ tappa.getTronco().getId()+"'"; //vedere se va bene
         tabella.insert(dati);
         int id_tappa = tabella.executeForKey();
         tappa.setId(id_tappa);

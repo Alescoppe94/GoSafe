@@ -41,7 +41,7 @@ public class GestioneMappe extends Application {
             costi_percorsi.put(percorso_ottimo_parziale, costo_percorso_ottimo_parziale);
             //Log.d("size1 costi_percorsi", String.valueOf(costi_percorsi.size()));
             //Log.d("inizio ciclo principale", "si");
-            while (!beacon_controllato.equals(arrivo)) {
+            while (!compare(beacon_controllato,arrivo)) {
                 //Log.d("nodo controllato", beacon_controllato.getNome()+", id:  "+beacon_controllato.getId_nodo());
                 Set<TroncoEntity> tronchi_collegati = new HashSet<>();
                 Set<TroncoEntity> allTronchiEdificio = troncoDAO.getAllTronchi(); //TODO: ragionare se metterlo nel costruttore
@@ -50,12 +50,12 @@ public class GestioneMappe extends Application {
                     TroncoEntity tronco = i.next();
                     //Log.d("tronco", String.valueOf(tronco.getId_arco()));
                     Set<BeaconEntity> beacons = tronco.getBeaconEstremi();
-                    if (beacons.contains(beacon_controllato)) {
+                    if (compare(beacons, beacon_controllato)) {
                         boolean tronco_visitato = false;
                         Iterator<BeaconEntity> j = beacons.iterator();
                         while (j.hasNext()) {
                             BeaconEntity beacon = j.next();
-                            if (beacon_visitati.contains(beacon))
+                            if (compare(beacon_visitati,beacon))
                                 tronco_visitato = true;
                         }
                         if (!tronco_visitato)
@@ -76,7 +76,7 @@ public class GestioneMappe extends Application {
                     Iterator<BeaconEntity> j = beacons.iterator();
                     while (j.hasNext()) {
                         BeaconEntity beacon = j.next();
-                        if (!beacon.equals(beacon_controllato)) {
+                        if (!compare(beacon, beacon_controllato)) {
                             percorso_parziale.add(beacon);
                         }
                         //Log.d("size percorso_parziale", String.valueOf(percorso_parziale.size()));
@@ -103,7 +103,7 @@ public class GestioneMappe extends Application {
                         Map.Entry<LinkedList<BeaconEntity>, Float> percorso_costo = it.next();
                         LinkedList<BeaconEntity> percorso_esistente = percorso_costo.getKey();
                         //Log.d("fine percorso_esistente", String.valueOf(percorso_esistente.getLast().getId_nodo()));
-                        if (percorso_esistente.getLast().equals(beacon_finale)) {
+                        if (compare(percorso_esistente.getLast(),beacon_finale)) {
                             //Log.d("fine=beacon_finale", "si");
                             inserito = true;
                             float costo_valore = percorso_costo.getValue();
@@ -158,6 +158,33 @@ public class GestioneMappe extends Application {
             percorso = null;
         }
         return percorso;
+    }
+
+
+    private boolean compare(Set<BeaconEntity> beacons, BeaconEntity beacon){
+
+        boolean contenuto = false;
+
+        for(BeaconEntity b : beacons){
+            if(b.getId() == beacon.getId()){
+                contenuto = true;
+            }
+        }
+
+        return contenuto;
+
+    }
+
+    private boolean compare(BeaconEntity beacon1, BeaconEntity beacon2){
+
+        boolean uguali = false;
+
+        if(beacon1.getId() == beacon2.getId()){
+            uguali = true;
+        }
+
+        return uguali;
+
     }
 
     //2 parametri
