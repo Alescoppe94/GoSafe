@@ -23,17 +23,28 @@ public class TroncoDAO {
         BeaconDAO beaconDAO = new BeaconDAO();
         try{
             while (rs.next()){
-                Set<BeaconEntity> estremiTronco = new HashSet<>();
-                estremiTronco.add(beaconDAO.getBeaconById(rs.getInt("beaconAId")));
-                estremiTronco.add(beaconDAO.getBeaconById(rs.getInt("beaconBId")));
-                TroncoEntity tronco = new TroncoEntity(
+                Set<BeaconEntity> estremiOrdinati = new HashSet<>();
+                Set<BeaconEntity> estremiInvertiti = new HashSet<>();
+                estremiOrdinati.add(beaconDAO.getBeaconById(rs.getInt("beaconAId")));
+                estremiOrdinati.add(beaconDAO.getBeaconById(rs.getInt("beaconBId")));
+                estremiInvertiti.add(beaconDAO.getBeaconById(rs.getInt("beaconBId")));
+                estremiInvertiti.add(beaconDAO.getBeaconById(rs.getInt("beaconAId")));
+                TroncoEntity troncoOrd = new TroncoEntity(
                         rs.getInt("id"),
                         rs.getBoolean("agibile"),
                         rs.getFloat("costo"),
-                        estremiTronco,
+                        estremiOrdinati,
                         rs.getFloat("lunghezza")
                 );
-                allTronchiEdificio.add(tronco);
+                TroncoEntity troncoInv = new TroncoEntity(
+                        rs.getInt("id"),
+                        rs.getBoolean("agibile"),
+                        rs.getFloat("costo"),
+                        estremiInvertiti,
+                        rs.getFloat("lunghezza")
+                );
+                allTronchiEdificio.add(troncoOrd);
+                allTronchiEdificio.add(troncoInv);
             }
         }
         catch (Exception e){
@@ -46,13 +57,13 @@ public class TroncoDAO {
     public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();
-        tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "'" );
+        tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
         ResultSet rs = tabella.fetch();
         try{
             rs.next();
             Set<BeaconEntity> estremiTronco = new HashSet<>();
-            estremiTronco.add(beaconB);
             estremiTronco.add(beaconA);
+            estremiTronco.add(beaconB);
             TroncoEntity tronco = new TroncoEntity(
                     rs.getInt("id"),
                     rs.getBoolean("agibile"),
