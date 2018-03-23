@@ -10,13 +10,11 @@ import java.util.*;
 
 public class TroncoDAO {
 
-    protected Tronco tabella;
+    protected static Tronco tabella = new Tronco();
 
-    public TroncoDAO() {
-        tabella= new Tronco();
-    }
+    public TroncoDAO() { }
 
-    public Set<TroncoEntity> getAllTronchi(){
+    public static Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
         List<Map<String, Object>> rs = tabella.fetch();
@@ -48,7 +46,7 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
-    public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
+    public static TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
