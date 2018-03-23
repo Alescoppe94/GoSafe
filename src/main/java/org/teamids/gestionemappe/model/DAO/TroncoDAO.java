@@ -54,6 +54,7 @@ public class TroncoDAO {
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
         List<Map<String, Object>> rs = tabella.fetch();
         Set<BeaconEntity> estremiTronco = new HashSet<>();
+        
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(
