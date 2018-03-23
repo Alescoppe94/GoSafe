@@ -22,8 +22,8 @@ public class TroncoDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {
-                Set<BeaconEntity> estremiOrdinati = new HashSet<>();
-                Set<BeaconEntity> estremiInvertiti = new HashSet<>();
+                ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
+                ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
                 estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
                 estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
                 estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
@@ -53,7 +53,7 @@ public class TroncoDAO {
         tabella.select();
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
         List<Map<String, Object>> rs = tabella.fetch();
-        Set<BeaconEntity> estremiTronco = new HashSet<>();
+        ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(

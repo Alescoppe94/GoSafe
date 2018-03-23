@@ -34,7 +34,7 @@ public class GestioneMappe extends Application {
             //Log.d("size0 costi_percorsi", String.valueOf(costi_percorsi.size()));
             //percorso_ottimo.add(partenza);
             BeaconEntity beacon_controllato = partenza;
-            Set<BeaconEntity> beacon_visitati = new HashSet<>();
+            ArrayList<BeaconEntity> beacon_visitati = new ArrayList<>();
             LinkedList<BeaconEntity> percorso_ottimo_parziale = new LinkedList<>();
             percorso_ottimo_parziale.add(beacon_controllato);
             float costo_percorso_ottimo_parziale = 0;
@@ -49,7 +49,7 @@ public class GestioneMappe extends Application {
                 while (i.hasNext()) {
                     TroncoEntity tronco = i.next();
                     //Log.d("tronco", String.valueOf(tronco.getId_arco()));
-                    Set<BeaconEntity> beacons = tronco.getBeaconEstremi();
+                    ArrayList<BeaconEntity> beacons = tronco.getBeaconEstremi();
                     if (compare(beacons, beacon_controllato)) {
                         boolean tronco_visitato = false;
                         Iterator<BeaconEntity> j = beacons.iterator();
@@ -72,7 +72,7 @@ public class GestioneMappe extends Application {
                     percorso_parziale.addAll(percorso_ottimo_parziale);
                     //Log.d("size percorso_parziale", String.valueOf(percorso_parziale.size()));
                     float costo_percorso_parziale = costo_percorso_ottimo_parziale;
-                    Set<BeaconEntity> beacons = tronco.getBeaconEstremi();
+                    ArrayList<BeaconEntity> beacons = tronco.getBeaconEstremi();
                     Iterator<BeaconEntity> j = beacons.iterator();
                     while (j.hasNext()) {
                         BeaconEntity beacon = j.next();
@@ -161,7 +161,7 @@ public class GestioneMappe extends Application {
     }
 
 
-    private boolean compare(Set<BeaconEntity> beacons, BeaconEntity beacon){
+    private boolean compare(ArrayList<BeaconEntity> beacons, BeaconEntity beacon){
 
         boolean contenuto = false;
 
