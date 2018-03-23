@@ -1,12 +1,12 @@
 package org.teamids.gestionemappe.model.DAO;
 
+import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DbTable.Tronco;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TroncoDAO {
 
@@ -19,38 +19,32 @@ public class TroncoDAO {
     public Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
-        ResultSet rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch();
         BeaconDAO beaconDAO = new BeaconDAO();
-        try{
-            while (rs.next()){
+        for (int i = 0; i<rs.size(); i++) {
                 Set<BeaconEntity> estremiOrdinati = new HashSet<>();
                 Set<BeaconEntity> estremiInvertiti = new HashSet<>();
-                estremiOrdinati.add(beaconDAO.getBeaconById(rs.getInt("beaconAId")));
-                estremiOrdinati.add(beaconDAO.getBeaconById(rs.getInt("beaconBId")));
-                estremiInvertiti.add(beaconDAO.getBeaconById(rs.getInt("beaconBId")));
-                estremiInvertiti.add(beaconDAO.getBeaconById(rs.getInt("beaconAId")));
+                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
                 TroncoEntity troncoOrd = new TroncoEntity(
-                        rs.getInt("id"),
-                        rs.getBoolean("agibile"),
-                        rs.getFloat("costo"),
+                        Integer.parseInt(rs.get(i).get("id").toString()),
+                        Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
+                        Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiOrdinati,
-                        rs.getFloat("lunghezza")
+                        Float.parseFloat(rs.get(i).get("lunghezza").toString())
                 );
                 TroncoEntity troncoInv = new TroncoEntity(
-                        rs.getInt("id"),
-                        rs.getBoolean("agibile"),
-                        rs.getFloat("costo"),
+                        Integer.parseInt(rs.get(i).get("id").toString()),
+                        Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
+                        Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiInvertiti,
-                        rs.getFloat("lunghezza")
+                        Float.parseFloat(rs.get(i).get("lunghezza").toString())
                 );
                 allTronchiEdificio.add(troncoOrd);
                 allTronchiEdificio.add(troncoInv);
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            allTronchiEdificio = null;
-        }
         return allTronchiEdificio;
     }
 
@@ -58,26 +52,18 @@ public class TroncoDAO {
 
         tabella.select();
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
-        ResultSet rs = tabella.fetch();
-        try{
-            rs.next();
-            Set<BeaconEntity> estremiTronco = new HashSet<>();
-            estremiTronco.add(beaconA);
-            estremiTronco.add(beaconB);
-            TroncoEntity tronco = new TroncoEntity(
-                    rs.getInt("id"),
-                    rs.getBoolean("agibile"),
-                    rs.getFloat("costo"),
-                    estremiTronco,
-                    rs.getFloat("lunghezza")
-            );
-            return tronco;
-        }
-        catch (Exception e){
-            System.out.println("Errore" + e);
-            return null;
-        }
-
+        List<Map<String, Object>> rs = tabella.fetch();
+        Set<BeaconEntity> estremiTronco = new HashSet<>();
+        estremiTronco.add(beaconA);
+        estremiTronco.add(beaconB);
+        TroncoEntity tronco = new TroncoEntity(
+                Integer.parseInt(rs.get(0).get("id").toString()),
+                Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
+                Float.parseFloat(rs.get(0).get("costo").toString()),
+                estremiTronco,
+                Float.parseFloat(rs.get(0).get("lunghezza").toString())
+        );
+        return tronco;
     }
 
 }

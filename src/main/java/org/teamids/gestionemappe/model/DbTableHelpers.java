@@ -1,9 +1,10 @@
 package org.teamids.gestionemappe.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DbTableHelpers {
 
@@ -30,19 +31,6 @@ public class DbTableHelpers {
 
     public void order(String clausola){
         sql = sql + "ORDER BY " + clausola;
-    }
-
-    public int count(ResultSet risultato){
-        int i=0;
-        try {
-            while (risultato.next()) {
-                i++;
-            }
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-        return i;
     }
 
     public boolean execute(){
@@ -85,18 +73,37 @@ public class DbTableHelpers {
         return generated_key;
     }
 
-    public ResultSet fetch(){
+    public List<Map<String, Object>> fetch(){
 
-        ResultSet risultato=null;
+        ResultSet risultato= null;
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
+        List<Map<String, Object>> lista;
         sql = sql + ";";
         try {
             Statement query = db.createStatement();
             risultato=query.executeQuery(sql);
+            lista=resultSetToList(risultato);
         } catch (Exception e) {
             System.out.println(e);
+            lista = null;
         }
-        return risultato;
+        connector.disconnect();
+        return lista;
     }
+
+    private List<Map<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        int columns = md.getColumnCount();
+        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+        while (rs.next()){
+            Map<String, Object> row = new HashMap<String, Object>(columns);
+            for(int i = 1; i <= columns; ++i){
+                row.put(md.getColumnName(i), rs.getObject(i));
+            }
+            rows.add(row);
+        }
+        return rows;
+    }
+
 }
