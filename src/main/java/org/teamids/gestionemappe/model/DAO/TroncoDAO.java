@@ -10,20 +10,18 @@ import java.util.*;
 
 public class TroncoDAO {
 
-    protected Tronco tabella;
+    protected static Tronco tabella = new Tronco();
 
-    public TroncoDAO() {
-        tabella= new Tronco();
-    }
+    public TroncoDAO() { }
 
-    public Set<TroncoEntity> getAllTronchi(){
+    public static Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {
-                Set<BeaconEntity> estremiOrdinati = new HashSet<>();
-                Set<BeaconEntity> estremiInvertiti = new HashSet<>();
+                ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
+                ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
                 estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
                 estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
                 estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
@@ -48,13 +46,12 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
-    public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
+    public static TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
         List<Map<String, Object>> rs = tabella.fetch();
-        Set<BeaconEntity> estremiTronco = new HashSet<>();
-        
+        ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(
