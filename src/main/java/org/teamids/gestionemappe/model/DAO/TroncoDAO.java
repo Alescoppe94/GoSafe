@@ -18,14 +18,13 @@ public class TroncoDAO {
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
         List<Map<String, Object>> rs = tabella.fetch();
-        BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {
                 ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
                 ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
-                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
-                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
                 TroncoEntity troncoOrd = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),

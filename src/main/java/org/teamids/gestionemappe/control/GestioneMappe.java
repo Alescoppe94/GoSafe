@@ -18,21 +18,20 @@ import java.util.*;
 public class GestioneMappe extends Application {
 
     private Set<TroncoEntity> allTronchiEdificio;
+    private Set<BeaconEntity> pdr;
 
     public GestioneMappe() {
 
         allTronchiEdificio = TroncoDAO.getAllTronchi(); //TODO: ragionare se metterlo nel costruttore
-
+        pdr = BeaconDAO.getAllPuntiDiRaccolta();
     }
 
     public PercorsoEntity calcoloPercorsoEvacuazione(int beaconPart) {
-        BeaconDAO beaconDAO = new BeaconDAO();
-        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
+        BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
         if (partenza != null) {
             boolean emergenza = true;
             PercorsoEntity percorso;
             Map<LinkedList<BeaconEntity>, Float> percorsi_ottimi = new HashMap<>();
-            Set<BeaconEntity> pdr = null /*partenza.getPunti_di_raccolta()*/;
             Iterator<BeaconEntity> n = pdr.iterator();
             while (n.hasNext()) {
                 BeaconEntity arrivo = n.next();
@@ -79,10 +78,9 @@ public class GestioneMappe extends Application {
 
     //2 parametro
     public PercorsoEntity calcoloPercorsoNoEmergenza(int beaconPart, int beaconArr){
-        BeaconDAO beaconDAO = new BeaconDAO();
-        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
+        BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
         boolean emergenza = false;
-        BeaconEntity arrivo = beaconDAO.getBeaconById(beaconArr);
+        BeaconEntity arrivo = BeaconDAO.getBeaconById(beaconArr);
         PercorsoEntity percorso;
 
         if (partenza != null && arrivo != null) {
@@ -153,7 +151,7 @@ public class GestioneMappe extends Application {
                 }
                 Float costo;
                 if (emergenza){
-                    costo = tronco.getLunghezza()/*getCosto_dinamico()*/;
+                    costo = tronco.getCosto();/*getCosto_dinamico()*/;
                 }else{
                     costo = tronco.getLunghezza();
                 }

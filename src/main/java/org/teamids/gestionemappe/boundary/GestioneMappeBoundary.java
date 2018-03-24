@@ -33,15 +33,9 @@ public class GestioneMappeBoundary {
     }
 
     @GET
-    @Path("lanciaemergenza")
-    public void lanciaEmergenza(){
-
-        try {
-            GestioneDB connection = new GestioneDB();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+    @Path("lanciaemergenza/{beaconPart}")
+    public PercorsoEntity lanciaEmergenza(@PathParam("beaconPart") int beaconPart){
+        return gestionemappe.calcoloPercorsoEvacuazione(beaconPart);
     }
 
 }

@@ -7,6 +7,10 @@ public class PianoEntity {
     private int piano;
     private TroncoEntity[] tronchi;
 
+    public PianoEntity(){
+
+    }
+
     public PianoEntity(String immagine, int piano, TroncoEntity[] tronchi) {
         this.immagine = immagine;
         this.piano = piano;
@@ -15,6 +19,10 @@ public class PianoEntity {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getImmagine() {

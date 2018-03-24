@@ -17,6 +17,18 @@ public class BeaconEntity {
     public BeaconEntity() {
     }
 
+    public BeaconEntity(int id, float los, float v, float r, float k, float l, float area, boolean is_puntodiraccola, PianoEntity piano) {
+        this.id = id;
+        this.los = los;
+        this.v = v;
+        this.r = r;
+        this.k = k;
+        this.l = l;
+        this.area = area;
+        this.is_puntodiraccola = is_puntodiraccola;
+        this.piano = piano;
+    }
+
     public int getId() {
         return id;
     }
