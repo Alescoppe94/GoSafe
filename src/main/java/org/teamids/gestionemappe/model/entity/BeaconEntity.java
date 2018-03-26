@@ -1,5 +1,7 @@
 package org.teamids.gestionemappe.model.entity;
 
+
+
 public class BeaconEntity {
 
     private int id;
@@ -9,8 +11,22 @@ public class BeaconEntity {
     private float k;
     private float l;
     private float area;
+    private boolean is_puntodiraccola;
+    private PianoEntity piano;
 
     public BeaconEntity() {
+    }
+
+    public BeaconEntity(int id, float los, float v, float r, float k, float l, float area, boolean is_puntodiraccola, PianoEntity piano) {
+        this.id = id;
+        this.los = los;
+        this.v = v;
+        this.r = r;
+        this.k = k;
+        this.l = l;
+        this.area = area;
+        this.is_puntodiraccola = is_puntodiraccola;
+        this.piano = piano;
     }
 
     public int getId() {
@@ -65,7 +81,23 @@ public class BeaconEntity {
         this.area = area;
     }
 
-   /* private int calcolaNumeroPersone(){
+    public boolean is_puntodiraccola() {
+        return is_puntodiraccola;
+    }
+
+    public void setIs_puntodiraccola(boolean is_puntodiraccola) {
+        this.is_puntodiraccola = is_puntodiraccola;
+    }
+
+    public PianoEntity getPiano() {
+        return piano;
+    }
+
+    public void setPiano(PianoEntity piano) {
+        this.piano = piano;
+    }
+
+    /* private int calcolaNumeroPersone(){
 
     }
 

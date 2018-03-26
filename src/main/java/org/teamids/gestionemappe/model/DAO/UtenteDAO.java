@@ -5,6 +5,7 @@ import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.sql.ResultSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class UtenteDAO {
@@ -23,6 +24,8 @@ public class UtenteDAO {
         dati=dati+",'"+utente.getCognome()+"'";
         dati=dati+",null";
         dati=dati+",null";
+        dati=dati+",1";
+        dati=dati+",null";
         tabella.insert(dati);
         int id_utente = tabella.executeForKey();
         utente.setId(id_utente);
@@ -31,31 +34,23 @@ public class UtenteDAO {
     public UtenteEntity getUserByUsername(String username){
         tabella.select();
         tabella.where("username = '" + username + "'" );
-        ResultSet risultato = tabella.fetch();
-        try{
-            risultato.next();
-            UtenteEntity utente = new UtenteEntity();
-            utente.setId(risultato.getInt("id"));
-            utente.setUsername(risultato.getString("username"));
-            utente.setNome(risultato.getString("nome"));
-            utente.setCognome(risultato.getString("cognome"));
-            utente.setPassword(risultato.getString("password"));
-            //utente.setBeaconId(risultato.getInt("beaconId"));
-            //utente.setPercorso(new PercorsoDAO().getPercorsoById(risultato.getInt("percorsoId")));
-            return utente;
-        }
-        catch (Exception e){
-            System.out.println("Errore" + e);
-            return null;
-        }
+        List<Map<String, Object>> rs = tabella.fetch();
+        UtenteEntity utente = new UtenteEntity();
+        utente.setId(Integer.parseInt(rs.get(0).get("id").toString()));
+        utente.setUsername(rs.get(0).get("username").toString());
+        utente.setNome(rs.get(0).get("nome").toString());
+        utente.setCognome(rs.get(0).get("cognome").toString());
+        utente.setPassword(rs.get(0).get("password").toString());
+        //utente.setBeaconId(risultato.getInt("beaconId"));
+        //utente.setPercorso(new PercorsoDAO().getPercorsoById(risultato.getInt("percorsoId")));
+        return utente;
     }
 
     public boolean findUserByCredential(String user, String pass){
         boolean success = false;
         tabella.select();
         tabella.where("username='" + user + "' and password='" + pass+"'");
-        int n = tabella.count(tabella.fetch());
-        if(n==1)
+        if(tabella.fetch().size()==1)
             success = true;
         else
             success=false;
@@ -66,8 +61,7 @@ public class UtenteDAO {
         boolean success = false;
         tabella.select();
         tabella.where("username='" + user + "'");
-        int n = tabella.count(tabella.fetch());
-        if(n==1)
+        if(tabella.fetch().size()==1)
             success = true;
         else
             success=false;
