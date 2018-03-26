@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class UtenteDAO {
 
-    protected Utente tabella;
+    protected static Utente tabella = new Utente();;
 
     public UtenteDAO() {
-        tabella= new Utente();
+
     }
 
-    public void insertUser(UtenteEntity utente){
+    public static void insertUser(UtenteEntity utente){
         String dati= String.valueOf(utente.getId());
         dati=dati+",'"+utente.getUsername()+"'";
         dati=dati+",'"+utente.getPassword()+"'";
@@ -31,7 +31,7 @@ public class UtenteDAO {
         utente.setId(id_utente);
     }
 
-    public UtenteEntity getUserByUsername(String username){
+    public static UtenteEntity getUserByUsername(String username){
         tabella.select();
         tabella.where("username = '" + username + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
@@ -46,10 +46,10 @@ public class UtenteDAO {
         return utente;
     }
 
-    public boolean findUserByCredential(String user, String pass){
+    public static boolean isAutenticato(String user, String pass){
         boolean success = false;
         tabella.select();
-        tabella.where("username='" + user + "' and password='" + pass+"'");
+        tabella.where("username ='" + user + "' and password = '" + pass + "' and is_autenticato = 1 ");
         if(tabella.fetch().size()==1)
             success = true;
         else
@@ -57,7 +57,7 @@ public class UtenteDAO {
         return success;
     }
 
-    public boolean findUserByUsername(String user){
+    public static boolean findUserByUsername(String user){
         boolean success = false;
         tabella.select();
         tabella.where("username='" + user + "'");
@@ -68,8 +68,24 @@ public class UtenteDAO {
         return success;
     }
 
-    public void logout(String username){
-        String dati = "percorsoId = NULL, beaconId = NULL";
+    public static void updateInfoUtente(String username, Map<String,Object> campoutente){
+        String dati = "";
+        for (Map.Entry<String, Object> campo : campoutente.entrySet()) {
+            dati += campo.getKey()+ "='" + campo.getValue() + "'";
+        }
+        tabella.update(dati);
+        tabella.where("username ='" + username + "'");
+        tabella.execute();
+    }
+
+    public static int countUsersPerBeacon(int beaconId){
+        tabella.select();
+        tabella.where("beaconId = '" + beaconId + "'");
+        return tabella.count(tabella.fetch());
+    }
+
+    public static void logout(String username){
+        String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0";
         tabella.update(dati);
         tabella.where("username='" + username + "'");
         tabella.execute();

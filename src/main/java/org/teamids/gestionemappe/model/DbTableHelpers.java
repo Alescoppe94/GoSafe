@@ -33,6 +33,10 @@ public class DbTableHelpers {
         sql = sql + "ORDER BY " + clausola;
     }
 
+    public int count(List<Map<String, Object>> tuple){
+        return tuple.size();
+    }
+
     public boolean execute(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();

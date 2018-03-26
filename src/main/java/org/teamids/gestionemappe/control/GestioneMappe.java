@@ -59,15 +59,13 @@ public class GestioneMappe extends Application {
             }
 
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            TappaDAO tappaDAO = new TappaDAO();
-            PercorsoDAO percorsoDAO = new PercorsoDAO(); //TODO settare il percorso su utente
-            int idPercorso =  percorsoDAO.insertPercorso(partenza);
+            int idPercorso =  PercorsoDAO.insertPercorso(partenza); //TODO settare il percorso su utente
 
             for(int i = 0; i < percorso_def.size()-1; i++) {
                 TroncoEntity troncoOttimo = TroncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
                 TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
                 tappeOttime.add(tappaOttima);
-                tappaDAO.insertTappa(tappaOttima);
+                TappaDAO.insertTappa(tappaOttima);
             }
 
             percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
@@ -88,9 +86,7 @@ public class GestioneMappe extends Application {
             Map<LinkedList<BeaconEntity>, Float> percorsoOttimo_costoOttimo =  calcoloDijkstra(partenza, arrivo, emergenza);
 
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            TappaDAO tappaDAO = new TappaDAO();
-            PercorsoDAO percorsoDAO = new PercorsoDAO(); //TODO settare il percorso su utente
-            int idPercorso =  percorsoDAO.insertPercorso(partenza);
+            int idPercorso =  PercorsoDAO.insertPercorso(partenza); //TODO settare il percorso su utente
 
             Map.Entry<LinkedList<BeaconEntity>, Float> entry = percorsoOttimo_costoOttimo.entrySet().iterator().next();
 
@@ -98,7 +94,7 @@ public class GestioneMappe extends Application {
                 TroncoEntity troncoOttimo = TroncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1));
                 TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
                 tappeOttime.add(tappaOttima);
-                tappaDAO.insertTappa(tappaOttima);
+                TappaDAO.insertTappa(tappaOttima);
             }
             percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
         }else{
