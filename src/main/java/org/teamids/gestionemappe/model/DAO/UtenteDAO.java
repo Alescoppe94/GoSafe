@@ -70,8 +70,12 @@ public class UtenteDAO {
 
     public static void updateInfoUtente(String username, Map<String,Object> campoutente){
         String dati = "";
-        for (Map.Entry<String, Object> campo : campoutente.entrySet()) {
+        Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, Object> campo = itr.next();
             dati += campo.getKey()+ "='" + campo.getValue() + "'";
+            if(itr.hasNext())
+                dati+= ", ";
         }
         tabella.update(dati);
         tabella.where("username ='" + username + "'");
