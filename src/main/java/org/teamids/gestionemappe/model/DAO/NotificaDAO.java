@@ -4,10 +4,9 @@ import org.teamids.gestionemappe.model.DbTable.Notifica;
 
 public class NotificaDAO {
 
-    protected Notifica tabella;
+    protected static Notifica tabella = new Notifica();
 
     public NotificaDAO(){
-        tabella = new Notifica();
     }
 
 }

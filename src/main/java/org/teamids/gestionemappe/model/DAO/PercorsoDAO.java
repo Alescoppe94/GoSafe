@@ -6,13 +6,12 @@ import org.teamids.gestionemappe.model.entity.PercorsoEntity;
 
 public class PercorsoDAO {
 
-    protected Percorso tabella;
+    protected static Percorso tabella = new Percorso();
 
     public PercorsoDAO() {
-        tabella= new Percorso();
     }
 
-    public int insertPercorso(BeaconEntity beaconPartenza){
+    public static int insertPercorso(BeaconEntity beaconPartenza){
 
         String dati= "0";
         dati=dati+",'"+ beaconPartenza.getId() +"'";

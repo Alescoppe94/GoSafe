@@ -26,7 +26,7 @@ public class GestioneMappeBoundary {
 
     @GET
     @Path("generanotifiche")
-    public String generaNotifiche(PercorsoEntity percorso) {
+    public String generaNotifiche() {
         //Fa partire il calcolo del percorso nel controller+
         return "bro";
 

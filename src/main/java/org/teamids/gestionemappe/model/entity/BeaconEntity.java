@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.model.entity;
 
 
+import org.teamids.gestionemappe.model.DAO.UtenteDAO;
 
 public class BeaconEntity {
 
@@ -97,12 +98,15 @@ public class BeaconEntity {
         this.piano = piano;
     }
 
-    /* private int calcolaNumeroPersone(){
-
+    private int calcolaNumeroPersone(){
+        int npersone = UtenteDAO.countUsersPerBeacon(this.id);
+        return npersone;
     }
 
-    public float calcolaLos(){
-
-    }*/
+    public void calcolaLos(){
+        int npersone = calcolaNumeroPersone();
+        float los = npersone/this.area;
+        setLos(los);
+    }
 
 }

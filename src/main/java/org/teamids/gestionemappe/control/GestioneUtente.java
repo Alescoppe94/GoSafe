@@ -6,22 +6,23 @@ import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.util.HashMap;
 
-import static java.sql.Types.NULL;
-
 public class GestioneUtente {
 
     public GestioneUtente() {
     }
 
     public String loginUtente(UtenteEntity utente){
-        UtenteDAO utenteDAO = new UtenteDAO();
-        UtenteEntity utentedb = utenteDAO.getUserByUsername(utente.getUsername());
+        UtenteEntity utentedb = UtenteDAO.getUserByUsername(utente.getUsername());
         String esito;
         if(utentedb != null) {
             if(utente.getPassword().equals(utentedb.getPassword())) {
                 utente.setId(utentedb.getId());
                 utente.setNome(utentedb.getNome());
                 utente.setCognome(utentedb.getCognome());
+                utente.setIs_autenticato(true);
+                HashMap<String, Object> campo = new HashMap<>();
+                campo.put("is_autenticato", 1);
+                UtenteDAO.updateInfoUtente(utente.getUsername(), campo); // TODO: aggiungere onTokenRefresh
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -34,29 +35,26 @@ public class GestioneUtente {
     }
 
     public boolean autenticazioneUtente(UtenteEntity utente){
-        UtenteDAO utenteDAO = new UtenteDAO();
-        boolean isAutenticato = utenteDAO.findUserByCredential(utente.getUsername(),utente.getPassword());
+        boolean isAutenticato = UtenteDAO.isAutenticato(utente.getUsername(),utente.getPassword());
         return isAutenticato;
     }
 
     public String registrazioneUtente(UtenteEntity utente){
-        UtenteDAO utenteDAO = new UtenteDAO();
-        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername());
+        boolean isUserInDb = UtenteDAO.findUserByUsername(utente.getUsername());
         String esito;
         if(isUserInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
-            utenteDAO.insertUser(utente);
-            int id_utente = utenteDAO.getUserByUsername(utente.getUsername()).getId();
+            UtenteDAO.insertUser(utente); // TODO: aggiungere onTokenRefresh
+            int id_utente = UtenteDAO.getUserByUsername(utente.getUsername()).getId();
             esito = "{\"id_utente\": \""+ id_utente +"\"}";
         }
         return esito;
     }
 
     public void logoutUtente(UtenteEntity utente){
-        UtenteDAO utenteDAO = new UtenteDAO();
-        utenteDAO.logout(utente.getUsername());
+        UtenteDAO.logout(utente.getUsername());
     }
 
 }

@@ -5,13 +5,12 @@ import org.teamids.gestionemappe.model.entity.TappaEntity;
 
 public class TappaDAO {
 
-    protected Tappa tabella;
+    protected  static Tappa tabella = new Tappa();
 
     public TappaDAO() {
-        tabella= new Tappa();
     }
 
-    public void insertTappa(TappaEntity tappa){
+    public static void insertTappa(TappaEntity tappa){
 
         String dati= "0";
         dati=dati+",'"+ tappa.getPercorsoId()+"'";
