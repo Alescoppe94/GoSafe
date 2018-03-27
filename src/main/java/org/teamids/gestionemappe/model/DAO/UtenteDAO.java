@@ -25,7 +25,7 @@ public class UtenteDAO {
         dati=dati+",null";
         dati=dati+",null";
         dati=dati+",1";
-        dati=dati+",null";
+        dati=dati+",'" + utente.getToken() + "'";
         tabella.insert(dati);
         int id_utente = tabella.executeForKey();
         utente.setId(id_utente);

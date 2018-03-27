@@ -22,7 +22,6 @@ public class GestioneUtente {
                 utente.setIs_autenticato(true);
                 HashMap<String, Object> campo = new HashMap<>();
                 campo.put("is_autenticato", 1);
-                System.out.println(utente.getToken());
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
                 UtenteDAO.updateInfoUtente(utente.getUsername(), campo); // TODO: aggiungere onTokenRefresh
