@@ -7,8 +7,9 @@ import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
-public class UtenteDAO {
+public class UtenteDAO extends Observable {
 
     protected static Utente tabella = new Utente();;
 
@@ -68,7 +69,7 @@ public class UtenteDAO {
         return success;
     }
 
-    public static void updateInfoUtente(String username, Map<String,Object> campoutente){
+    public void updateInfoUtente(String username, Map<String,Object> campoutente){
         String dati = "";
         Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
         while (itr.hasNext()) {
@@ -80,6 +81,8 @@ public class UtenteDAO {
         tabella.update(dati);
         tabella.where("username ='" + username + "'");
         tabella.execute();
+        setChanged();
+        notifyObservers();
     }
 
     public static int countUsersPerBeacon(int beaconId){
