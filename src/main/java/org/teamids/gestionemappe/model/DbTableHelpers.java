@@ -37,6 +37,10 @@ public class DbTableHelpers {
         return tuple.size();
     }
 
+    public void groupby(String campo){
+        sql = sql + "GROUP BY " + campo;
+    }
+
     public boolean execute(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();

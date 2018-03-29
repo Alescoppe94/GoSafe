@@ -30,14 +30,18 @@ public class TroncoDAO {
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
                         Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiOrdinati,
-                        Float.parseFloat(rs.get(i).get("lunghezza").toString())
+                        Float.parseFloat(rs.get(i).get("lunghezza").toString()),
+                        Float.parseFloat(rs.get(i).get("los").toString()),
+                        Float.parseFloat(rs.get(i).get("area").toString())
                 );
                 TroncoEntity troncoInv = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
                         Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiInvertiti,
-                        Float.parseFloat(rs.get(i).get("lunghezza").toString())
+                        Float.parseFloat(rs.get(i).get("lunghezza").toString()),
+                        Float.parseFloat(rs.get(i).get("los").toString()),
+                        Float.parseFloat(rs.get(i).get("area").toString())
                 );
                 allTronchiEdificio.add(troncoOrd);
                 allTronchiEdificio.add(troncoInv);
@@ -58,9 +62,31 @@ public class TroncoDAO {
                 Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
                 Float.parseFloat(rs.get(0).get("costo").toString()),
                 estremiTronco,
-                Float.parseFloat(rs.get(0).get("lunghezza").toString())
+                Float.parseFloat(rs.get(0).get("lunghezza").toString()),
+                Float.parseFloat(rs.get(0).get("los").toString()),
+                Float.parseFloat(rs.get(0).get("area").toString())
         );
         return tronco;
     }
 
+    public static TroncoEntity getTroncoById(String troncoId) {
+        tabella.select();
+        tabella.where("id = '" + troncoId + "'" );
+        List<Map<String, Object>> rs = tabella.fetch();
+        ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
+        BeaconEntity beaconA = BeaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconAId").toString()));
+        BeaconEntity beaconB = BeaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconBId").toString()));
+        estremiTronco.add(beaconA);
+        estremiTronco.add(beaconB);
+        TroncoEntity tronco = new TroncoEntity(
+                Integer.parseInt(rs.get(0).get("id").toString()),
+                Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
+                Float.parseFloat(rs.get(0).get("costo").toString()),
+                estremiTronco,
+                Float.parseFloat(rs.get(0).get("lunghezza").toString()),
+                Float.parseFloat(rs.get(0).get("los").toString()),
+                Float.parseFloat(rs.get(0).get("area").toString())
+        );
+        return tronco;
+    }
 }

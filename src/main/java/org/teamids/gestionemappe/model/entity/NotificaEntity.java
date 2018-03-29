@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class NotificaEntity {
@@ -7,17 +8,22 @@ public class NotificaEntity {
     private int id;
     private int utenteId;
     private PercorsoEntity percorso;
-    private Date orario;
+    private LocalDateTime dataorario;
     private String messaggio;
 
-    public NotificaEntity(int utenteId, PercorsoEntity percorso, String messaggio) {
+    public NotificaEntity(int utenteId, PercorsoEntity percorso, LocalDateTime dataorario, String messaggio) {
         this.utenteId = utenteId;
         this.percorso = percorso;
+        this.dataorario = dataorario;
         this.messaggio = messaggio;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUtenteId() {
@@ -36,12 +42,12 @@ public class NotificaEntity {
         this.percorso = percorso;
     }
 
-    public Date getOrario() {
-        return orario;
+    public LocalDateTime getDataorario() {
+        return dataorario;
     }
 
-    public void setOrario(Date orario) {
-        this.orario = orario;
+    public void setDataorario(LocalDateTime dataorario) {
+        this.dataorario = dataorario;
     }
 
     public String getMessaggio() {

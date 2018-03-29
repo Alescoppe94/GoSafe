@@ -5,10 +5,7 @@ import org.teamids.gestionemappe.model.DbTable.Beacon;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 
 import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BeaconDAO {
 
@@ -17,12 +14,12 @@ public class BeaconDAO {
     public BeaconDAO() {
     }
 
-    public static void updateBeacon(BeaconEntity beacon){
+    /*public static void updateBeacon(BeaconEntity beacon){
         String dati= "los = " + beacon.getLos();
         tabella.update(dati);
         tabella.where("id ='" + beacon.getId() + "'");
         tabella.execute();
-    }
+    } */
 
     public static BeaconEntity getBeaconById(int beaconId){
         tabella.select();
@@ -30,12 +27,10 @@ public class BeaconDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconEntity beacon = new BeaconEntity();
         beacon.setId(Integer.parseInt(rs.get(0).get("id").toString()));
-        beacon.setLos(Float.parseFloat(rs.get(0).get("los").toString()));
         beacon.setV(Float.parseFloat(rs.get(0).get("v").toString()));
         beacon.setR(Float.parseFloat(rs.get(0).get("r").toString()));
         beacon.setK(Float.parseFloat(rs.get(0).get("k").toString()));
         beacon.setL(Float.parseFloat(rs.get(0).get("l").toString()));
-        beacon.setArea(Float.parseFloat(rs.get(0).get("area").toString()));
         return beacon;
     }
 
@@ -47,12 +42,10 @@ public class BeaconDAO {
         for (int i = 0; i<rs.size(); i++) {
             BeaconEntity beaconDiRaccolta = new BeaconEntity(
                     Integer.parseInt(rs.get(i).get("id").toString()),
-                    Float.parseFloat(rs.get(i).get("los").toString()),
                     Float.parseFloat(rs.get(i).get("v").toString()),
                     Float.parseFloat(rs.get(i).get("r").toString()),
                     Float.parseFloat(rs.get(i).get("k").toString()),
                     Float.parseFloat(rs.get(i).get("l").toString()),
-                    Float.parseFloat(rs.get(i).get("area").toString()),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
                     PianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString()))
             );
@@ -60,5 +53,4 @@ public class BeaconDAO {
         }
         return allPuntiDiRaccolta;
     }
-
 }

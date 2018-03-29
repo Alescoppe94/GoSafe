@@ -1,17 +1,12 @@
 package org.teamids.gestionemappe.control;
 
-import org.teamids.gestionemappe.model.DAO.BeaconDAO;
-import org.teamids.gestionemappe.model.DAO.PercorsoDAO;
-import org.teamids.gestionemappe.model.DAO.TappaDAO;
-import org.teamids.gestionemappe.model.DAO.TroncoDAO;
+import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.DbTable.Tronco;
-import org.teamids.gestionemappe.model.entity.BeaconEntity;
-import org.teamids.gestionemappe.model.entity.PercorsoEntity;
-import org.teamids.gestionemappe.model.entity.TappaEntity;
-import org.teamids.gestionemappe.model.entity.TroncoEntity;
+import org.teamids.gestionemappe.model.entity.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @ApplicationPath("gestionemappe")
@@ -22,11 +17,18 @@ public class GestioneMappe extends Application {
 
     public GestioneMappe() {
 
-        allTronchiEdificio = TroncoDAO.getAllTronchi(); //TODO: ragionare se metterlo nel costruttore
+        allTronchiEdificio = TroncoDAO.getAllTronchi();
         pdr = BeaconDAO.getAllPuntiDiRaccolta();
     }
 
-    public PercorsoEntity calcoloPercorsoEvacuazione(int beaconPart) {
+    public void lanciaEmergenza(){
+        ArrayList<Integer> beaconsDiPartenzaId = UtenteDAO.getBeaconsIdAttivi();
+        for(int beaconId: beaconsDiPartenzaId){
+            calcoloPercorsoEvacuazione(beaconId);
+        } //TODO: lancia notifiche push e servizio di calcolo percorso continuo
+    }
+
+    public PercorsoEntity calcoloPercorsoEvacuazione(int beaconPart) { //TODO: ragionare se ritornare void
         BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
         if (partenza != null) {
             boolean emergenza = true;
@@ -226,15 +228,12 @@ public class GestioneMappe extends Application {
 
     }
 
-    //2 parametri
-
-    public void generaNotifica(){
-
+    public NotificaEntity visualizzaNotifica(int beaconPart, int utenteId) {
+        PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+        LocalDateTime ora = LocalDateTime.now();
+        NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!");
+        NotificaDAO.insertNotifica(notifica);
+        return notifica;
     }
-
-    public void lanciaEmergenza(){
-
-    }
-
 
 }

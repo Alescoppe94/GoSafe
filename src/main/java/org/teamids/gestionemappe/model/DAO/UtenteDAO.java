@@ -4,10 +4,7 @@ import org.teamids.gestionemappe.model.DbTable.Utente;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.sql.ResultSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
+import java.util.*;
 
 public class UtenteDAO extends Observable {
 
@@ -96,5 +93,17 @@ public class UtenteDAO extends Observable {
         tabella.update(dati);
         tabella.where("username='" + username + "'");
         tabella.execute();
+    }
+
+    public static ArrayList<Integer> getBeaconsIdAttivi() {
+        tabella.select("beaconId");
+        tabella.where("is_autenticato = 1 ");
+        tabella.groupby("beaconId");
+        List<Map<String, Object>> rs = tabella.fetch();
+        ArrayList<Integer> beaconsAttivi = new ArrayList<>();
+        for (int i = 0; i<rs.size(); i++) {
+            beaconsAttivi.add(Integer.parseInt(rs.get(i).get("beaconId").toString()));
+        }
+        return beaconsAttivi;
     }
 }

@@ -6,12 +6,12 @@ public class PercorsoEntity {
 
     private int id;
     private LinkedList<TappaEntity> tappe;
-    private BeaconEntity beaconPartenzaId;
+    private BeaconEntity beaconPartenza;
 
-    public PercorsoEntity(int id, LinkedList<TappaEntity> tappe, BeaconEntity beaconPartenzaId) {
+    public PercorsoEntity(int id, LinkedList<TappaEntity> tappe, BeaconEntity beaconPartenza) {
         this.id = id;
         this.tappe = tappe;
-        this.beaconPartenzaId = beaconPartenzaId;
+        this.beaconPartenza = beaconPartenza;
     }
 
     public int getId() {
@@ -28,12 +28,12 @@ public class PercorsoEntity {
         this.tappe = tappe;
     }
 
-    public BeaconEntity getBeaconPartenzaId() {
-        return beaconPartenzaId;
+    public BeaconEntity getBeaconPartenza() {
+        return beaconPartenza;
     }
 
-    public void setBeaconPartenzaId(BeaconEntity beaconPartenzaId) {
-        this.beaconPartenzaId = beaconPartenzaId;
+    public void setBeaconPartenza(BeaconEntity beaconPartenza) {
+        this.beaconPartenza = beaconPartenza;
     }
 
 

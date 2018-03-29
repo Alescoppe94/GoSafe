@@ -7,9 +7,15 @@ public class TappaEntity {
     private TroncoEntity tronco;
 
     public TappaEntity(TroncoEntity tronco, int percorsoId) {
-        this.tronco = tronco;
-        this.percorsoId= percorsoId;
         this.id=0;
+        this.percorsoId= percorsoId;
+        this.tronco = tronco;
+    }
+
+    public TappaEntity(int id, int percorsoId, TroncoEntity tronco) {
+        this.id=id;
+        this.percorsoId= percorsoId;
+        this.tronco = tronco;
     }
 
     public int getId() {

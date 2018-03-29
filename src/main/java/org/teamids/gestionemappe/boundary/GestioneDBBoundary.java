@@ -16,8 +16,8 @@ public class GestioneDBBoundary {
     @PUT
     @Path("/beacons/{beaconId}")
     public void aggiornaDB(@PathParam("beaconId") int id, BeaconEntity beacon){
-        beacon.setId(id);
-        BeaconDAO.updateBeacon(beacon);
+        //beacon.setId(id);
+        //BeaconDAO.updateBeacon(beacon);
     }
 
     @POST

@@ -2,6 +2,7 @@ package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneMappe;
+import org.teamids.gestionemappe.model.entity.NotificaEntity;
 import org.teamids.gestionemappe.model.entity.PercorsoEntity;
 
 import javax.ws.rs.*;
@@ -15,6 +16,12 @@ public class GestioneMappeBoundary {
 
     GestioneMappe gestionemappe = new GestioneMappe();
 
+    @POST
+    @Path("lanciaemergenza")
+    public void lanciaEmergenza(){
+        gestionemappe.lanciaEmergenza();
+    }
+
     @GET
     @Path("calcolapercorso/{beaconPart}/{beaconArr}")
     public PercorsoEntity calcoloPercorsoNoEmergenza(@PathParam("beaconPart") int beaconPart,
@@ -24,17 +31,10 @@ public class GestioneMappeBoundary {
     }
 
     @GET
-    @Path("generanotifiche")
-    public String generaNotifiche() {
-        //Fa partire il calcolo del percorso nel controller+
-        return "bro";
-
-    }
-
-    @GET
-    @Path("lanciaemergenza/{beaconPart}")
-    public PercorsoEntity lanciaEmergenza(@PathParam("beaconPart") int beaconPart){
-        return gestionemappe.calcoloPercorsoEvacuazione(beaconPart);
+    @Path("visualizzanotifica/{beaconPart}/{utenteId}")
+    public NotificaEntity visualizzaNotifica(@PathParam("beaconPart") int beaconPart,
+                                             @PathParam("utenteId") int utenteId){
+        return gestionemappe.visualizzaNotifica(beaconPart, utenteId);
     }
 
 }
