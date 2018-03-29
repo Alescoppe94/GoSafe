@@ -21,7 +21,6 @@ public class GestioneMappeBoundary {
                                              @PathParam("beaconArr") int beaconArr) {
         // Calcolo del percorso con il codice del tizio
         return gestionemappe.calcoloPercorsoNoEmergenza(beaconPart, beaconArr);
-
     }
 
     @GET
