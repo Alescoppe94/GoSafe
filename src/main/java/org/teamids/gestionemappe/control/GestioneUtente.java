@@ -1,14 +1,23 @@
 package org.teamids.gestionemappe.control;
 
 import com.google.gson.Gson;
+import org.teamids.gestionemappe.model.DAO.BeaconDAO;
 import org.teamids.gestionemappe.model.DAO.UtenteDAO;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
-public class GestioneUtente {
+public class GestioneUtente implements Observer {
+
+    private final UtenteDAO utenteDAO = new UtenteDAO();
+    private final BeaconDAO beaconDAO = new BeaconDAO();
 
     public GestioneUtente() {
+
+        utenteDAO.addObserver(this);
+
     }
 
     public String loginUtente(UtenteEntity utente){
@@ -22,7 +31,9 @@ public class GestioneUtente {
                 utente.setIs_autenticato(true);
                 HashMap<String, Object> campo = new HashMap<>();
                 campo.put("is_autenticato", 1);
-                UtenteDAO.updateInfoUtente(utente.getUsername(), campo); // TODO: aggiungere onTokenRefresh
+                if(utente.getToken()!=null)
+                    campo.put("token", utente.getToken());
+                utenteDAO.updateInfoUtente(utente.getUsername(), campo); // TODO: aggiungere onTokenRefresh
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -57,4 +68,8 @@ public class GestioneUtente {
         UtenteDAO.logout(utente.getUsername());
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("ciao");
+    }
 }

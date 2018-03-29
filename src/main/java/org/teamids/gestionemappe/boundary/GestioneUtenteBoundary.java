@@ -14,19 +14,19 @@ public class GestioneUtenteBoundary {
     GestioneUtente gestioneutente = new GestioneUtente();
 
     @POST
-    @Path("login")
+    @Path("/login")
     public String loginUtente(UtenteEntity utente){
         return gestioneutente.loginUtente(utente);
     }
 
     @POST
-    @Path("registrazione")
+    @Path("/registrazione")
     public String registrazioneUtente(UtenteEntity utente){
         return gestioneutente.registrazioneUtente(utente);
     }
 
     @PUT
-    @Path("logout")
+    @Path("/logout")
     public void logoutUtente(UtenteEntity utente){
         gestioneutente.logoutUtente(utente);
     }
