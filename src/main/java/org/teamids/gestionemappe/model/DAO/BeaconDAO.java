@@ -14,13 +14,6 @@ public class BeaconDAO {
     public BeaconDAO() {
     }
 
-    /*public static void updateBeacon(BeaconEntity beacon){
-        String dati= "los = " + beacon.getLos();
-        tabella.update(dati);
-        tabella.where("id ='" + beacon.getId() + "'");
-        tabella.execute();
-    } */
-
     public static BeaconEntity getBeaconById(int beaconId){
         tabella.select();
         tabella.where("id = '" + beaconId + "'" );

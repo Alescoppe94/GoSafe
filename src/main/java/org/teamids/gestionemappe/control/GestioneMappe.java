@@ -10,15 +10,17 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @ApplicationPath("gestionemappe")
-public class GestioneMappe extends Application {
+public class GestioneMappe extends Application implements Observer {
 
     private Set<TroncoEntity> allTronchiEdificio;
     private Set<BeaconEntity> pdr;
+    private final UtenteDAO utenteDAO = new UtenteDAO();
 
     public GestioneMappe() {
 
         allTronchiEdificio = TroncoDAO.getAllTronchi();
         pdr = BeaconDAO.getAllPuntiDiRaccolta();
+        utenteDAO.addObserver(this);
     }
 
     public void lanciaEmergenza(){
@@ -243,12 +245,37 @@ public class GestioneMappe extends Application {
 
     }
 
-    public NotificaEntity visualizzaNotifica(int beaconPart, int utenteId) {
+    public NotificaEntity visualizzaNotifica(int utenteId,int beaconPart) {
         PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
         LocalDateTime ora = LocalDateTime.now();
         NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!");
         NotificaDAO.insertNotifica(notifica);
+        HashMap<String, Object> campo = new HashMap<>();
+        campo.put("percorsoId", percorso.getId());
+        UtenteDAO.updateInfoUtente(utenteId, campo);
+        TroncoEntity tronco = percorso.getTappe().getFirst().getTronco();
+        utenteDAO.updatePositionInEmergency(utenteId,beaconPart,tronco);
         return notifica;
     }
 
+    public PercorsoEntity aggiornaPercorso(int utenteId, int beaconPart) {
+        PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+        HashMap<String, Object> campo = new HashMap<>();
+        campo.put("percorsoId", percorso.getId());
+        UtenteDAO.updateInfoUtente(utenteId, campo);
+        TroncoEntity tronco = percorso.getTappe().getFirst().getTronco();
+        utenteDAO.updatePositionInEmergency(utenteId,beaconPart,tronco);
+        return percorso;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        TroncoEntity tronco = (TroncoEntity) arg;
+        ArrayList<BeaconEntity> estremi = tronco.getBeaconEstremi();
+        /* Prendiamo tutti i percorsi (al massimo 2), che hanno come beacon di partenza uno dei due estremi e come
+           secondo beacon l'altro.
+           Di questi percorsi prendiamo l'id.
+           Infine, sulla tabella utente, contiamo quante sono le persone che hanno uno tra quei due percosoId.
+         */
+    }
 }

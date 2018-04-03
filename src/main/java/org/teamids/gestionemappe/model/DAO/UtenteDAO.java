@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.model.DAO;
 
 import org.teamids.gestionemappe.model.DbTable.Utente;
+import org.teamids.gestionemappe.model.entity.TroncoEntity;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ import java.util.*;
 
 public class UtenteDAO extends Observable {
 
-    protected static Utente tabella = new Utente();;
+    protected static Utente tabella = new Utente();
 
     public UtenteDAO() {
 
@@ -66,7 +67,16 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
-    public void updateInfoUtente(int id, Map<String,Object> campoutente){
+    public void updatePositionInEmergency(int id, int beaconId, TroncoEntity tronco){
+        String dati = "beaconId = '" + beaconId + "'";
+        tabella.update(dati);
+        tabella.where("id ='" + id + "'");
+        tabella.execute();
+        setChanged();
+        notifyObservers(tronco);
+    }
+
+    public static void updateInfoUtente(int id, Map<String,Object> campoutente){
         String dati = "";
         Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
         while (itr.hasNext()) {
@@ -78,8 +88,6 @@ public class UtenteDAO extends Observable {
         tabella.update(dati);
         tabella.where("id ='" + id + "'");
         tabella.execute();
-        setChanged();
-        notifyObservers();
     }
 
     public static int countUsersPerBeacon(int beaconId){

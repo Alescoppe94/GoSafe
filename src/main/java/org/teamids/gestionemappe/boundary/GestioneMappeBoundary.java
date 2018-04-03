@@ -32,9 +32,16 @@ public class GestioneMappeBoundary {
     }
 
     @GET
-    @Path("visualizzanotifica/{beaconPart}/{utenteId}")
-    public NotificaEntity visualizzaNotifica(@PathParam("beaconPart") int beaconPart,
-                                             @PathParam("utenteId") int utenteId){
-        return gestionemappe.visualizzaNotifica(beaconPart, utenteId);
+    @Path("visualizzanotifica/{utenteId}/{beaconPart}")
+    public NotificaEntity visualizzaNotifica( @PathParam("utenteId") int utenteId,
+                                              @PathParam("beaconPart") int beaconPart){
+        return gestionemappe.visualizzaNotifica(utenteId,beaconPart);
+    }
+
+    @GET
+    @Path("aggiornapercorso/{utenteId}/{beaconPart}")
+    public PercorsoEntity aggiornaPercorso(@PathParam("utenteId") int utenteId,
+                                           @PathParam("beaconPart") int beaconPart){
+        return gestionemappe.aggiornaPercorso(utenteId,beaconPart);
     }
 }
