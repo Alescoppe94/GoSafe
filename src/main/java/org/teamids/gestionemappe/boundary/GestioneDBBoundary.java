@@ -20,7 +20,7 @@ public class GestioneDBBoundary {
         //BeaconDAO.updateBeacon(beacon);
     }
 
-    @POST
+  /*  @POST
     @Path("tokentest")
     public void tokenUpdater(javax.json.JsonObject token){
 
@@ -31,6 +31,6 @@ public class GestioneDBBoundary {
             e.printStackTrace();
         }
 
-    }
+    }  */
 
 }

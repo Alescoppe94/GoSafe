@@ -41,6 +41,10 @@ public class DbTableHelpers {
         sql = sql + "GROUP BY " + campo;
     }
 
+    public void innerjoin(String tabella, String uguaglianza){
+        sql = sql + " INNER JOIN " + tabella + " ON " + uguaglianza;
+    }
+
     public boolean execute(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();

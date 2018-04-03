@@ -2,6 +2,7 @@ package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneMappe;
+import org.teamids.gestionemappe.model.DAO.UtenteDAO;
 import org.teamids.gestionemappe.model.entity.NotificaEntity;
 import org.teamids.gestionemappe.model.entity.PercorsoEntity;
 
@@ -36,5 +37,4 @@ public class GestioneMappeBoundary {
                                              @PathParam("utenteId") int utenteId){
         return gestionemappe.visualizzaNotifica(beaconPart, utenteId);
     }
-
 }

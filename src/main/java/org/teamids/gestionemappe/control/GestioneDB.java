@@ -52,7 +52,7 @@ public class GestioneDB {
     public void aggiornaDB(Object object){
     }
 
-    public void tokenUpdater(String token){
+  //  public void tokenUpdater(String token){
 
         /*FileInputStream serviceAccount =
                 null;
@@ -70,9 +70,9 @@ public class GestioneDB {
             e.printStackTrace();
         }*/
 
-        HttpPost post = null;
+      /*  HttpPost post = null;
         CloseableHttpClient client = null;
-        try {
+             try {
             client = HttpClientBuilder.create().build();
             post = new HttpPost("https://fcm.googleapis.com/fcm/send");
             post.setHeader("Content-type", "application/json");
@@ -108,6 +108,6 @@ public class GestioneDB {
         }
 
 
-    }
+    } */
 
 }

@@ -33,7 +33,7 @@ public class GestioneUtente implements Observer {
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
-                utenteDAO.updateInfoUtente(utente.getUsername(), campo); // TODO: aggiungere onTokenRefresh
+                utenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -71,5 +71,11 @@ public class GestioneUtente implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("ciao");
+    }
+
+    public void updateUserPosition(int beaconId, int utenteId) {
+        HashMap<String, Object> campo = new HashMap<>();
+        campo.put("beaconId", beaconId);
+        utenteDAO.updateInfoUtente(utenteId,campo);
     }
 }

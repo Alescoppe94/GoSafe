@@ -66,7 +66,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
-    public void updateInfoUtente(String username, Map<String,Object> campoutente){
+    public void updateInfoUtente(int id, Map<String,Object> campoutente){
         String dati = "";
         Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
         while (itr.hasNext()) {
@@ -76,7 +76,7 @@ public class UtenteDAO extends Observable {
                 dati+= ", ";
         }
         tabella.update(dati);
-        tabella.where("username ='" + username + "'");
+        tabella.where("id ='" + id + "'");
         tabella.execute();
         setChanged();
         notifyObservers();
@@ -97,7 +97,8 @@ public class UtenteDAO extends Observable {
 
     public static ArrayList<Integer> getBeaconsIdAttivi() {
         tabella.select("beaconId");
-        tabella.where("is_autenticato = 1 ");
+        tabella.innerjoin("beacon","utente.beaconId = beacon.id");
+        tabella.where("beacon.is_puntodiraccolta = 1 AND utente.is_autenticato = 1 ");
         tabella.groupby("beaconId");
         List<Map<String, Object>> rs = tabella.fetch();
         ArrayList<Integer> beaconsAttivi = new ArrayList<>();
@@ -105,5 +106,29 @@ public class UtenteDAO extends Observable {
             beaconsAttivi.add(Integer.parseInt(rs.get(i).get("beaconId").toString()));
         }
         return beaconsAttivi;
+    }
+
+    public static ArrayList<String> getTokensAttivi() {
+        tabella.select("token");
+        tabella.where("is_autenticato = 1 ");
+        tabella.groupby("token");
+        List<Map<String, Object>> rs = tabella.fetch();
+        ArrayList<String> tokensAttivi = new ArrayList<>();
+        for (int i = 0; i<rs.size(); i++) {
+            tokensAttivi.add(rs.get(i).get("token").toString());
+        }
+        return tokensAttivi;
+    }
+
+    public static boolean existUtenteInPericolo() {
+        boolean success = false;
+        tabella.select("beaconId");
+        tabella.innerjoin("beacon","utente.beaconId = beacon.id");
+        tabella.where("beacon.is_puntodiraccolta = 0 ");
+        if(tabella.fetch().size()>=1)
+            success = true;
+        else
+            success=false;
+        return success;
     }
 }

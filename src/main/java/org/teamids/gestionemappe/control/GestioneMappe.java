@@ -22,13 +22,30 @@ public class GestioneMappe extends Application {
     }
 
     public void lanciaEmergenza(){
+        generaPercorsiEvacuazione();
+        ArrayList<String> tokensAttivi = UtenteDAO.getTokensAttivi();
+        Communication communication = new Communication();
+        for(String token : tokensAttivi){
+            communication.inviaNotifica(token);
+        }
+        Runnable r = new Runnable() {
+            public void run() {
+                while(UtenteDAO.existUtenteInPericolo()){
+                    generaPercorsiEvacuazione();
+                }
+            }
+        };
+        new Thread(r).start();
+    }
+
+    public void generaPercorsiEvacuazione(){
         ArrayList<Integer> beaconsDiPartenzaId = UtenteDAO.getBeaconsIdAttivi();
         for(int beaconId: beaconsDiPartenzaId){
             calcoloPercorsoEvacuazione(beaconId);
-        } //TODO: lancia notifiche push e servizio di calcolo percorso continuo
+        }
     }
 
-    public PercorsoEntity calcoloPercorsoEvacuazione(int beaconPart) { //TODO: ragionare se ritornare void
+    public void calcoloPercorsoEvacuazione(int beaconPart) {
         BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
         if (partenza != null) {
             boolean emergenza = true;
@@ -71,9 +88,7 @@ public class GestioneMappe extends Application {
             }
 
             percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
-            return percorso;
         }
-        return null;
     }
 
     //2 parametro

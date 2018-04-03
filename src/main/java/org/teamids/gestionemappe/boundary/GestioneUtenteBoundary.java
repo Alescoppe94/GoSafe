@@ -31,5 +31,10 @@ public class GestioneUtenteBoundary {
         gestioneutente.logoutUtente(utente);
     }
 
-
+    @PUT
+    @Path("updateposition/{utenteId}/{beaconId}")
+    public void updateUserPosition(@PathParam("utenteId") int utenteId,
+                                   @PathParam("beaconId") int beaconId){
+        gestioneutente.updateUserPosition(beaconId, utenteId);
+    }
 }
