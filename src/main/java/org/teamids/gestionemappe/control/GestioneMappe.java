@@ -41,7 +41,6 @@ public class GestioneMappe extends Application implements Observer {
     }
 
 
-
     public void generaPercorsiEvacuazione(){
         ArrayList<Integer> beaconsDiPartenzaId = UtenteDAO.getBeaconsIdAttivi();
         for(int beaconId: beaconsDiPartenzaId){
@@ -251,6 +250,12 @@ public class GestioneMappe extends Application implements Observer {
 
     public NotificaEntity visualizzaPercorso(int utenteId, int beaconPart) {
         PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+        if(percorso == null){
+            synchronized (this) {
+                calcoloPercorsoEvacuazione(beaconPart);
+                percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+            }
+        }
         LocalDateTime ora = LocalDateTime.now();
         NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!"); //TODO: valutare inserimento notifica nel db
         NotificaDAO.insertNotifica(notifica);

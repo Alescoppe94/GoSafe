@@ -62,9 +62,9 @@ public class GestioneUtente{
         UtenteDAO.logout(utente.getUsername());
     }
 
-    public void updateUserPosition(int beaconId, int utenteId) {
+    public void updateUserPosition(UtenteEntity utente) {
         HashMap<String, Object> campo = new HashMap<>();
-        campo.put("beaconId", beaconId);
-        UtenteDAO.updateInfoUtente(utenteId,campo);
+        campo.put("beaconId", utente.getBeaconId());
+        UtenteDAO.updateInfoUtente(utente.getId(),campo);
     }
 }
