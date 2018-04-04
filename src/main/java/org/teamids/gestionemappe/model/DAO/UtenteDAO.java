@@ -90,12 +90,6 @@ public class UtenteDAO extends Observable {
         tabella.execute();
     }
 
-    public static int countUsersPerBeacon(int beaconId){
-        tabella.select();
-        tabella.where("beaconId = '" + beaconId + "'");
-        return tabella.count(tabella.fetch());
-    }
-
     public static void logout(String username){
         String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0";
         tabella.update(dati);
