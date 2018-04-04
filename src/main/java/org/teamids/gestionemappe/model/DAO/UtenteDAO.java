@@ -139,4 +139,15 @@ public class UtenteDAO extends Observable {
             success=false;
         return success;
     }
+
+    public static int countUsersPerTronco(ArrayList<Integer> percorsiId) {
+        int users = 0;
+        for(int percorsoId: percorsiId){
+            tabella.select();
+            tabella.where("percorsoId = '" + percorsoId + "'");
+            users += tabella.count(tabella.fetch());
+        }
+        return users;
+
+    }
 }

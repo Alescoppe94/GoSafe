@@ -96,4 +96,9 @@ public class TroncoDAO {
         );
         return tronco;
     }
+
+    public static void losToDefault() {
+        tabella.update("los = tronco.lunghezza");
+        tabella.execute();
+    }
 }
