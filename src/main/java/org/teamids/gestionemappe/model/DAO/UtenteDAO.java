@@ -82,6 +82,22 @@ public class UtenteDAO extends Observable {
         notifyObservers();
     }
 
+    public void updateInfoUtente(String username, Map<String,Object> campoutente){          //per ora serve per testare
+        String dati = "";
+        Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<String, Object> campo = itr.next();
+            dati += campo.getKey()+ "='" + campo.getValue() + "'";
+            if(itr.hasNext())
+                dati+= ", ";
+        }
+        tabella.update(dati);
+        tabella.where("username ='" + username + "'");
+        tabella.execute();
+        setChanged();
+        notifyObservers();
+    }
+
     public static int countUsersPerBeacon(int beaconId){
         tabella.select();
         tabella.where("beaconId = '" + beaconId + "'");

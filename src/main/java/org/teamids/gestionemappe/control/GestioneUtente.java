@@ -73,9 +73,9 @@ public class GestioneUtente implements Observer {
         System.out.println("ciao");
     }
 
-    public void updateUserPosition(int beaconId, int utenteId) {
+    public void updateUserPosition(String beaconId, String username) {
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", beaconId);
-        utenteDAO.updateInfoUtente(utenteId,campo);
+        utenteDAO.updateInfoUtente(username,campo);
     }
 }
