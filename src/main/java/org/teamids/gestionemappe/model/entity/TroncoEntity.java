@@ -79,14 +79,4 @@ public class TroncoEntity {
         this.area = area;
     }
 
-    private int calcolaNumeroPersone(){ //TODO: da modificare
-        int npersone = UtenteDAO.countUsersPerBeacon(this.id);
-        return npersone;
-    }
-
-    public void calcolaLos(){
-        int npersone = calcolaNumeroPersone();
-        float los = npersone/this.area;
-        setLos(los);
-    }
 }

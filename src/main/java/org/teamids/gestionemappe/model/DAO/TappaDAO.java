@@ -42,4 +42,15 @@ public class TappaDAO {
         }
         return tappe;
     }
+
+    public static void removeTappeByPercorsoId(int percorsoId) {
+        tabella.delete();
+        tabella.where("percorsoId = '" + percorsoId + "'");
+        tabella.execute();
+    }
+
+    public static void removeAllTappe() {
+        tabella.delete();
+        tabella.execute();
+    }
 }

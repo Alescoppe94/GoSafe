@@ -31,11 +31,9 @@ public class GestioneUtenteBoundary {
         gestioneutente.logoutUtente(utente);
     }
 
-    @GET
-    @Path("/updateposition/{utenteId}/{beaconId}")
-    public void updateUserPosition(@PathParam("utenteId") String utenteId,
-                                   @PathParam("beaconId") String beaconId){
-        System.out.println(utenteId);
-        gestioneutente.updateUserPosition(beaconId, utenteId);
+    @PUT
+    @Path("updateposition")
+    public void updateUserPosition(UtenteEntity utente){
+        gestioneutente.updateUserPosition(utente);
     }
 }

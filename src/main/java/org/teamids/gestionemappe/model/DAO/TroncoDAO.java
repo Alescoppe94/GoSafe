@@ -14,6 +14,13 @@ public class TroncoDAO {
 
     public TroncoDAO() { }
 
+    public static void updateLos(int troncoId,float los){
+        String dati= "los = " + los;
+        tabella.update(dati);
+        tabella.where("id ='" + troncoId + "'");
+        tabella.execute();
+    }
+
     public static Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
@@ -88,5 +95,10 @@ public class TroncoDAO {
                 Float.parseFloat(rs.get(0).get("area").toString())
         );
         return tronco;
+    }
+
+    public static void losToDefault() {
+        tabella.update("los = tronco.lunghezza");
+        tabella.execute();
     }
 }

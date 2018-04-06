@@ -25,13 +25,33 @@ public class PercorsoDAO {
 
     }
 
-    public static PercorsoEntity getPercorsoByBeaconId(int beaconId){
+    public static PercorsoEntity getPercorsoByBeaconId(int beaconId){ //TODO: sistemare direzione tappe
         tabella.select();
         tabella.where("beaconPartenzaId = '" + beaconId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
-        int percorsoId = Integer.parseInt(rs.get(0).get("id").toString());
-        LinkedList<TappaEntity> tappe = TappaDAO.getTappeByPercorsoId(percorsoId);
-        PercorsoEntity percorso = new PercorsoEntity(percorsoId, tappe, BeaconDAO.getBeaconById(beaconId));
-        return percorso;
+        try {
+            int percorsoId = Integer.parseInt(rs.get(0).get("id").toString());
+            LinkedList<TappaEntity> tappe = TappaDAO.getTappeByPercorsoId(percorsoId);
+            PercorsoEntity percorso = new PercorsoEntity(percorsoId, tappe, BeaconDAO.getBeaconById(beaconId));
+            return percorso;
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    public static boolean findPercorsoByBeaconId(int beaconPart) {
+        boolean success = false;
+        tabella.select();
+        tabella.where("beaconPartenzaId='" + beaconPart + "'");
+        if(tabella.fetch().size()==1)
+            success = true;
+        else
+            success=false;
+        return success;
+    }
+
+    public static void removeAllPercorsi() {
+        tabella.delete();
+        tabella.execute();
     }
 }

@@ -9,15 +9,9 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GestioneUtente implements Observer {
-
-    private final UtenteDAO utenteDAO = new UtenteDAO();
-    private final BeaconDAO beaconDAO = new BeaconDAO();
+public class GestioneUtente{
 
     public GestioneUtente() {
-
-        utenteDAO.addObserver(this);
-
     }
 
     public String loginUtente(UtenteEntity utente){
@@ -33,7 +27,7 @@ public class GestioneUtente implements Observer {
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
-                utenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
+                UtenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -68,14 +62,9 @@ public class GestioneUtente implements Observer {
         UtenteDAO.logout(utente.getUsername());
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("ciao");
-    }
-
-    public void updateUserPosition(String beaconId, String username) {
+    public void updateUserPosition(UtenteEntity utente) {
         HashMap<String, Object> campo = new HashMap<>();
-        campo.put("beaconId", beaconId);
-        utenteDAO.updateInfoUtente(username,campo);
+        campo.put("beaconId", utente.getBeaconId());
+        UtenteDAO.updateInfoUtente(utente.getId(),campo);
     }
 }
