@@ -91,16 +91,20 @@ public class GestioneMappe extends Application implements Observer {
             int idPercorso;
             if(existPercorso) {
                 idPercorso = percorsoDAO.getPercorsoByBeaconId(beaconPart).getId();
-                tappaDAO.removeTappeByPercorsoId(idPercorso);
+                for(int i = 0; i < percorso_def.size()-1; i++) {
+                    TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
+                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
+                    tappeOttime.add(tappaOttima);
+                }
+                tappaDAO.aggiornaTappe(idPercorso, tappeOttime);
             } else {
-                idPercorso = percorsoDAO.insertPercorso(partenza);
+                for(int i = 0; i < percorso_def.size()-1; i++) {
+                    TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
+                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo);
+                    tappeOttime.add(tappaOttima);
+                }
+                tappaDAO.creaPercorsoConTappe(partenza, tappeOttime);
             } //TODO settare il percorso su utente
-            for(int i = 0; i < percorso_def.size()-1; i++) {
-                TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
-                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
-                tappeOttime.add(tappaOttima);
-                tappaDAO.insertTappa(tappaOttima);
-            }
         }
     }
 

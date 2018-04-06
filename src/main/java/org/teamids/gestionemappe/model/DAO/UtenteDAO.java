@@ -102,7 +102,7 @@ public class UtenteDAO extends Observable {
     public ArrayList<Integer> getBeaconsIdAttivi() {
         tabella.select("beaconId");
         tabella.innerjoin("beacon","utente.beaconId = beacon.id");
-        tabella.where("beacon.is_puntodiraccolta = 1 AND utente.is_autenticato = 1 ");
+        tabella.where("beacon.is_puntodiraccolta = 0 AND utente.is_autenticato = 1 ");
         tabella.groupby("beaconId");
         List<Map<String, Object>> rs = tabella.fetch();
         ArrayList<Integer> beaconsAttivi = new ArrayList<>();
