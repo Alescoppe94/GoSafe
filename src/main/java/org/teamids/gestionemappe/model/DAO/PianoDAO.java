@@ -8,12 +8,15 @@ import java.util.Map;
 
 public class PianoDAO {
 
-    protected static Piano tabella = new Piano();
+    protected Piano tabella;
 
     public PianoDAO() {
+
+         this.tabella = new Piano();
+
     }
 
-    public static PianoEntity getPianoById(int idpiano){
+    public PianoEntity getPianoById(int idpiano){
         tabella.select();
         tabella.where("id = '" + idpiano + "'" );
         List<Map<String, Object>> rs = tabella.fetch();

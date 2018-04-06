@@ -10,28 +10,31 @@ import java.util.*;
 
 public class TroncoDAO {
 
-    protected static Tronco tabella = new Tronco();
+    protected Tronco tabella;
 
-    public TroncoDAO() { }
+    public TroncoDAO() {
+        this.tabella = new Tronco();
+    }
 
-    public static void updateLos(int troncoId,float los){
+    public void updateLos(int troncoId,float los){
         String dati= "los = " + los;
         tabella.update(dati);
         tabella.where("id ='" + troncoId + "'");
         tabella.execute();
     }
 
-    public static Set<TroncoEntity> getAllTronchi(){
+    public Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
         List<Map<String, Object>> rs = tabella.fetch();
+        BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {
                 ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
                 ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
-                estremiOrdinati.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
-                estremiOrdinati.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(BeaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
+                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
                 TroncoEntity troncoOrd = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
@@ -56,7 +59,7 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
-    public static TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
+    public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();
         tabella.where("beaconAId = '" + beaconA.getId() + "' and beaconBId = '" + beaconB.getId() + "' or beaconAId = '" + beaconB.getId() + "' and beaconBId = '" + beaconA.getId() + "'"  );
@@ -76,13 +79,14 @@ public class TroncoDAO {
         return tronco;
     }
 
-    public static TroncoEntity getTroncoById(String troncoId) {
+    public TroncoEntity getTroncoById(String troncoId) {
         tabella.select();
         tabella.where("id = '" + troncoId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
         ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
-        BeaconEntity beaconA = BeaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconAId").toString()));
-        BeaconEntity beaconB = BeaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconBId").toString()));
+        BeaconDAO beaconDAO = new BeaconDAO();
+        BeaconEntity beaconA = beaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconAId").toString()));
+        BeaconEntity beaconB = beaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconBId").toString()));
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(
@@ -97,7 +101,7 @@ public class TroncoDAO {
         return tronco;
     }
 
-    public static void losToDefault() {
+    public void losToDefault() {
         tabella.update("los = tronco.lunghezza");
         tabella.execute();
     }

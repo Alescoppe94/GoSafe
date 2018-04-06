@@ -10,12 +10,13 @@ import java.util.Map;
 
 public class TappaDAO {
 
-    protected  static Tappa tabella = new Tappa();
+    protected Tappa tabella;
 
     public TappaDAO() {
+        this.tabella = new Tappa();
     }
 
-    public static void insertTappa(TappaEntity tappa){
+    public void insertTappa(TappaEntity tappa){
 
         String dati= "0";
         dati=dati+",'"+ tappa.getPercorsoId()+"'";
@@ -26,13 +27,14 @@ public class TappaDAO {
 
     }
 
-    public static LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId) {
+    public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId) {
         LinkedList<TappaEntity> tappe = new LinkedList<>();
         tabella.select();
         tabella.where("percorsoId = '" + percorsoId + "'");
         List<Map<String, Object>> rs = tabella.fetch();
+        TroncoDAO troncoDAO = new TroncoDAO();
         for (int i = 0; i<rs.size(); i++) {
-            TroncoEntity tronco = TroncoDAO.getTroncoById(rs.get(i).get("troncoId").toString());
+            TroncoEntity tronco = troncoDAO.getTroncoById(rs.get(i).get("troncoId").toString());
             TappaEntity tappa = new TappaEntity(
                     Integer.parseInt(rs.get(i).get("id").toString()),
                     Integer.parseInt(rs.get(i).get("percorsoId").toString()),
@@ -43,13 +45,13 @@ public class TappaDAO {
         return tappe;
     }
 
-    public static void removeTappeByPercorsoId(int percorsoId) {
+    public void removeTappeByPercorsoId(int percorsoId) {
         tabella.delete();
         tabella.where("percorsoId = '" + percorsoId + "'");
         tabella.execute();
     }
 
-    public static void removeAllTappe() {
+    public void removeAllTappe() {
         tabella.delete();
         tabella.execute();
     }

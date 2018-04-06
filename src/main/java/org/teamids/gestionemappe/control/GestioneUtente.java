@@ -1,8 +1,7 @@
 package org.teamids.gestionemappe.control;
 
 import com.google.gson.Gson;
-import org.teamids.gestionemappe.model.DAO.BeaconDAO;
-import org.teamids.gestionemappe.model.DAO.UtenteDAO;
+import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.util.HashMap;
@@ -11,11 +10,14 @@ import java.util.Observer;
 
 public class GestioneUtente{
 
+    private UtenteDAO utenteDAO;
+
     public GestioneUtente() {
+        this.utenteDAO = new UtenteDAO();
     }
 
     public String loginUtente(UtenteEntity utente){
-        UtenteEntity utentedb = UtenteDAO.getUserByUsername(utente.getUsername());
+        UtenteEntity utentedb = utenteDAO.getUserByUsername(utente.getUsername());
         String esito;
         if(utentedb != null) {
             if(utente.getPassword().equals(utentedb.getPassword())) {
@@ -27,7 +29,7 @@ public class GestioneUtente{
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
-                UtenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
+                utenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -40,31 +42,31 @@ public class GestioneUtente{
     }
 
     public boolean autenticazioneUtente(UtenteEntity utente){
-        boolean isAutenticato = UtenteDAO.isAutenticato(utente.getUsername(),utente.getPassword());
+        boolean isAutenticato = utenteDAO.isAutenticato(utente.getUsername(),utente.getPassword());
         return isAutenticato;
     }
 
     public String registrazioneUtente(UtenteEntity utente){
-        boolean isUserInDb = UtenteDAO.findUserByUsername(utente.getUsername());
+        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername());
         String esito;
         if(isUserInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
-            UtenteDAO.insertUser(utente); // TODO: aggiungere onTokenRefresh
-            int id_utente = UtenteDAO.getUserByUsername(utente.getUsername()).getId();
+            utenteDAO.insertUser(utente); // TODO: aggiungere onTokenRefresh
+            int id_utente = utenteDAO.getUserByUsername(utente.getUsername()).getId();
             esito = "{\"id_utente\": \""+ id_utente +"\"}";
         }
         return esito;
     }
 
     public void logoutUtente(UtenteEntity utente){
-        UtenteDAO.logout(utente.getUsername());
+        utenteDAO.logout(utente.getUsername());
     }
 
     public void updateUserPosition(UtenteEntity utente) {
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", utente.getBeaconId());
-        UtenteDAO.updateInfoUtente(utente.getId(),campo);
+        utenteDAO.updateInfoUtente(utente.getId(),campo);
     }
 }
