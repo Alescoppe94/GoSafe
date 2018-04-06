@@ -18,6 +18,10 @@ public class TappaEntity {
         this.tronco = tronco;
     }
 
+    public TappaEntity(TroncoEntity tronco) {
+        this.tronco = tronco;
+    }
+
     public int getId() {
         return id;
     }

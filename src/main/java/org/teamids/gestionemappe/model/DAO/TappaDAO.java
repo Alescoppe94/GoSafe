@@ -1,9 +1,14 @@
 package org.teamids.gestionemappe.model.DAO;
 
+import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DbTable.Tappa;
+import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.TappaEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -54,5 +59,57 @@ public class TappaDAO {
     public void removeAllTappe() {
         tabella.delete();
         tabella.execute();
+    }
+
+    public void aggiornaTappe(int percorsoId, LinkedList<TappaEntity> tappeOttime) {
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        try {
+            db.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String delete = "DELETE FROM tappa WHERE percorsoId =" + percorsoId + ";";
+        PreparedStatement query = null;
+        try {
+            query = db.prepareStatement(delete);
+            query.executeUpdate();
+
+            for(TappaEntity tappa: tappeOttime){
+                String insert = "INSERT INTO tappa VALUES(0,"+tappa.getPercorsoId()+","+tappa.getTronco().getId()+");";
+                query = db.prepareStatement(insert);
+                query.executeUpdate();
+            }
+            db.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime) {
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        try {
+            db.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement query = null;
+        String insertPercorso = "INSERT INTO percorso VALUES(0,"+ partenza.getId() + ");";
+        String selectPercorsoId = "SELECT @ID:=id FROM percorso WHERE beaconPartenzaId="+ partenza.getId()+";";
+        try {
+            query = db.prepareStatement(insertPercorso);
+            query.executeUpdate();
+            query = db.prepareStatement(selectPercorsoId);
+            query.executeQuery();
+            for(TappaEntity tappa: tappeOttime){
+                String insertTappa = "INSERT INTO tappa VALUES(0,@ID,"+tappa.getTronco().getId()+");";
+                query = db.prepareStatement(insertTappa);
+                query.executeUpdate();
+            }
+            db.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
