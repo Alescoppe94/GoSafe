@@ -81,9 +81,10 @@ public class TappaDAO {
                 query.executeUpdate();
             }
             db.commit();
-        } catch (SQLException e) {
+        } catch (SQLException e) { //TODO: aggiungere rollback
             e.printStackTrace();
         }
+        connector.disconnect();
     }
 
     public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime) {
@@ -108,8 +109,9 @@ public class TappaDAO {
                 query.executeUpdate();
             }
             db.commit();
-        } catch (SQLException e) {
+        } catch (SQLException e) { //TODO: aggiungere rollback
             e.printStackTrace();
         }
+        connector.disconnect();
     }
 }
