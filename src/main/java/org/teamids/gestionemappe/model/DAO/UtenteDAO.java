@@ -9,13 +9,15 @@ import java.util.*;
 
 public class UtenteDAO extends Observable {
 
-    protected static Utente tabella = new Utente();
+    protected Utente tabella;
 
     public UtenteDAO() {
 
+        this.tabella = new Utente();
+
     }
 
-    public static void insertUser(UtenteEntity utente){
+    public void insertUser(UtenteEntity utente){
         String dati= String.valueOf(utente.getId());
         dati=dati+",'"+utente.getUsername()+"'";
         dati=dati+",'"+utente.getPassword()+"'";
@@ -30,7 +32,7 @@ public class UtenteDAO extends Observable {
         utente.setId(id_utente);
     }
 
-    public static UtenteEntity getUserByUsername(String username){
+    public UtenteEntity getUserByUsername(String username){
         tabella.select();
         tabella.where("username = '" + username + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
@@ -45,7 +47,7 @@ public class UtenteDAO extends Observable {
         return utente;
     }
 
-    public static boolean isAutenticato(String user, String pass){
+    public boolean isAutenticato(String user, String pass){
         boolean success = false;
         tabella.select();
         tabella.where("username ='" + user + "' and password = '" + pass + "' and is_autenticato = 1 ");
@@ -56,7 +58,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
-    public static boolean findUserByUsername(String user){
+    public boolean findUserByUsername(String user){
         boolean success = false;
         tabella.select();
         tabella.where("username='" + user + "'");
@@ -76,7 +78,7 @@ public class UtenteDAO extends Observable {
         notifyObservers(tronco);
     }
 
-    public static void updateInfoUtente(int id, Map<String,Object> campoutente){
+    public void updateInfoUtente(int id, Map<String,Object> campoutente){
         String dati = "";
         Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
         while (itr.hasNext()) {
@@ -90,14 +92,14 @@ public class UtenteDAO extends Observable {
         tabella.execute();
     }
 
-    public static void logout(String username){
+    public void logout(String username){
         String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0";
         tabella.update(dati);
         tabella.where("username='" + username + "'");
         tabella.execute();
     }
 
-    public static ArrayList<Integer> getBeaconsIdAttivi() {
+    public ArrayList<Integer> getBeaconsIdAttivi() {
         tabella.select("beaconId");
         tabella.innerjoin("beacon","utente.beaconId = beacon.id");
         tabella.where("beacon.is_puntodiraccolta = 1 AND utente.is_autenticato = 1 ");
@@ -110,7 +112,7 @@ public class UtenteDAO extends Observable {
         return beaconsAttivi;
     }
 
-    public static ArrayList<String> getTokensAttivi() {
+    public ArrayList<String> getTokensAttivi() {
         tabella.select("token");
         tabella.where("is_autenticato = 1 ");
         tabella.groupby("token");
@@ -122,7 +124,7 @@ public class UtenteDAO extends Observable {
         return tokensAttivi;
     }
 
-    public static boolean existUtenteInPericolo() {
+    public boolean existUtenteInPericolo() {
         boolean success = false;
         tabella.select("beaconId");
         tabella.innerjoin("beacon","utente.beaconId = beacon.id");
@@ -134,7 +136,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
-    public static int countUsersPerTronco(ArrayList<Integer> percorsiId) {
+    public int countUsersPerTronco(ArrayList<Integer> percorsiId) {
         int users = 0;
         for(int percorsoId: percorsiId){
             tabella.select();

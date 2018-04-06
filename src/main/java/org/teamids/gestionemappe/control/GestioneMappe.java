@@ -12,27 +12,34 @@ import java.util.*;
 @ApplicationPath("gestionemappe")
 public class GestioneMappe extends Application implements Observer {
 
-    private Set<TroncoEntity> allTronchiEdificio;
-    private Set<BeaconEntity> pdr;
-    private final UtenteDAO utenteDAO = new UtenteDAO();
+    private UtenteDAO utenteDAO;
+    private TroncoDAO troncoDAO;
+    private PercorsoDAO percorsoDAO;
+    private TappaDAO tappaDAO;
+    private NotificaDAO notificaDAO;
+    private BeaconDAO beaconDAO;
 
     public GestioneMappe() {
 
-        allTronchiEdificio = TroncoDAO.getAllTronchi();
-        pdr = BeaconDAO.getAllPuntiDiRaccolta();
+        this.utenteDAO = new UtenteDAO();
+        this.troncoDAO = new TroncoDAO();
+        this.percorsoDAO = new PercorsoDAO();
+        this.tappaDAO = new TappaDAO();
+        this.notificaDAO = new NotificaDAO();
+        this.beaconDAO = new BeaconDAO();
         utenteDAO.addObserver(this);
     }
 
     public void lanciaEmergenza(){
         generaPercorsiEvacuazione();
-        ArrayList<String> tokensAttivi = UtenteDAO.getTokensAttivi();
+        ArrayList<String> tokensAttivi = utenteDAO.getTokensAttivi();
         Communication communication = new Communication();
         for(String token : tokensAttivi){
             communication.inviaNotifica(token);
         }
         Runnable r = new Runnable() {
             public void run() {
-                while(UtenteDAO.existUtenteInPericolo()){
+                while(utenteDAO.existUtenteInPericolo()){
                     generaPercorsiEvacuazione();
                 }
             }
@@ -42,14 +49,15 @@ public class GestioneMappe extends Application implements Observer {
 
 
     public void generaPercorsiEvacuazione(){
-        ArrayList<Integer> beaconsDiPartenzaId = UtenteDAO.getBeaconsIdAttivi();
+        ArrayList<Integer> beaconsDiPartenzaId = utenteDAO.getBeaconsIdAttivi();
         for(int beaconId: beaconsDiPartenzaId){
             calcoloPercorsoEvacuazione(beaconId);
         }
     }
 
     public void calcoloPercorsoEvacuazione(int beaconPart) {
-        BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
+        Set<BeaconEntity> pdr = beaconDAO.getAllPuntiDiRaccolta();
+        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         if (partenza != null) {
             boolean emergenza = true;
             Map<LinkedList<BeaconEntity>, Float> percorsi_ottimi = new HashMap<>();
@@ -79,28 +87,28 @@ public class GestioneMappe extends Application implements Observer {
                 percorso_def.add(partenza);
             }
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            boolean existPercorso = PercorsoDAO.findPercorsoByBeaconId(beaconPart);
+            boolean existPercorso = percorsoDAO.findPercorsoByBeaconId(beaconPart);
             int idPercorso;
             if(existPercorso) {
-                idPercorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart).getId();
-                TappaDAO.removeTappeByPercorsoId(idPercorso);
+                idPercorso = percorsoDAO.getPercorsoByBeaconId(beaconPart).getId();
+                tappaDAO.removeTappeByPercorsoId(idPercorso);
             } else {
-                idPercorso = PercorsoDAO.insertPercorso(partenza);
+                idPercorso = percorsoDAO.insertPercorso(partenza);
             } //TODO settare il percorso su utente
             for(int i = 0; i < percorso_def.size()-1; i++) {
-                TroncoEntity troncoOttimo = TroncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
+                TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
                 TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
                 tappeOttime.add(tappaOttima);
-                TappaDAO.insertTappa(tappaOttima);
+                tappaDAO.insertTappa(tappaOttima);
             }
         }
     }
 
     //2 parametro
     public PercorsoEntity calcoloPercorsoNoEmergenza(int beaconPart, int beaconArr){
-        BeaconEntity partenza = BeaconDAO.getBeaconById(beaconPart);
+        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         boolean emergenza = false;
-        BeaconEntity arrivo = BeaconDAO.getBeaconById(beaconArr);
+        BeaconEntity arrivo = beaconDAO.getBeaconById(beaconArr);
         PercorsoEntity percorso;
 
         if (partenza != null && arrivo != null) {
@@ -108,15 +116,15 @@ public class GestioneMappe extends Application implements Observer {
             Map<LinkedList<BeaconEntity>, Float> percorsoOttimo_costoOttimo =  calcoloDijkstra(partenza, arrivo, emergenza);
 
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            int idPercorso =  PercorsoDAO.insertPercorso(partenza); //TODO: elimina l'insert del percorso sul db, settare il percorso su utente
+            int idPercorso =  percorsoDAO.insertPercorso(partenza); //TODO: elimina l'insert del percorso sul db, settare il percorso su utente
 
             Map.Entry<LinkedList<BeaconEntity>, Float> entry = percorsoOttimo_costoOttimo.entrySet().iterator().next();
 
             for(int i = 0; i < entry.getKey().size()-1; i++) {
-                TroncoEntity troncoOttimo = TroncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1));
+                TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1));
                 TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
                 tappeOttime.add(tappaOttima);
-                TappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
+                tappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
             }
             percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
         }else{
@@ -128,6 +136,7 @@ public class GestioneMappe extends Application implements Observer {
 
     private Map<LinkedList<BeaconEntity>, Float> calcoloDijkstra(BeaconEntity partenza, BeaconEntity arrivo, boolean emergenza){
 
+        Set<TroncoEntity> allTronchiEdificio = troncoDAO.getAllTronchi();
         Map<LinkedList<BeaconEntity>, Float> costi_percorsi = new HashMap<>();
         BeaconEntity beacon_controllato = partenza;
         ArrayList<BeaconEntity> beacon_visitati = new ArrayList<>();
@@ -249,19 +258,19 @@ public class GestioneMappe extends Application implements Observer {
     }
 
     public NotificaEntity visualizzaPercorso(int utenteId, int beaconPart) {
-        PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+        PercorsoEntity percorso = percorsoDAO.getPercorsoByBeaconId(beaconPart);
         if(percorso == null){
             synchronized (this) {
                 calcoloPercorsoEvacuazione(beaconPart);
-                percorso = PercorsoDAO.getPercorsoByBeaconId(beaconPart);
+                percorso = percorsoDAO.getPercorsoByBeaconId(beaconPart);
             }
         }
         LocalDateTime ora = LocalDateTime.now();
         NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!"); //TODO: valutare inserimento notifica nel db
-        NotificaDAO.insertNotifica(notifica);
+        notificaDAO.insertNotifica(notifica);
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("percorsoId", percorso.getId());
-        UtenteDAO.updateInfoUtente(utenteId, campo);
+        utenteDAO.updateInfoUtente(utenteId, campo);
         TroncoEntity tronco = percorso.getTappe().getFirst().getTronco();
         utenteDAO.updatePositionInEmergency(utenteId,beaconPart,tronco);
         return notifica;
@@ -276,7 +285,7 @@ public class GestioneMappe extends Application implements Observer {
            Di questi percorsi prendiamo l'id. */
         ArrayList<PercorsoEntity> percorsi = new ArrayList<>();
         for(int i = 0; i < 2; i++){
-            PercorsoEntity percorso = PercorsoDAO.getPercorsoByBeaconId(estremi.get(i).getId());
+            PercorsoEntity percorso = percorsoDAO.getPercorsoByBeaconId(estremi.get(i).getId());
             if(percorso != null) percorsi.add(percorso);
         }
         ArrayList<Integer> percorsiId = new ArrayList<>();
@@ -286,16 +295,15 @@ public class GestioneMappe extends Application implements Observer {
             }
         }
         // Infine, sulla tabella utente, contiamo quante sono le persone che hanno uno tra quei due percosoId.
-        int numUserInTronco = UtenteDAO.countUsersPerTronco(percorsiId);
+        int numUserInTronco = utenteDAO.countUsersPerTronco(percorsiId);
         float los = numUserInTronco/tronco.getArea();
-        TroncoDAO.updateLos(tronco.getId(), los);
+        troncoDAO.updateLos(tronco.getId(), los);
         tronco.setLos(los);
     }
 
     public void backToNormalMode(){
-        TroncoDAO.losToDefault();
-        TappaDAO.removeAllTappe();
-        PercorsoDAO.removeAllPercorsi();
-        NotificaDAO.removeAllNotifiche();
+        troncoDAO.losToDefault();
+        tappaDAO.removeAllTappe();
+        percorsoDAO.removeAllPercorsi();
     }
 }

@@ -5,12 +5,13 @@ import org.teamids.gestionemappe.model.entity.NotificaEntity;
 
 public class NotificaDAO {
 
-    protected static Notifica tabella = new Notifica();
+    protected Notifica tabella;
 
     public NotificaDAO(){
+        this.tabella = new Notifica();
     }
 
-    public static void insertNotifica(NotificaEntity notifica) {
+    public void insertNotifica(NotificaEntity notifica) {
         String dati= String.valueOf(notifica.getId());
         dati=dati+",'"+notifica.getUtenteId()+"'";
         dati=dati+",'"+notifica.getPercorso().getId()+"'";
