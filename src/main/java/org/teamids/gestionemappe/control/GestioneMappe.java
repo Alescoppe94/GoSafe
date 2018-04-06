@@ -296,5 +296,6 @@ public class GestioneMappe extends Application implements Observer {
         TroncoDAO.losToDefault();
         TappaDAO.removeAllTappe();
         PercorsoDAO.removeAllPercorsi();
+        NotificaDAO.removeAllNotifiche();
     }
 }
