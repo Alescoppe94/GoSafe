@@ -55,7 +55,7 @@ public class DbTableHelpers {
             query.executeUpdate();
             check=true;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             check=false;
         }
         connector.disconnect();
@@ -76,10 +76,10 @@ public class DbTableHelpers {
                 generated_key = rs.getInt("GENERATED_KEY");
 
             } catch (Exception e) {
-                System.out.println("C'è un errore:" + e);
+                e.printStackTrace();
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         connector.disconnect();
         return generated_key;
@@ -97,7 +97,7 @@ public class DbTableHelpers {
             risultato=query.executeQuery(sql);
             lista=resultSetToList(risultato);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             lista = null;
         }
         connector.disconnect();

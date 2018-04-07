@@ -146,4 +146,17 @@ public class UtenteDAO extends Observable {
         return users;
 
     }
+
+    public boolean isUsernameIdPresent(String username, int id){
+        boolean success = false;
+        tabella.select();
+        tabella.where("id='" + id + "' and username='"+ username +"'");
+        int n = tabella.count(tabella.fetch());
+        if(n==1)
+            success = true;
+        else
+            success=false;
+        return success;
+    }
+
 }

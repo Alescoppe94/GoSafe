@@ -1,5 +1,7 @@
 package org.teamids.gestionemappe.model.entity;
 
+import java.io.Serializable;
+
 public class UtenteEntity {
 
     private int id;
@@ -7,7 +9,7 @@ public class UtenteEntity {
     private String password;
     private String nome;
     private String cognome;
-    private int beaconId;
+    private String beaconId;
     private PercorsoEntity percorso;
     private boolean is_autenticato;
     private String token;
@@ -53,11 +55,11 @@ public class UtenteEntity {
         this.cognome = cognome;
     }
 
-    public int getBeaconId() {
+    public String getBeaconId() {
         return beaconId;
     }
 
-    public void setBeaconId(int beaconId) {
+    public void setBeaconId(String beaconId) {
         this.beaconId = beaconId;
     }
 

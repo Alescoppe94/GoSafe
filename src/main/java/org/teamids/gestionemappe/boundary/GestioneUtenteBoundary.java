@@ -31,8 +31,14 @@ public class GestioneUtenteBoundary {
         gestioneutente.logoutUtente(utente);
     }
 
+    @POST
+    @Path("modifica")
+    public String updateUtente(UtenteEntity utente){
+        return gestioneutente.updateUtente(utente);
+    }
+
     @PUT
-    @Path("updateposition")
+    @Path("/updateposition")
     public void updateUserPosition(UtenteEntity utente){
         gestioneutente.updateUserPosition(utente);
     }
