@@ -11,12 +11,12 @@ public class DbTableHelpers {
     protected String name;
     protected String sql;
 
-    public void insert(String campi){ sql="insert into " + name + " values("+ campi +")"; }
+    public void insert(String campi){ sql= "insert into " + name + " values("+ campi +")"; }
 
     public void update(String info){ sql="update "+ name + " set " + info; }
 
     public void delete(){
-        sql="delete from "+name;
+        sql = "delete from "+name;
     }
 
     public void select(){

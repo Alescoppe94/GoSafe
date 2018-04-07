@@ -40,4 +40,10 @@ public class GestioneMappeBoundary {
         gestionemappe.backToNormalMode();
     }
 
+    @PUT
+    @Path("prova")
+    public void c(){
+        gestionemappe.calcoloPercorsoEvacuazione(1);
+    }
+
 }
