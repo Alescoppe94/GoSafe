@@ -60,6 +60,28 @@ public class GestioneUtente{
         return esito;
     }
 
+    public String updateUtente(UtenteEntity utente){
+        UtenteDAO utenteDAO = new UtenteDAO();
+        boolean isUsernameInDb = utenteDAO.findUserByUsername(utente.getUsername()) && !utenteDAO.isUsernameIdPresent(utente.getUsername(), utente.getId());
+        System.out.println("isUserinDB"+isUsernameInDb);
+        String esito;
+        if(isUsernameInDb) {
+            esito = "{\"esito\": \"Username in uso\"}";
+        }
+        else{
+            System.out.println("Sono qua");
+            HashMap<String, Object> campo = new HashMap<>();
+            campo.put("username", utente.getUsername());
+            campo.put("password", utente.getPassword());
+            campo.put("nome", utente.getNome());
+            campo.put("cognome", utente.getCognome());
+            utenteDAO.updateInfoUtente(utente.getId(), campo);
+            esito = "{\"esito\": \"success\"}";
+        }
+        System.out.println(esito);
+        return esito;
+    }
+
     public void logoutUtente(UtenteEntity utente){
         utenteDAO.logout(utente.getUsername());
     }
@@ -67,6 +89,6 @@ public class GestioneUtente{
     public void updateUserPosition(UtenteEntity utente) {
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", utente.getBeaconId());
-        utenteDAO.updateInfoUtente(utente.getId(),campo);
+        utenteDAO.updateInfoUtente(utente.getId(),campo);   //metodo creato
     }
 }
