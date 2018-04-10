@@ -25,6 +25,8 @@ public class DbTableHelpers {
 
     public void select(String campo) { sql="SELECT " +campo+ " FROM " + name;}
 
+    public void select(String campo1, String campo2) { sql="SELECT " + campo1 + ", "+ campo2 +" FROM " + name;}
+
     public void where(String clausola){
         sql=sql + " WHERE " + clausola;
     }

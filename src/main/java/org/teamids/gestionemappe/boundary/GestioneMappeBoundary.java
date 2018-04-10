@@ -3,6 +3,7 @@ package org.teamids.gestionemappe.boundary;
 import org.teamids.gestionemappe.control.GestioneMappe;
 import org.teamids.gestionemappe.model.entity.NotificaEntity;
 import org.teamids.gestionemappe.model.entity.PercorsoEntity;
+import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -39,4 +40,5 @@ public class GestioneMappeBoundary {
     public void backToNormalMode(){
         gestionemappe.backToNormalMode();
     }
+
 }

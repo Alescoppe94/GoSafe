@@ -182,7 +182,7 @@ public class GestioneMappe extends Application implements Observer {
                 }
                 Float costo;
                 if (emergenza){
-                    costo = tronco.getCosto(); // TODO: getCosto_dinamico()
+                    costo = tronco.calcolaCosto();
                 }else{
                     costo = tronco.getLunghezza();
                 }

@@ -1,11 +1,10 @@
 package org.teamids.gestionemappe.model.entity;
 
+import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
 import org.teamids.gestionemappe.model.DAO.UtenteDAO;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TroncoEntity {
 
@@ -25,6 +24,10 @@ public class TroncoEntity {
         this.lunghezza = lunghezza;
         this.los = los;
         this.area = area;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -79,4 +82,17 @@ public class TroncoEntity {
         this.area = area;
     }
 
+    public float calcolaCosto(){
+        PesiTroncoDAO pesiTroncoDAO = new PesiTroncoDAO();
+        HashMap<Float, Float> coeffVal = pesiTroncoDAO.getPesiTronco(this.id);
+        Iterator<Map.Entry<Float, Float>> it = coeffVal.entrySet().iterator();
+        float costo = 0;
+        while (it.hasNext()) {
+            Map.Entry<Float, Float> coeff_val = it.next();
+            costo += (coeff_val.getKey()*coeff_val.getValue());
+        }
+        setCosto(costo);
+        return costo;
+
+    }
 }
