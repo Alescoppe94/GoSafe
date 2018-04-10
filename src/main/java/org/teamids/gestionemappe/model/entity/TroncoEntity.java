@@ -89,7 +89,7 @@ public class TroncoEntity {
         float costo = 0;
         while (it.hasNext()) {
             Map.Entry<Float, Float> coeff_val = it.next();
-            costo += (coeff_val.getKey()*coeff_val.getValue());
+            costo += (coeff_val.getKey()*coeff_val.getValue()); //TODO: valutare se aggiungere los e lunghezza
         }
         setCosto(costo);
         return costo;

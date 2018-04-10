@@ -184,7 +184,7 @@ public class GestioneMappe extends Application implements Observer {
                 if (emergenza){
                     costo = tronco.calcolaCosto();
                 }else{
-                    costo = tronco.getLunghezza();
+                    costo = tronco.getLunghezza(); //TODO: valutare se inserire lunghezza nei pesi
                 }
                 costo_percorso_parziale += costo;
                 BeaconEntity beacon_finale = percorso_parziale.getLast();
@@ -301,12 +301,12 @@ public class GestioneMappe extends Application implements Observer {
         // Infine, sulla tabella utente, contiamo quante sono le persone che hanno uno tra quei due percosoId.
         int numUserInTronco = utenteDAO.countUsersPerTronco(percorsiId);
         float los = numUserInTronco/tronco.getArea();
-        troncoDAO.updateLos(tronco.getId(), los);
+        troncoDAO.updateLos(tronco.getId(), los); //TODO: valutare se inserire los nei pesi e se si rifare updateLos
         tronco.setLos(los);
     }
 
     public void backToNormalMode(){
-        troncoDAO.losToDefault();
+        troncoDAO.losToDefault(); //TODO: modifica se los va nei pesi
         tappaDAO.removeAllTappe();
         percorsoDAO.removeAllPercorsi();
     }
