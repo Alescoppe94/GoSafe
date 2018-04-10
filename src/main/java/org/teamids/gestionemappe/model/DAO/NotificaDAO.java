@@ -21,9 +21,4 @@ public class NotificaDAO {
         int id_notifica = tabella.executeForKey();
         notifica.setId(id_notifica);
     }
-
-    public static void removeAllNotifiche() {
-        tabella.delete();
-        tabella.execute();
-    }
 }
