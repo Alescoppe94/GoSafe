@@ -11,9 +11,11 @@ import java.util.Observer;
 public class GestioneUtente{
 
     private UtenteDAO utenteDAO;
+    private BeaconDAO beaconDAO;
 
     public GestioneUtente() {
         this.utenteDAO = new UtenteDAO();
+        this.beaconDAO = new BeaconDAO();
     }
 
     public String loginUtente(UtenteEntity utente){
@@ -89,6 +91,6 @@ public class GestioneUtente{
     public void updateUserPosition(UtenteEntity utente) {
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", utente.getBeaconId());
-        utenteDAO.updateInfoUtente(utente.getId(),campo);   //metodo creato
+        utenteDAO.updateInfoUtente(utente.getId(),campo);
     }
 }

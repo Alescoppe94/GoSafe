@@ -81,7 +81,20 @@ public class TappaDAO {
                 query.executeUpdate();
             }
             db.commit();
-        } catch (SQLException e) { //TODO: aggiungere rollback
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (db != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    db.rollback();
+                } catch(SQLException excep) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            db.setAutoCommit(true);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         connector.disconnect();
@@ -109,7 +122,20 @@ public class TappaDAO {
                 query.executeUpdate();
             }
             db.commit();
-        } catch (SQLException e) { //TODO: aggiungere rollback
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (db != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    db.rollback();
+                } catch(SQLException excep) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            db.setAutoCommit(true);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         connector.disconnect();

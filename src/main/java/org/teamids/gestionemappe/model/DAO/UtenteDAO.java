@@ -69,7 +69,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
-    public void updatePositionInEmergency(int id, int beaconId, TroncoEntity tronco){
+    public void updatePositionInEmergency(int id, String beaconId, TroncoEntity tronco){
         String dati = "beaconId = '" + beaconId + "'";
         tabella.update(dati);
         tabella.where("id ='" + id + "'");
@@ -99,15 +99,15 @@ public class UtenteDAO extends Observable {
         tabella.execute();
     }
 
-    public ArrayList<Integer> getBeaconsIdAttivi() {
+    public ArrayList<String> getBeaconsIdAttivi() {
         tabella.select("beaconId");
         tabella.innerjoin("beacon","utente.beaconId = beacon.id");
         tabella.where("beacon.is_puntodiraccolta = 0 AND utente.is_autenticato = 1 ");
         tabella.groupby("beaconId");
         List<Map<String, Object>> rs = tabella.fetch();
-        ArrayList<Integer> beaconsAttivi = new ArrayList<>();
+        ArrayList<String> beaconsAttivi = new ArrayList<>();
         for (int i = 0; i<rs.size(); i++) {
-            beaconsAttivi.add(Integer.parseInt(rs.get(i).get("beaconId").toString()));
+            beaconsAttivi.add(rs.get(i).get("beaconId").toString());
         }
         return beaconsAttivi;
     }

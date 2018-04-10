@@ -21,16 +21,16 @@ public class GestioneMappeBoundary {
     }
 
     @GET
-    @Path("calcolapercorso/{beaconPart}/{beaconArr}")
-    public PercorsoEntity calcoloPercorsoNoEmergenza(@PathParam("beaconPart") int beaconPart,
-                                             @PathParam("beaconArr") int beaconArr) {
+    @Path("calcolapercorso/{beaconPart}/{beaconArr}") //TODO: da modificare.Il macAddress può dare problemi con l URL
+    public PercorsoEntity calcoloPercorsoNoEmergenza(@PathParam("beaconPart") String beaconPart,
+                                             @PathParam("beaconArr") String beaconArr) {
         return gestionemappe.calcoloPercorsoNoEmergenza(beaconPart, beaconArr);
     }
 
     @GET
-    @Path("visualizzapercorso/{utenteId}/{beaconPart}")
+    @Path("visualizzapercorso/{utenteId}/{beaconPart}") //TODO: da modificare.Il macAddress può dare problemi con l URL
     public NotificaEntity visualizzaPercorso(@PathParam("utenteId") int utenteId,
-                                             @PathParam("beaconPart") int beaconPart){
+                                             @PathParam("beaconPart") String beaconPart){
         return gestionemappe.visualizzaPercorso(utenteId,beaconPart);
     }
 
@@ -39,11 +39,4 @@ public class GestioneMappeBoundary {
     public void backToNormalMode(){
         gestionemappe.backToNormalMode();
     }
-
-    @PUT
-    @Path("prova")
-    public void c(){
-        gestionemappe.calcoloPercorsoEvacuazione(1);
-    }
-
 }

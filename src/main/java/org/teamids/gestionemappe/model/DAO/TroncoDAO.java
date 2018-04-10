@@ -31,10 +31,10 @@ public class TroncoDAO {
         for (int i = 0; i<rs.size(); i++) {
                 ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
                 ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
-                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
-                estremiOrdinati.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconBId").toString())));
-                estremiInvertiti.add(beaconDAO.getBeaconById(Integer.parseInt(rs.get(i).get("beaconAId").toString())));
+                estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
+                estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+                estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+                estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
                 TroncoEntity troncoOrd = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
@@ -85,8 +85,8 @@ public class TroncoDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
         BeaconDAO beaconDAO = new BeaconDAO();
-        BeaconEntity beaconA = beaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconAId").toString()));
-        BeaconEntity beaconB = beaconDAO.getBeaconById(Integer.parseInt(rs.get(0).get("beaconBId").toString()));
+        BeaconEntity beaconA = beaconDAO.getBeaconById(rs.get(0).get("beaconAId").toString());
+        BeaconEntity beaconB = beaconDAO.getBeaconById(rs.get(0).get("beaconBId").toString());
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(

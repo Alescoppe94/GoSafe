@@ -15,16 +15,12 @@ public class BeaconDAO {
         this.tabella = new Beacon();
     }
 
-    public BeaconEntity getBeaconById(int beaconId){
+    public BeaconEntity getBeaconById(String beaconId){
         tabella.select();
         tabella.where("id = '" + beaconId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconEntity beacon = new BeaconEntity();
-        beacon.setId(Integer.parseInt(rs.get(0).get("id").toString()));
-        beacon.setV(Float.parseFloat(rs.get(0).get("v").toString()));
-        beacon.setR(Float.parseFloat(rs.get(0).get("r").toString()));
-        beacon.setK(Float.parseFloat(rs.get(0).get("k").toString()));
-        beacon.setL(Float.parseFloat(rs.get(0).get("l").toString()));
+        beacon.setId(rs.get(0).get("id").toString());
         return beacon;
     }
 
@@ -36,11 +32,7 @@ public class BeaconDAO {
         PianoDAO pianoDAO = new PianoDAO();
         for (int i = 0; i<rs.size(); i++) {
             BeaconEntity beaconDiRaccolta = new BeaconEntity(
-                    Integer.parseInt(rs.get(i).get("id").toString()),
-                    Float.parseFloat(rs.get(i).get("v").toString()),
-                    Float.parseFloat(rs.get(i).get("r").toString()),
-                    Float.parseFloat(rs.get(i).get("k").toString()),
-                    Float.parseFloat(rs.get(i).get("l").toString()),
+                    rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
                     pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString()))
             );

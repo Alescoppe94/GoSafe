@@ -49,13 +49,13 @@ public class GestioneMappe extends Application implements Observer {
 
 
     public void generaPercorsiEvacuazione(){
-        ArrayList<Integer> beaconsDiPartenzaId = utenteDAO.getBeaconsIdAttivi();
-        for(int beaconId: beaconsDiPartenzaId){
+        ArrayList<String> beaconsDiPartenzaId = utenteDAO.getBeaconsIdAttivi();
+        for(String beaconId: beaconsDiPartenzaId){
             calcoloPercorsoEvacuazione(beaconId);
         }
     }
 
-    public void calcoloPercorsoEvacuazione(int beaconPart) {
+    public void calcoloPercorsoEvacuazione(String beaconPart) {
         Set<BeaconEntity> pdr = beaconDAO.getAllPuntiDiRaccolta();
         BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         if (partenza != null) {
@@ -104,12 +104,12 @@ public class GestioneMappe extends Application implements Observer {
                     tappeOttime.add(tappaOttima);
                 }
                 tappaDAO.creaPercorsoConTappe(partenza, tappeOttime);
-            } //TODO settare il percorso su utente
+            }
         }
     }
 
     //2 parametro
-    public PercorsoEntity calcoloPercorsoNoEmergenza(int beaconPart, int beaconArr){
+    public PercorsoEntity calcoloPercorsoNoEmergenza(String beaconPart, String beaconArr){
         BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         boolean emergenza = false;
         BeaconEntity arrivo = beaconDAO.getBeaconById(beaconArr);
@@ -130,7 +130,7 @@ public class GestioneMappe extends Application implements Observer {
                 tappeOttime.add(tappaOttima);
                 tappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
             }
-            percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza); //TODO settare il percorso su utente
+            percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza);
         }else{
             percorso = null;
         }
@@ -222,7 +222,7 @@ public class GestioneMappe extends Application implements Observer {
                 }
             }
             beacon_visitati.add(beacon_controllato);
-            if (percorso_scelto.isEmpty())//TODO controllare, messo per aggirare un bug
+            if (percorso_scelto.isEmpty())
                 percorso_scelto.add(arrivo);
             beacon_controllato = percorso_scelto.getLast();
             percorso_ottimo_parziale = percorso_scelto;
@@ -240,7 +240,7 @@ public class GestioneMappe extends Application implements Observer {
         boolean contenuto = false;
 
         for(BeaconEntity b : beacons){
-            if(b.getId() == beacon.getId()){
+            if(b.getId().equals(beacon.getId())){
                 contenuto = true;
             }
         }
@@ -253,7 +253,7 @@ public class GestioneMappe extends Application implements Observer {
 
         boolean uguali = false;
 
-        if(beacon1.getId() == beacon2.getId()){
+        if(beacon1.getId().equals(beacon2.getId())){
             uguali = true;
         }
 
@@ -261,7 +261,7 @@ public class GestioneMappe extends Application implements Observer {
 
     }
 
-    public NotificaEntity visualizzaPercorso(int utenteId, int beaconPart) {
+    public NotificaEntity visualizzaPercorso(int utenteId, String beaconPart) {
         PercorsoEntity percorso = percorsoDAO.getPercorsoByBeaconId(beaconPart);
         if(percorso == null){
             synchronized (this) {
@@ -270,7 +270,7 @@ public class GestioneMappe extends Application implements Observer {
             }
         }
         LocalDateTime ora = LocalDateTime.now();
-        NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!"); //TODO: valutare inserimento notifica nel db
+        NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!");
         notificaDAO.insertNotifica(notifica);
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("percorsoId", percorso.getId());
