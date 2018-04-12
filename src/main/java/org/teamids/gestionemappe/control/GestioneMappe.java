@@ -18,6 +18,7 @@ public class GestioneMappe extends Application implements Observer {
     private TappaDAO tappaDAO;
     private NotificaDAO notificaDAO;
     private BeaconDAO beaconDAO;
+    private PesiTroncoDAO pesiTroncoDAO;
 
     public GestioneMappe() {
 
@@ -27,6 +28,7 @@ public class GestioneMappe extends Application implements Observer {
         this.tappaDAO = new TappaDAO();
         this.notificaDAO = new NotificaDAO();
         this.beaconDAO = new BeaconDAO();
+        this.pesiTroncoDAO = new PesiTroncoDAO();
         utenteDAO.addObserver(this);
     }
 
@@ -126,7 +128,8 @@ public class GestioneMappe extends Application implements Observer {
 
             for(int i = 0; i < entry.getKey().size()-1; i++) {
                 TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1));
-                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
+                boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo);
+                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso, direzione);
                 tappeOttime.add(tappaOttima);
                 tappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
             }
@@ -184,7 +187,7 @@ public class GestioneMappe extends Application implements Observer {
                 if (emergenza){
                     costo = tronco.calcolaCosto();
                 }else{
-                    costo = tronco.getLunghezza(); //TODO: valutare se inserire lunghezza nei pesi
+                    costo = pesiTroncoDAO.geValoreByPesoId(tronco.getId(), "l");
                 }
                 costo_percorso_parziale += costo;
                 BeaconEntity beacon_finale = percorso_parziale.getLast();
@@ -301,12 +304,11 @@ public class GestioneMappe extends Application implements Observer {
         // Infine, sulla tabella utente, contiamo quante sono le persone che hanno uno tra quei due percosoId.
         int numUserInTronco = utenteDAO.countUsersPerTronco(percorsiId);
         float los = numUserInTronco/tronco.getArea();
-        troncoDAO.updateLos(tronco.getId(), los); //TODO: valutare se inserire los nei pesi e se si rifare updateLos
-        tronco.setLos(los);
+        pesiTroncoDAO.updateValorePeso(tronco.getId(), "los", los);
     }
 
     public void backToNormalMode(){
-        troncoDAO.losToDefault(); //TODO: modifica se los va nei pesi
+        pesiTroncoDAO.losToDefault();
         tappaDAO.removeAllTappe();
         percorsoDAO.removeAllPercorsi();
     }

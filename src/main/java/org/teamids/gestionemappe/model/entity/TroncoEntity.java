@@ -12,17 +12,17 @@ public class TroncoEntity {
     private boolean agibile;
     private float costo;
     private ArrayList<BeaconEntity> beaconEstremi;
-    private float lunghezza;
-    private float los;
     private float area;
 
-    public TroncoEntity(int id,boolean agibile, float costo, ArrayList<BeaconEntity> beaconEstremi, float lunghezza, float los, float area) {
+    public TroncoEntity(int id){
+        this.id = id;
+    }
+
+    public TroncoEntity(int id,boolean agibile, float costo, ArrayList<BeaconEntity> beaconEstremi, float area) {
         this.id = id;
         this.agibile = agibile;
         this.costo = costo;
         this.beaconEstremi = beaconEstremi;
-        this.lunghezza = lunghezza;
-        this.los = los;
         this.area = area;
     }
 
@@ -58,22 +58,6 @@ public class TroncoEntity {
         this.beaconEstremi = beaconEstremi;
     }
 
-    public float getLunghezza() {
-        return lunghezza;
-    }
-
-    public void setLunghezza(float lunghezza) {
-        this.lunghezza = lunghezza;
-    }
-
-    public float getLos() {
-        return los;
-    }
-
-    public void setLos(float los) {
-        this.los = los;
-    }
-
     public float getArea() {
         return area;
     }
@@ -89,7 +73,7 @@ public class TroncoEntity {
         float costo = 0;
         while (it.hasNext()) {
             Map.Entry<Float, Float> coeff_val = it.next();
-            costo += (coeff_val.getKey()*coeff_val.getValue()); //TODO: valutare se aggiungere los e lunghezza
+            costo += (coeff_val.getKey()*coeff_val.getValue());
         }
         setCosto(costo);
         return costo;

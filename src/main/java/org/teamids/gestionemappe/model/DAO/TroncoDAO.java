@@ -16,13 +16,6 @@ public class TroncoDAO {
         this.tabella = new Tronco();
     }
 
-    public void updateLos(int troncoId,float los){
-        String dati= "los = " + los;
-        tabella.update(dati);
-        tabella.where("id ='" + troncoId + "'");
-        tabella.execute();
-    }
-
     public Set<TroncoEntity> getAllTronchi(){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
@@ -40,8 +33,6 @@ public class TroncoDAO {
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
                         Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiOrdinati,
-                        Float.parseFloat(rs.get(i).get("lunghezza").toString()),
-                        Float.parseFloat(rs.get(i).get("los").toString()),
                         Float.parseFloat(rs.get(i).get("area").toString())
                 );
                 TroncoEntity troncoInv = new TroncoEntity(
@@ -49,8 +40,6 @@ public class TroncoDAO {
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
                         Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiInvertiti,
-                        Float.parseFloat(rs.get(i).get("lunghezza").toString()),
-                        Float.parseFloat(rs.get(i).get("los").toString()),
                         Float.parseFloat(rs.get(i).get("area").toString())
                 );
                 allTronchiEdificio.add(troncoOrd);
@@ -72,8 +61,6 @@ public class TroncoDAO {
                 Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
                 Float.parseFloat(rs.get(0).get("costo").toString()),
                 estremiTronco,
-                Float.parseFloat(rs.get(0).get("lunghezza").toString()),
-                Float.parseFloat(rs.get(0).get("los").toString()),
                 Float.parseFloat(rs.get(0).get("area").toString())
         );
         return tronco;
@@ -94,15 +81,19 @@ public class TroncoDAO {
                 Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
                 Float.parseFloat(rs.get(0).get("costo").toString()),
                 estremiTronco,
-                Float.parseFloat(rs.get(0).get("lunghezza").toString()),
-                Float.parseFloat(rs.get(0).get("los").toString()),
                 Float.parseFloat(rs.get(0).get("area").toString())
         );
         return tronco;
     }
 
-    public void losToDefault() {
-        tabella.update("los = 0");
-        tabella.execute();
+    public boolean checkDirezioneTronco(TroncoEntity troncoOttimo) {
+        boolean success = false;
+        tabella.select();
+        tabella.where("id='" + troncoOttimo.getId() + "' AND beaconAId = '" + troncoOttimo.getBeaconEstremi().get(0).getId() + "' and beaconBId = '" + troncoOttimo.getBeaconEstremi().get(1).getId() + "'" );
+        if(tabella.fetch().size()==1)
+            success = true;
+        else
+            success=false;
+        return success;
     }
 }

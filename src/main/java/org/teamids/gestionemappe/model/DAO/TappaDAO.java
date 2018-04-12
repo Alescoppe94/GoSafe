@@ -22,10 +22,10 @@ public class TappaDAO {
     }
 
     public void insertTappa(TappaEntity tappa){
-
         String dati= "0";
         dati=dati+",'"+ tappa.getPercorsoId()+"'";
-        dati=dati+",'"+ tappa.getTronco().getId()+"'"; //vedere se va bene
+        dati=dati+",'"+ tappa.getTronco().getId()+"'";
+        dati=dati+","+ tappa.isDirezione()+"";//vedere se va bene
         tabella.insert(dati);
         int id_tappa = tabella.executeForKey();
         tappa.setId(id_tappa);

@@ -15,6 +15,10 @@ public class DbTableHelpers {
 
     public void update(String info){ sql="update "+ name + " set " + info; }
 
+    public void update(){ sql = "update " + name ;}
+
+    public void set(String info){ sql = sql + " set " + info;}
+
     public void delete(){
         sql = "delete from "+name;
     }
