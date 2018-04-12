@@ -31,7 +31,7 @@ public class GestioneUtente{
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
-                utenteDAO.updateInfoUtente(utente.getId(), campo); // TODO: aggiungere onTokenRefresh
+                utenteDAO.updateInfoUtente(utente.getId(), campo);
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -55,7 +55,7 @@ public class GestioneUtente{
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
-            utenteDAO.insertUser(utente); // TODO: aggiungere onTokenRefresh
+            utenteDAO.insertUser(utente);
             int id_utente = utenteDAO.getUserByUsername(utente.getUsername()).getId();
             esito = "{\"id_utente\": \""+ id_utente +"\"}";
         }
