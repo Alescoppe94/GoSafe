@@ -10,7 +10,6 @@ public class TroncoEntity {
 
     private int id;
     private boolean agibile;
-    private float costo;
     private ArrayList<BeaconEntity> beaconEstremi;
     private float area;
 
@@ -18,10 +17,9 @@ public class TroncoEntity {
         this.id = id;
     }
 
-    public TroncoEntity(int id,boolean agibile, float costo, ArrayList<BeaconEntity> beaconEstremi, float area) {
+    public TroncoEntity(int id,boolean agibile, ArrayList<BeaconEntity> beaconEstremi, float area) {
         this.id = id;
         this.agibile = agibile;
-        this.costo = costo;
         this.beaconEstremi = beaconEstremi;
         this.area = area;
     }
@@ -40,14 +38,6 @@ public class TroncoEntity {
 
     public void setAgibile(boolean agibile) {
         this.agibile = agibile;
-    }
-
-    public float getCosto() {
-        return costo;
-    }
-
-    public void setCosto(float costo) {
-        this.costo = costo;
     }
 
     public ArrayList<BeaconEntity> getBeaconEstremi() {
@@ -75,7 +65,6 @@ public class TroncoEntity {
             Map.Entry<Float, Float> coeff_val = it.next();
             costo += (coeff_val.getKey()*coeff_val.getValue());
         }
-        setCosto(costo);
         return costo;
 
     }

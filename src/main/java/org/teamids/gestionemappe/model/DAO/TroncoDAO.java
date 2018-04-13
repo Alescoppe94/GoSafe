@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.model.DAO;
 
 import org.teamids.gestionemappe.model.ConnectorHelpers;
+import org.teamids.gestionemappe.model.DbTable.Beacon;
 import org.teamids.gestionemappe.model.DbTable.Tronco;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
@@ -31,14 +32,12 @@ public class TroncoDAO {
                 TroncoEntity troncoOrd = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
-                        Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiOrdinati,
                         Float.parseFloat(rs.get(i).get("area").toString())
                 );
                 TroncoEntity troncoInv = new TroncoEntity(
                         Integer.parseInt(rs.get(i).get("id").toString()),
                         Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
-                        Float.parseFloat(rs.get(i).get("costo").toString()),
                         estremiInvertiti,
                         Float.parseFloat(rs.get(i).get("area").toString())
                 );
@@ -59,27 +58,32 @@ public class TroncoDAO {
         TroncoEntity tronco = new TroncoEntity(
                 Integer.parseInt(rs.get(0).get("id").toString()),
                 Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
-                Float.parseFloat(rs.get(0).get("costo").toString()),
                 estremiTronco,
                 Float.parseFloat(rs.get(0).get("area").toString())
         );
         return tronco;
     }
 
-    public TroncoEntity getTroncoById(String troncoId) {
+    public TroncoEntity getTroncoById(String troncoId, boolean direzione) {
         tabella.select();
         tabella.where("id = '" + troncoId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
         ArrayList<BeaconEntity> estremiTronco = new ArrayList<>();
         BeaconDAO beaconDAO = new BeaconDAO();
-        BeaconEntity beaconA = beaconDAO.getBeaconById(rs.get(0).get("beaconAId").toString());
-        BeaconEntity beaconB = beaconDAO.getBeaconById(rs.get(0).get("beaconBId").toString());
+        BeaconEntity beaconA;
+        BeaconEntity beaconB;
+        if(direzione) {
+            beaconA = beaconDAO.getBeaconById(rs.get(0).get("beaconAId").toString());
+            beaconB = beaconDAO.getBeaconById(rs.get(0).get("beaconBId").toString());
+        } else {
+            beaconA = beaconDAO.getBeaconById(rs.get(0).get("beaconBId").toString());
+            beaconB = beaconDAO.getBeaconById(rs.get(0).get("beaconAId").toString());
+        }
         estremiTronco.add(beaconA);
         estremiTronco.add(beaconB);
         TroncoEntity tronco = new TroncoEntity(
                 Integer.parseInt(rs.get(0).get("id").toString()),
                 Boolean.parseBoolean(rs.get(0).get("agibile").toString()),
-                Float.parseFloat(rs.get(0).get("costo").toString()),
                 estremiTronco,
                 Float.parseFloat(rs.get(0).get("area").toString())
         );

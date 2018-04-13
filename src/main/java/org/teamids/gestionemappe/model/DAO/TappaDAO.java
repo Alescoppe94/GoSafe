@@ -39,11 +39,13 @@ public class TappaDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         TroncoDAO troncoDAO = new TroncoDAO();
         for (int i = 0; i<rs.size(); i++) {
-            TroncoEntity tronco = troncoDAO.getTroncoById(rs.get(i).get("troncoId").toString());
+            boolean direzione = Boolean.parseBoolean(rs.get(i).get("direzione").toString());
+            TroncoEntity tronco = troncoDAO.getTroncoById(rs.get(i).get("troncoId").toString(), direzione);
             TappaEntity tappa = new TappaEntity(
                     Integer.parseInt(rs.get(i).get("id").toString()),
                     Integer.parseInt(rs.get(i).get("percorsoId").toString()),
-                    tronco
+                    tronco,
+                    direzione
             );
             tappe.add(tappa);
         }
@@ -76,7 +78,7 @@ public class TappaDAO {
             query.executeUpdate();
 
             for(TappaEntity tappa: tappeOttime){
-                String insert = "INSERT INTO tappa VALUES(0,"+tappa.getPercorsoId()+","+tappa.getTronco().getId()+");";
+                String insert = "INSERT INTO tappa VALUES(0,"+tappa.getPercorsoId()+","+tappa.getTronco().getId()+","+ tappa.isDirezione() +");";
                 query = db.prepareStatement(insert);
                 query.executeUpdate();
             }
@@ -117,7 +119,7 @@ public class TappaDAO {
             query = db.prepareStatement(selectPercorsoId);
             query.executeQuery();
             for(TappaEntity tappa: tappeOttime){
-                String insertTappa = "INSERT INTO tappa VALUES(0,@ID,"+tappa.getTronco().getId()+");";
+                String insertTappa = "INSERT INTO tappa VALUES(0,@ID,"+tappa.getTronco().getId()+","+ tappa.isDirezione() +");";
                 query = db.prepareStatement(insertTappa);
                 query.executeUpdate();
             }

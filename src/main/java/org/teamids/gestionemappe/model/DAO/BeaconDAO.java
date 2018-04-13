@@ -20,7 +20,7 @@ public class BeaconDAO {
         tabella.where("id = '" + beaconId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconEntity beacon = new BeaconEntity();
-        beacon.setId(rs.get(0).get("id").toString());
+        beacon.setId(rs.get(0).get("id").toString()); //TODO: valutare inserimento del piano
         return beacon;
     }
 

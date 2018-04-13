@@ -26,7 +26,7 @@ public class PercorsoDAO {
 
     }
 
-    public PercorsoEntity getPercorsoByBeaconId(String beaconId){ //TODO: sistemare direzione tappe
+    public PercorsoEntity getPercorsoByBeaconId(String beaconId){
         tabella.select();
         tabella.where("beaconPartenzaId = '" + beaconId + "'" );
         List<Map<String, Object>> rs = tabella.fetch();

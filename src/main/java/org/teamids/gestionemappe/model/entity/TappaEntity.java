@@ -14,15 +14,16 @@ public class TappaEntity {
         this.direzione = direzione;
     }
 
-    public TappaEntity(int id, int percorsoId, TroncoEntity tronco) {
+    public TappaEntity(int id, int percorsoId, TroncoEntity tronco, boolean direzione) {
         this.id=id;
         this.percorsoId= percorsoId;
         this.tronco = tronco;
 
     }
 
-    public TappaEntity(TroncoEntity tronco) {
+    public TappaEntity(TroncoEntity tronco, boolean direzione) {
         this.tronco = tronco;
+        this.direzione = direzione;
     }
 
     public int getId() {

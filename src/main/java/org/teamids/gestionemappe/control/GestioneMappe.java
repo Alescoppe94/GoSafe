@@ -95,14 +95,16 @@ public class GestioneMappe extends Application implements Observer {
                 idPercorso = percorsoDAO.getPercorsoByBeaconId(beaconPart).getId();
                 for(int i = 0; i < percorso_def.size()-1; i++) {
                     TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
-                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso);
+                    boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo);
+                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso, direzione);
                     tappeOttime.add(tappaOttima);
                 }
                 tappaDAO.aggiornaTappe(idPercorso, tappeOttime);
             } else {
                 for(int i = 0; i < percorso_def.size()-1; i++) {
                     TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1));
-                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo);
+                    boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo);
+                    TappaEntity tappaOttima = new TappaEntity(troncoOttimo, direzione);
                     tappeOttime.add(tappaOttima);
                 }
                 tappaDAO.creaPercorsoConTappe(partenza, tappeOttime);

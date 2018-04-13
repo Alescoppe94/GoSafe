@@ -43,12 +43,4 @@ public class GestioneUtenteBoundary {
         gestioneutente.updateUserPosition(utente);
     }
 
-    @GET
-    @Path("/updateposition/{b}/{c}")
-    public int updateUserPosition(@PathParam("b")String beaconPart, @PathParam("c")String beaconArr){
-        int p;
-        p=1;
-        return p;
-        //gestioneutente.updateUserPosition(utente);
-    }
 }
