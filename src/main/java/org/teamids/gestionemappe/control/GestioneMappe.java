@@ -21,7 +21,6 @@ public class GestioneMappe extends Application implements Observer {
     private PesiTroncoDAO pesiTroncoDAO;
 
     public GestioneMappe() {
-
         this.utenteDAO = new UtenteDAO();
         this.troncoDAO = new TroncoDAO();
         this.percorsoDAO = new PercorsoDAO();
