@@ -18,7 +18,6 @@ public class GestioneDB {
     public GestioneDB(){
 
     }
-    
     private boolean verificaAggiornamentiDB(){
         return true;
     }
