@@ -1,7 +1,6 @@
 package org.teamids.gestionemappe.control;
 
 import org.teamids.gestionemappe.model.DAO.*;
-import org.teamids.gestionemappe.model.DbTable.Tronco;
 import org.teamids.gestionemappe.model.entity.*;
 
 import javax.ws.rs.ApplicationPath;
@@ -111,7 +110,6 @@ public class GestioneMappe extends Application implements Observer {
         }
     }
 
-    //2 parametro
     public PercorsoEntity calcoloPercorsoNoEmergenza(String beaconPart, String beaconArr){
         BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart);
         boolean emergenza = false;

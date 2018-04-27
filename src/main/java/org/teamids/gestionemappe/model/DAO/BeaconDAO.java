@@ -1,10 +1,12 @@
 package org.teamids.gestionemappe.model.DAO;
 
-import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DbTable.Beacon;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 
-import java.sql.ResultSet;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class BeaconDAO {
@@ -39,5 +41,20 @@ public class BeaconDAO {
             allPuntiDiRaccolta.add(beaconDiRaccolta);
         }
         return allPuntiDiRaccolta;
+    }
+
+    public JsonArray getAllBeaconAggiornati(Timestamp timestamp) {
+        JsonArrayBuilder beaconAggiornati = Json.createArrayBuilder();
+        tabella.select();
+        tabella.where("last_update>'"+timestamp+"'");
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            beaconAggiornati.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("is_puntodiraccolta",rs.get(i).get("is_puntodiraccolta").toString())
+                    .add("pianoId",rs.get(i).get("pianoId").toString())
+            );
+        }
+        return beaconAggiornati.build();
     }
 }

@@ -1,12 +1,13 @@
 package org.teamids.gestionemappe.model.DAO;
 
-import org.teamids.gestionemappe.model.ConnectorHelpers;
-import org.teamids.gestionemappe.model.DbTable.Beacon;
 import org.teamids.gestionemappe.model.DbTable.Tronco;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
-import java.sql.ResultSet;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class TroncoDAO {
@@ -99,5 +100,22 @@ public class TroncoDAO {
         else
             success=false;
         return success;
+    }
+
+    public JsonArray getAllTronchiAggiornati(Timestamp timestamp) {
+        JsonArrayBuilder tronchiAggiornati = Json.createArrayBuilder();
+        tabella.select();
+        tabella.where("last_update>'"+timestamp+"'");
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            tronchiAggiornati.add(Json.createObjectBuilder()
+                                .add("id",rs.get(i).get("id").toString())
+                                .add("beaconAId",rs.get(i).get("beaconAId").toString())
+                                .add("beaconBId",rs.get(i).get("beaconBId").toString())
+                                .add("agibile",rs.get(i).get("agibile").toString())
+                                .add("area",rs.get(i).get("area").toString())
+                                );
+        }
+        return tronchiAggiornati.build();
     }
 }

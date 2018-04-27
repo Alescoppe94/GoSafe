@@ -1,7 +1,5 @@
 package org.teamids.gestionemappe.model.entity;
 
-import java.io.Serializable;
-
 public class UtenteEntity {
 
     private int id;
