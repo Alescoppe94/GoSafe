@@ -3,15 +3,15 @@ package org.teamids.gestionemappe.model.entity;
 public class BeaconEntity {
 
     private String id;
-    private boolean is_puntodiraccolta;
+    private boolean untodiraccolta;
     private PianoEntity piano;
 
     public BeaconEntity() {
     }
 
-    public BeaconEntity(String id, boolean is_puntodiraccolta, PianoEntity piano) {
+    public BeaconEntity(String id, boolean untodiraccolta, PianoEntity piano) {
         this.id = id;
-        this.is_puntodiraccolta = is_puntodiraccolta;
+        this.untodiraccolta = untodiraccolta;
         this.piano = piano;
     }
 
@@ -22,11 +22,11 @@ public class BeaconEntity {
     public void setId(String id) { this.id = id; }
 
     public boolean is_puntodiraccolta() {
-        return is_puntodiraccolta;
+        return untodiraccolta;
     }
 
-    public void setIs_puntodiraccolta(boolean is_puntodiraccolta) {
-        this.is_puntodiraccolta = is_puntodiraccolta;
+    public void setUntodiraccolta(boolean untodiraccolta) {
+        this.untodiraccolta = untodiraccolta;
     }
 
     public PianoEntity getPiano() {
