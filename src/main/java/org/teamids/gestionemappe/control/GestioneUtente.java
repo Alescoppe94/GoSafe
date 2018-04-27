@@ -5,8 +5,6 @@ import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
 public class GestioneUtente{
 

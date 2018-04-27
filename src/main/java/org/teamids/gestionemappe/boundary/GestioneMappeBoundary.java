@@ -1,12 +1,10 @@
 package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneMappe;
-import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
 import org.teamids.gestionemappe.model.entity.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 
 @Path("/mappe")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,12 +36,4 @@ public class GestioneMappeBoundary {
     public void backToNormalMode(){
         gestionemappe.backToNormalMode();
     }
-
-    @GET
-    @Path("prova")
-    public float c(){
-        TroncoEntity t = new TroncoEntity(1);
-        return t.calcolaCosto();
-    }
-
 }

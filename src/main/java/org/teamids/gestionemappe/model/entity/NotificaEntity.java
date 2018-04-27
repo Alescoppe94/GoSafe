@@ -1,7 +1,6 @@
 package org.teamids.gestionemappe.model.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class NotificaEntity {
 

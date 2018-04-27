@@ -42,5 +42,4 @@ public class GestioneUtenteBoundary {
     public void updateUserPosition(UtenteEntity utente){
         gestioneutente.updateUserPosition(utente);
     }
-
 }

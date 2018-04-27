@@ -1,8 +1,6 @@
 package org.teamids.gestionemappe.model.entity;
 
 import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
-import org.teamids.gestionemappe.model.DAO.UtenteDAO;
-import org.teamids.gestionemappe.model.entity.BeaconEntity;
 
 import java.util.*;
 

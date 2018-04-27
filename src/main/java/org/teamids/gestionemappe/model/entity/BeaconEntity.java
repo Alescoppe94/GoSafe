@@ -1,8 +1,5 @@
 package org.teamids.gestionemappe.model.entity;
 
-
-import org.teamids.gestionemappe.model.DAO.UtenteDAO;
-
 public class BeaconEntity {
 
     private String id;

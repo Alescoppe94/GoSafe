@@ -4,7 +4,6 @@ import org.teamids.gestionemappe.model.DbTable.Utente;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
-import java.sql.ResultSet;
 import java.util.*;
 
 public class UtenteDAO extends Observable {
