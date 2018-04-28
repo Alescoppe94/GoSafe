@@ -23,7 +23,7 @@ public class BeaconDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconEntity beacon = new BeaconEntity();
         beacon.setId(rs.get(0).get("id").toString());
-        beacon.setPuntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));//TODO: valutare inserimento del piano
+        beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));//TODO: valutare inserimento del piano
         return beacon;
     }
 
