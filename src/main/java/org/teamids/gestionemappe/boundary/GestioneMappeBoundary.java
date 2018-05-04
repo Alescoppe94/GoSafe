@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.boundary;
 
+import org.teamids.gestionemappe.control.Communication;
 import org.teamids.gestionemappe.control.GestioneMappe;
 import org.teamids.gestionemappe.model.entity.*;
 
@@ -35,5 +36,11 @@ public class GestioneMappeBoundary {
     @Path("backtonormalmode") // chiamato dall'amministratore
     public void backToNormalMode(){
         gestionemappe.backToNormalMode();
+    }
+
+    @GET
+    @Path("not")
+    public void not(){
+        new Communication().inviaNotifica("dJUwYnXY6S8:APA91bEEPJcM-31_C6urBvkgNSnBVusYg7efEiwfqKywr8Brn_mE3-3cS4glFwsIHj28HpOjOV1TYePc2aolsiPOPAZPGoeZmST8qsaz5LBGP6A1ES7i8oK2W9V2Kel91ALXbAU4i64V");
     }
 }
