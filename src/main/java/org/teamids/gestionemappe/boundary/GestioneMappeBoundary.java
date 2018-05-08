@@ -41,6 +41,6 @@ public class GestioneMappeBoundary {
     @GET
     @Path("not")
     public void not(){
-        new Communication().inviaNotifica("dJUwYnXY6S8:APA91bEEPJcM-31_C6urBvkgNSnBVusYg7efEiwfqKywr8Brn_mE3-3cS4glFwsIHj28HpOjOV1TYePc2aolsiPOPAZPGoeZmST8qsaz5LBGP6A1ES7i8oK2W9V2Kel91ALXbAU4i64V");
+        new Communication().inviaNotifica("f6u18KCsU98:APA91bH3oFveiN03-27o2lHLjlsn6FwvxwHO26c0NUug6KqTlvFXZwgF70nnuKW9MWEjEafGCiVm7lbSPBbLI_VR16_Uyrf0LyTWWmrhD8ZutEHLmEMEtcYTm65ipcYkGf1dBQt1hSup");
     }
 }
