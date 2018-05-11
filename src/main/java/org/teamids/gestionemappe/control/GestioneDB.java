@@ -27,7 +27,7 @@ public class GestioneDB {
         this.pesiTroncoDAO = new PesiTroncoDAO();
     }
     public String aggiornaDB(Timestamp timestamp_client){
-        //if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
+        if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
             JsonArray tronchiTable = troncoDAO.getTable();
             JsonArray pianiTable = pianoDAO.getTable();
             JsonArray beaconTable = beaconDAO.getTable();
@@ -42,7 +42,7 @@ public class GestioneDB {
                     .add("pesitronco", pesitroncoTable)
                     .build();
             return db.toString();
-        /*} else {
+        } else {
             JsonArray tronchiaggionati = troncoDAO.getAllTronchiAggiornati(timestamp_client);
             JsonArray pianiaggionati = pianoDAO.getAllPianiAggiornati(timestamp_client);
             JsonArray beaconaggiornati = beaconDAO.getAllBeaconAggiornati(timestamp_client);
@@ -57,6 +57,6 @@ public class GestioneDB {
                     .add("pesitronco", pesitroncoaggiornati)
                     .build();
             return dbAggiornato.toString();
-        }*/
+        }
     }
 }

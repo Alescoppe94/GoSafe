@@ -60,4 +60,10 @@ public class PianoDAO {
         }
         return piani.build();
     }
+
+    public void eliminaPiano(int pianoId){
+        tabella.delete();
+        tabella.where("id = '" + pianoId + "'");
+        tabella.execute();
+    }
 }

@@ -6,6 +6,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,5 +45,17 @@ public class PesoDAO {
             );
         }
         return pesi.build();
+    }
+
+    public void inserisciPeso(String nome,float coefficiente){
+        String dati= String.valueOf(nome);
+        dati=dati+",'"+ coefficiente +"'";
+        tabella.insert(dati);
+        tabella.execute();
+    }
+
+    public void eliminaPesi(){
+        tabella.delete();
+        tabella.execute();
     }
 }
