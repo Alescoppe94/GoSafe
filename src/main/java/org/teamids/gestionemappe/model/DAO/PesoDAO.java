@@ -31,4 +31,18 @@ public class PesoDAO {
         }
         return pesiAggiornati.build();
     }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder pesi = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            pesi.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("nome",rs.get(i).get("nome").toString())
+                    .add("coefficiente",rs.get(i).get("coefficiente").toString())
+            );
+        }
+        return pesi.build();
+    }
 }

@@ -118,4 +118,20 @@ public class TroncoDAO {
         }
         return tronchiAggiornati.build();
     }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder tronchi = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            tronchi.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("beaconAId",rs.get(i).get("beaconAId").toString())
+                    .add("beaconBId",rs.get(i).get("beaconBId").toString())
+                    .add("agibile",rs.get(i).get("agibile").toString())
+                    .add("area",rs.get(i).get("area").toString())
+            );
+        }
+        return tronchi.build();
+    }
 }

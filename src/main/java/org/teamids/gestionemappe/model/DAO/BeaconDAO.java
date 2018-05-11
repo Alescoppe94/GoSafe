@@ -23,7 +23,9 @@ public class BeaconDAO {
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconEntity beacon = new BeaconEntity();
         beacon.setId(rs.get(0).get("id").toString());
-        beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));//TODO: valutare inserimento del piano
+        beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));
+        beacon.setCoordx(Float.parseFloat(rs.get(0).get("coordx").toString()));
+        beacon.setCoordy(Float.parseFloat(rs.get(0).get("coordy").toString()));//TODO: valutare inserimento del piano
         return beacon;
     }
 
@@ -37,7 +39,9 @@ public class BeaconDAO {
             BeaconEntity beaconDiRaccolta = new BeaconEntity(
                     rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
-                    pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString()))
+                    pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString())),
+                    Float.parseFloat(rs.get(i).get("coordx").toString()),
+                    Float.parseFloat(rs.get(i).get("coordy").toString())
             );
             allPuntiDiRaccolta.add(beaconDiRaccolta);
         }
@@ -54,8 +58,26 @@ public class BeaconDAO {
                     .add("id",rs.get(i).get("id").toString())
                     .add("is_puntodiraccolta",rs.get(i).get("is_puntodiraccolta").toString())
                     .add("pianoId",rs.get(i).get("pianoId").toString())
+                    .add("coordx", rs.get(i).get("coordx").toString())
+                    .add("coordy", rs.get(i).get("coordy").toString())
             );
         }
         return beaconAggiornati.build();
+    }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder beacon = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            beacon.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("is_puntodiraccolta",rs.get(i).get("is_puntodiraccolta").toString())
+                    .add("pianoId",rs.get(i).get("pianoId").toString())
+                    .add("coordx", rs.get(i).get("coordx").toString())
+                    .add("coordy", rs.get(i).get("coordy").toString())
+            );
+        }
+        return beacon.build();
     }
 }
