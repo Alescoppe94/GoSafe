@@ -58,4 +58,19 @@ public class BeaconDAO {
         }
         return beaconAggiornati.build();
     }
+
+    public void inserisciBeacons(ArrayList<BeaconEntity> beacons){
+        for (BeaconEntity beacon : beacons){
+            String dati= String.valueOf(beacon.getId());
+            dati=dati+",'"+beacon.isIs_puntodiraccolta()+"'";
+            dati=dati+",'"+beacon.getPiano().getId()+"'";
+            tabella.insert(dati);
+            tabella.execute();
+        }
+    }
+    public void eliminaBeaconsPerPiano(int pianoId){
+        tabella.delete();
+        tabella.where("pianoId = '" + pianoId + "'");
+        tabella.execute();
+    }
 }

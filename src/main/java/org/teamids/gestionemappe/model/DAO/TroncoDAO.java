@@ -118,4 +118,26 @@ public class TroncoDAO {
         }
         return tronchiAggiornati.build();
     }
+
+    public void inserisciTronchi(ArrayList<TroncoEntity> tronchi){
+        for(TroncoEntity tronco : tronchi){
+            String dati= String.valueOf(tronco.getId());
+            dati=dati+",'"+tronco.getBeaconEstremi().get(0)+"'";
+            dati=dati+",'"+tronco.getBeaconEstremi().get(1)+"'";
+            dati=dati+",'"+tronco.isAgibile()+"'";
+            dati=dati+",'"+tronco.getArea()+"'";
+            tabella.insert(dati);
+            tabella.execute();
+        }
+    }
+    public void eliminaTronchiPerPiano(int pianoId){
+        tabella.delete();
+        tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");
+        tabella.execute();
+        tabella.delete();
+        tabella.innerjoin("beacon", "tronco.beaconBId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");
+        tabella.execute();
+    }
 }
