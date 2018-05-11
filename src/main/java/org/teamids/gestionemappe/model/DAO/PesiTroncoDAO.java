@@ -70,4 +70,19 @@ public class PesiTroncoDAO {
         }
         return pesiTroncoAggiornati.build();
     }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder pesiTronco = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            pesiTronco.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("troncoId",rs.get(i).get("troncoId").toString())
+                    .add("pesoId",rs.get(i).get("pesoId").toString())
+                    .add("valore",rs.get(i).get("valore").toString())
+            );
+        }
+        return pesiTronco.build();
+    }
 }

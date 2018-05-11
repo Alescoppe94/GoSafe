@@ -19,4 +19,6 @@ public class GestioneDBBoundary {
     public String aggiornaDB(@PathParam("timestamp") Timestamp timestamp){
         return gestionedb.aggiornaDB(timestamp);
     }
+
+
 }
