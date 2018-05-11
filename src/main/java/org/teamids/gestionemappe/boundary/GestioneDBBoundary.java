@@ -2,17 +2,23 @@ package org.teamids.gestionemappe.boundary;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 
 import javax.imageio.ImageIO;
 import javax.json.Json;
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.Base64;
 
 
 @Path("/db")
@@ -33,6 +39,9 @@ public class GestioneDBBoundary {
     public void aggiungiPiano(String piano) {
         Gson pianojson = new Gson();
         JsonObject jsonRequest = pianojson.fromJson(piano, JsonObject.class);
+
+        gestionedb.aggiungiPiano(jsonRequest);
+
         /*String base64Image = piano.getImmagine().split(",")[1];
         byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
         try {
@@ -40,6 +49,5 @@ public class GestioneDBBoundary {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        System.out.println(piano);
     }
 }

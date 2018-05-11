@@ -11,6 +11,11 @@ public class PianoEntity {
 
     }
 
+    public PianoEntity(String immagine, int piano) {
+        this.immagine = immagine;
+        this.piano = piano;
+    }
+
     public PianoEntity(String immagine, int piano, TroncoEntity[] tronchi) {
         this.immagine = immagine;
         this.piano = piano;
