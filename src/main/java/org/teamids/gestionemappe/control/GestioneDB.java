@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Base64;
 
 
@@ -70,12 +71,13 @@ public class GestioneDB {
     public String aggiungiPiano(com.google.gson.JsonObject jsonRequest){
 
         int numeropiano = jsonRequest.get("piano").getAsInt();
-        String immagine = jsonRequest.get("immagine").getAsString();
+        String immagine =  jsonRequest.get("immagine").getAsString().split(",")[1];
         PianoEntity newpiano = new PianoEntity(immagine, numeropiano);
 
-        //TODO: inserire piano nel db
+        PianoDAO pianoDAO = new PianoDAO();
+        pianoDAO.inserisciPiano(newpiano);
 
-        String base64 = jsonRequest.get("file").getAsString().split(",")[1];
+        String base64 = jsonRequest.get("beaconcsv").getAsString().split(",")[1];
         byte[] decoded = Base64.getDecoder().decode(base64);
         try (FileOutputStream fos = new FileOutputStream("C:\\Users\\Alessandro\\IdeaProjects\\GoSafe\\docs\\test.csv")) {
             fos.write(decoded);
@@ -88,22 +90,27 @@ public class GestioneDB {
         String line = "";
         String cvsSplitBy = ",";
 
+        ArrayList<BeaconEntity> nuoviBeacon = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
 
             while ((line = br.readLine()) != null) {
 
                 // use comma as separator
                 String[] field = line.split(cvsSplitBy);
+                
+                BeaconEntity beacon = new BeaconEntity(field[0], Boolean.parseBoolean(field[1]), newpiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
 
-                BeaconEntity beacon = new BeaconEntity(field[0], Boolean.parseBoolean(field[1]), newpiano);
-
-                //TODO: inserire beacon nel db
+                nuoviBeacon.add(beacon);
 
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        BeaconDAO beaconDAO = new BeaconDAO();
+        beaconDAO.inserisciBeacons(nuoviBeacon);
 
         return null;
 

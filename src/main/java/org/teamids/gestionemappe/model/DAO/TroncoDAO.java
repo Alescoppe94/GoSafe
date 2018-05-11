@@ -142,6 +142,7 @@ public class TroncoDAO {
             dati=dati+",'"+tronco.getBeaconEstremi().get(1)+"'";
             dati=dati+",'"+tronco.isAgibile()+"'";
             dati=dati+",'"+tronco.getArea()+"'";
+            dati=dati+",null";
             tabella.insert(dati);
             tabella.execute();
         }

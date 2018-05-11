@@ -1,5 +1,7 @@
 package org.teamids.gestionemappe.boundary;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.teamids.gestionemappe.control.GestioneDB;
 
 import javax.ws.rs.*;
