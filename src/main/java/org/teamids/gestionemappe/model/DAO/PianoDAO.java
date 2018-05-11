@@ -46,4 +46,24 @@ public class PianoDAO {
         return pianiAggiornati.build();
 
     }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder piani = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            piani.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("immagine",rs.get(i).get("immagine").toString())
+                    .add("piano",rs.get(i).get("piano").toString())
+            );
+        }
+        return piani.build();
+    }
+
+    public void eliminaPiano(int pianoId){
+        tabella.delete();
+        tabella.where("id = '" + pianoId + "'");
+        tabella.execute();
+    }
 }

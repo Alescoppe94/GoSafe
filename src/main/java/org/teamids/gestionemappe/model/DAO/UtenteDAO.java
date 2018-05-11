@@ -35,14 +35,17 @@ public class UtenteDAO extends Observable {
         tabella.select();
         tabella.where("username = '" + username + "'" );
         List<Map<String, Object>> rs = tabella.fetch();
-        UtenteEntity utente = new UtenteEntity();
-        utente.setId(Integer.parseInt(rs.get(0).get("id").toString()));
-        utente.setUsername(rs.get(0).get("username").toString());
-        utente.setNome(rs.get(0).get("nome").toString());
-        utente.setCognome(rs.get(0).get("cognome").toString());
-        utente.setPassword(rs.get(0).get("password").toString());
-        //utente.setBeaconId(risultato.getInt("beaconId"));
-        //utente.setPercorso(new PercorsoDAO().getPercorsoById(risultato.getInt("percorsoId")));
+        UtenteEntity utente = null;
+        if (rs.size() != 0) {
+            utente = new UtenteEntity();
+            utente.setId(Integer.parseInt(rs.get(0).get("id").toString()));
+            utente.setUsername(rs.get(0).get("username").toString());
+            utente.setNome(rs.get(0).get("nome").toString());
+            utente.setCognome(rs.get(0).get("cognome").toString());
+            utente.setPassword(rs.get(0).get("password").toString());
+            //utente.setBeaconId(risultato.getInt("beaconId"));
+            //utente.setPercorso(new PercorsoDAO().getPercorsoById(risultato.getInt("percorsoId")));
+        }
         return utente;
     }
 

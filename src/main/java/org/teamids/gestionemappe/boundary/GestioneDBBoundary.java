@@ -1,16 +1,8 @@
 package org.teamids.gestionemappe.boundary;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.teamids.gestionemappe.control.GestioneDB;
-import org.teamids.gestionemappe.model.entity.PianoEntity;
 
-import javax.imageio.ImageIO;
-import javax.json.Json;
-import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -22,7 +14,7 @@ import java.util.Base64;
 
 
 @Path("/db")
-@Produces(MediaType.TEXT_PLAIN)
+@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneDBBoundary {
 

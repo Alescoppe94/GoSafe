@@ -118,4 +118,42 @@ public class TroncoDAO {
         }
         return tronchiAggiornati.build();
     }
+
+    public JsonArray getTable() {
+        JsonArrayBuilder tronchi = Json.createArrayBuilder();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            tronchi.add(Json.createObjectBuilder()
+                    .add("id",rs.get(i).get("id").toString())
+                    .add("beaconAId",rs.get(i).get("beaconAId").toString())
+                    .add("beaconBId",rs.get(i).get("beaconBId").toString())
+                    .add("agibile",rs.get(i).get("agibile").toString())
+                    .add("area",rs.get(i).get("area").toString())
+            );
+        }
+        return tronchi.build();
+    }
+
+    public void inserisciTronchi(ArrayList<TroncoEntity> tronchi){
+        for(TroncoEntity tronco : tronchi){
+            String dati= String.valueOf(tronco.getId());
+            dati=dati+",'"+tronco.getBeaconEstremi().get(0)+"'";
+            dati=dati+",'"+tronco.getBeaconEstremi().get(1)+"'";
+            dati=dati+",'"+tronco.isAgibile()+"'";
+            dati=dati+",'"+tronco.getArea()+"'";
+            tabella.insert(dati);
+            tabella.execute();
+        }
+    }
+    public void eliminaTronchiPerPiano(int pianoId){
+        tabella.delete();
+        tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");
+        tabella.execute();
+        tabella.delete();
+        tabella.innerjoin("beacon", "tronco.beaconBId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");
+        tabella.execute();
+    }
 }
