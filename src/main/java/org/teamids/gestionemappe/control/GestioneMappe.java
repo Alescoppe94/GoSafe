@@ -3,13 +3,16 @@ package org.teamids.gestionemappe.control;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.*;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @ApplicationPath("gestionemappe")
 public class GestioneMappe extends Application implements Observer {
+
 
     private UtenteDAO utenteDAO;
     private TroncoDAO troncoDAO;

@@ -3,11 +3,14 @@ package org.teamids.gestionemappe.control;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
+import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -68,7 +71,7 @@ public class GestioneDB {
         }
     }
 
-    public String aggiungiPiano(com.google.gson.JsonObject jsonRequest){
+    public String aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
         int numeropiano = jsonRequest.get("piano").getAsInt();
         String immagine =  jsonRequest.get("immagine").getAsString().split(",")[1];
@@ -77,29 +80,24 @@ public class GestioneDB {
         PianoDAO pianoDAO = new PianoDAO();
         pianoDAO.inserisciPiano(newpiano);
 
-        String base64 = jsonRequest.get("beaconcsv").getAsString().split(",")[1];
-        byte[] decoded = Base64.getDecoder().decode(base64);
-        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\Alessandro\\IdeaProjects\\GoSafe\\docs\\test.csv")) {
-            fos.write(decoded);
-            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try. And this will automatically close the OutputStream
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        creaFileCsv(path, "beaconcsv", jsonRequest);
+        creaFileCsv(path, "troncocsv", jsonRequest);
 
-        String csvFile = "C:\\Users\\Alessandro\\IdeaProjects\\GoSafe\\docs\\test.csv";
         String line = "";
         String cvsSplitBy = ",";
 
         ArrayList<BeaconEntity> nuoviBeacon = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path+"beaconcsv.csv"))) {
 
             while ((line = br.readLine()) != null) {
 
                 // use comma as separator
                 String[] field = line.split(cvsSplitBy);
-                
-                BeaconEntity beacon = new BeaconEntity(field[0], Boolean.parseBoolean(field[1]), newpiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
+
+                boolean isPuntodiRaccolta = "1".equals(field[1]);
+
+                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, newpiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
 
                 nuoviBeacon.add(beacon);
 
@@ -112,8 +110,47 @@ public class GestioneDB {
         BeaconDAO beaconDAO = new BeaconDAO();
         beaconDAO.inserisciBeacons(nuoviBeacon);
 
+        ArrayList<TroncoEntity> nuoviTronchi = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path+"troncocsv.csv"))) {
+
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] field = line.split(cvsSplitBy);
+
+                ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();
+                beaconEstremi.add(new BeaconEntity(field[0]));
+                beaconEstremi.add(new BeaconEntity(field[1]));
+
+                boolean agibile = "1".equals(field[2]);
+
+                TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[3]));
+
+                nuoviTronchi.add(tronco);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        TroncoDAO troncoDAO = new TroncoDAO();
+        troncoDAO.inserisciTronchi(nuoviTronchi);
+
         return null;
 
+    }
+
+    private void creaFileCsv(String path, String filename, com.google.gson.JsonObject jsonRequest) {
+        String base64 = jsonRequest.get(filename).getAsString().split(",")[1];
+        byte[] decoded = Base64.getDecoder().decode(base64);
+        try (FileOutputStream fos = new FileOutputStream(path + filename +".csv")) {
+            fos.write(decoded);
+            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try. And this will automatically close the OutputStream
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

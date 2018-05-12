@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.teamids.gestionemappe.control.GestioneDB;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -30,11 +33,13 @@ public class GestioneDBBoundary {
 
     @POST
     @Path("/aggiungipiano")
-    public void aggiungiPiano(String piano) {
+    public void aggiungiPiano(@Context HttpServletRequest request, String piano) {
         Gson pianojson = new Gson();
         JsonObject jsonRequest = pianojson.fromJson(piano, JsonObject.class);
 
-        gestionedb.aggiungiPiano(jsonRequest);
+        String path = request.getServletContext().getRealPath("/WEB-INF/docs/");
+
+        gestionedb.aggiungiPiano(path, jsonRequest);
 
         /*String base64Image = piano.getImmagine().split(",")[1];
         byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
