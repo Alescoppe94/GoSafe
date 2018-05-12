@@ -1,0 +1,12 @@
+body{
+    display: flex;
+    justify-content: center;
+}
+
+#page{
+    flex-direction: column;
+}
+
+#inserimentopianoblock{
+    justify-content: center;
+}

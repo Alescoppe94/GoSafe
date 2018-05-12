@@ -1,5 +1,7 @@
 package org.teamids.gestionemappe.control;
 
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.*;
 
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @ApplicationPath("gestionemappe")
-public class GestioneMappe extends Application implements Observer {
+public class GestioneMappe extends ResourceConfig implements Observer {
 
 
     private UtenteDAO utenteDAO;
@@ -22,6 +24,7 @@ public class GestioneMappe extends Application implements Observer {
     private BeaconDAO beaconDAO;
     private PesiTroncoDAO pesiTroncoDAO;
 
+
     public GestioneMappe() {
         this.utenteDAO = new UtenteDAO();
         this.troncoDAO = new TroncoDAO();
@@ -31,6 +34,10 @@ public class GestioneMappe extends Application implements Observer {
         this.beaconDAO = new BeaconDAO();
         this.pesiTroncoDAO = new PesiTroncoDAO();
         utenteDAO.addObserver(this);
+        packages("org.teamids.gestionemappe");
+        register(JspMvcFeature.class);
+        // it may be also jersey.config.server.mvc.templateBasePath
+        property("jersey.config.server.mvc.templateBasePath.jsp", "/WEB-INF/jsp");
     }
 
     public void lanciaEmergenza(){

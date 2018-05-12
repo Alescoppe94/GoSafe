@@ -7,6 +7,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,5 +78,17 @@ public class PianoDAO {
         tabella.delete();
         tabella.where("id = '" + pianoId + "'");
         tabella.execute();
+    }
+
+    public ArrayList<PianoEntity> getAllPiani(){
+
+        ArrayList<PianoEntity> piani = new ArrayList<>();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+            PianoEntity piano = new PianoEntity(Integer.parseInt(rs.get(i).get("id").toString()), "Ciao", Integer.parseInt(rs.get(i).get("piano").toString()));
+            piani.add(piano);
+        }
+        return piani;
     }
 }

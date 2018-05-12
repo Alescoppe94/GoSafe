@@ -37,6 +37,11 @@ public class GestioneDB {
         this.pesoDAO = new PesoDAO();
         this.pesiTroncoDAO = new PesiTroncoDAO();
     }
+
+    public ArrayList<PianoEntity> getPiani(){
+        return pianoDAO.getAllPiani();
+    }
+
     public String aggiornaDB(Timestamp timestamp_client){
         if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
             JsonArray tronchiTable = troncoDAO.getTable();
