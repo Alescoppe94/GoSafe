@@ -83,9 +83,13 @@ public class BeaconDAO {
 
     public void inserisciBeacons(ArrayList<BeaconEntity> beacons){
         for (BeaconEntity beacon : beacons){
+            int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
             String dati= String.valueOf(beacon.getId());
-            dati=dati+",'"+beacon.isIs_puntodiraccolta()+"'";
+            dati=dati+",'"+puntodiraccolta+"'";
             dati=dati+",'"+beacon.getPiano().getId()+"'";
+            dati=dati+",'"+beacon.getCoordx()+"'";
+            dati=dati+",'"+beacon.getCoordy()+"'";
+            dati=dati+",null";
             tabella.insert(dati);
             tabella.execute();
         }

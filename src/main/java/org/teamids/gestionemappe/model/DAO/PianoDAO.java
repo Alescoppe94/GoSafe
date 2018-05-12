@@ -61,6 +61,16 @@ public class PianoDAO {
         return piani.build();
     }
 
+    public void inserisciPiano(PianoEntity piano){
+        String dati = String.valueOf(piano.getId());
+        dati=dati+",'"+piano.getImmagine()+"'";
+        dati=dati+",'"+piano.getPiano()+"'";
+        dati=dati+",null";
+        tabella.insert(dati);
+        int id_piano = tabella.executeForKey();
+        piano.setId(id_piano);
+    }
+
     public void eliminaPiano(int pianoId){
         tabella.delete();
         tabella.where("id = '" + pianoId + "'");
