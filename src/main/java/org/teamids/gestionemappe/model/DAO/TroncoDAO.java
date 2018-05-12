@@ -137,10 +137,11 @@ public class TroncoDAO {
 
     public void inserisciTronchi(ArrayList<TroncoEntity> tronchi){
         for(TroncoEntity tronco : tronchi){
+            int agibile = tronco.isAgibile() ? 1 : 0;
             String dati= String.valueOf(tronco.getId());
             dati=dati+",'"+tronco.getBeaconEstremi().get(0)+"'";
             dati=dati+",'"+tronco.getBeaconEstremi().get(1)+"'";
-            dati=dati+",'"+tronco.isAgibile()+"'";
+            dati=dati+",'"+agibile+"'";
             dati=dati+",'"+tronco.getArea()+"'";
             dati=dati+",null";
             tabella.insert(dati);
