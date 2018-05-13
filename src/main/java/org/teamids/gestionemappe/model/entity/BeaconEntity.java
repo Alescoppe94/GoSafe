@@ -11,6 +11,10 @@ public class BeaconEntity {
     public BeaconEntity() {
     }
 
+    public BeaconEntity(String id){
+        this.id = id;
+    }
+
     public BeaconEntity(String id, boolean is_puntodiraccolta, PianoEntity piano, float coordx, float coordy) {
         this.id = id;
         this.is_puntodiraccolta = is_puntodiraccolta;

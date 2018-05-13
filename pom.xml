@@ -19,6 +19,16 @@
       <artifactId>jersey-media-moxy</artifactId>
       <version>2.26</version>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+      <version>2.26</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-mvc-jsp</artifactId>
+      <version>2.26</version>
+    </dependency>
     <!--Aggiungo dipendenze javax deprecate:javax.xml.blind e javax.activation-->
     <dependency>
       <groupId>javax.xml.bind</groupId>
@@ -44,6 +54,12 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
+      <version>8.0.42</version>
+      <scope>provided</scope>
     </dependency>
     <!--Fine dipendenze aggiunte-->
   </dependencies>

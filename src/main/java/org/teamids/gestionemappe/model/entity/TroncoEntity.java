@@ -15,6 +15,14 @@ public class TroncoEntity {
         this.id = id;
     }
 
+    public TroncoEntity(boolean agibile, ArrayList<BeaconEntity> beaconEstremi, float area){
+
+        this.agibile = agibile;
+        this.beaconEstremi = beaconEstremi;
+        this.area = area;
+
+    }
+
     public TroncoEntity(int id,boolean agibile, ArrayList<BeaconEntity> beaconEstremi, float area) {
         this.id = id;
         this.agibile = agibile;
