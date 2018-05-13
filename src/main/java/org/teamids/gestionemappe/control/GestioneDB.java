@@ -62,6 +62,11 @@ public class GestioneDB {
 
     }
 
+    public void aggiornaPesi(String peso, int troncoId, float valore){
+
+        pesiTroncoDAO.aggiornaPesiTronco(troncoId, peso, valore);
+    }
+
     public String aggiornaDB(Timestamp timestamp_client){
         if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
             JsonArray tronchiTable = troncoDAO.getTable();

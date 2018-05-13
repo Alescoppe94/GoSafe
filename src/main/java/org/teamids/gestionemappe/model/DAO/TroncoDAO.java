@@ -50,32 +50,22 @@ public class TroncoDAO {
 
     public Set<TroncoEntity> getTronchiPiano(int pianoId){
         Set<TroncoEntity> allTronchiPiano = new HashSet<>();
-        tabella.select();
+        tabella.select("tronco.*");
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");      //per ora controlla solo il piano di un beacon
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {
-            ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
-            ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
-            estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
-            estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
-            estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
-            estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
-            TroncoEntity troncoOrd = new TroncoEntity(
+            ArrayList<BeaconEntity> estremi = new ArrayList<>();
+            estremi.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
+            estremi.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+            TroncoEntity tronco = new TroncoEntity(
                     Integer.parseInt(rs.get(i).get("id").toString()),
                     Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
-                    estremiOrdinati,
+                    estremi,
                     Float.parseFloat(rs.get(i).get("area").toString())
             );
-            TroncoEntity troncoInv = new TroncoEntity(
-                    Integer.parseInt(rs.get(i).get("id").toString()),
-                    Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
-                    estremiInvertiti,
-                    Float.parseFloat(rs.get(i).get("area").toString())
-            );
-            allTronchiPiano.add(troncoOrd);
-            allTronchiPiano.add(troncoInv);
+            allTronchiPiano.add(tronco);
         }
         return allTronchiPiano;
     }
@@ -180,7 +170,7 @@ public class TroncoDAO {
             tabella.execute();
         }
     }
-    public void eliminaTronchiPerPiano(int pianoId){
+    public void eliminaTronchiPerPiano(int pianoId){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
         tabella.delete();
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");

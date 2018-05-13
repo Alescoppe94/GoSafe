@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.model.DAO;
 
 import org.teamids.gestionemappe.model.DbTable.PesiTronco;
+import org.teamids.gestionemappe.model.DbTable.Peso;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -90,4 +91,30 @@ public class PesiTroncoDAO {
         }
         return pesiTronco.build();
     }
+
+
+    public void aggiornaPesiTronco(int troncoId, String peso, float valore){
+
+        tabella.select();
+        tabella.innerjoin("peso", "pesoId = peso.id");
+        tabella.where("troncoId = '" + troncoId +"' AND peso.nome = '" + peso + "'");
+        List<Map<String, Object>> rs = tabella.fetch();
+        if(rs.size()==0){
+            Peso tabella2 = new Peso();                             //non è bellissima sta cosa ma funziona
+            tabella2.select("id");
+            tabella2.where("nome = '"+ peso +"'");
+            List<Map<String, Object>> rs2 = tabella2.fetch();
+            String dati= "null";
+            dati=dati+",'"+troncoId+"'";
+            dati=dati+",'"+rs2.get(0).get("id").toString()+"'";
+            dati=dati+",'" + valore + "'";
+            dati=dati+",null";
+            tabella.insert(dati);
+            tabella.execute();
+        }else{
+            updateValorePeso(troncoId, peso, valore);
+        }
+
+    }
+
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -82,4 +83,26 @@ public class GestioneDBBoundary {
             e.printStackTrace();
         }*/
     }
+
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
+    @Path("/aggiornapesitronco")
+    public void aggiornaPesiTronco(final MultivaluedMap<String, String> formParams){
+
+        //Map<String,String> parameters = new HashMap<String,String>();
+
+        Iterator<String> it = formParams.keySet().iterator();
+
+
+        while(it.hasNext()){
+            String theKey = (String)it.next();
+            String nomePeso = theKey.split("-")[0];
+            int idTronco = Integer.parseInt(theKey.split("-")[1]);
+            float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
+            gestionedb.aggiornaPesi(nomePeso, idTronco, valorePeso);
+            //parameters.put(theKey,formParams.getFirst(theKey));
+        }
+
+    }
+
 }

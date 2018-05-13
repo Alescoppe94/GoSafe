@@ -9,21 +9,20 @@
 <ul>
     <%
         HashMap<TroncoEntity, HashMap<String, Float>> map = (HashMap)request.getAttribute("model");
+        out.println("<form action=\"http://localhost:8080/gestionemappe/db/aggiornapesitronco\" method=\"post\">");
         for(Map.Entry<TroncoEntity, HashMap<String, Float>> entry : map.entrySet()) {
             out.println("<li>"+entry.getKey().getId()+ " " + entry.getKey().getArea() +"</li>");
-            out.println("<form>");
             for(Map.Entry<String, Float> subentry : entry.getValue().entrySet()){
 
                 if(subentry.getValue() != null) {
-                    out.println(subentry.getKey() + ":<input type=\"text\" value=\"" + subentry.getValue() + "\">");
+                    out.println(subentry.getKey() + ":<input name=\""+ subentry.getKey()+ "-" +entry.getKey().getId()+"\" type=\"text\" value=\"" + subentry.getValue() + "\">");
                 }else{
-                    out.println(subentry.getKey() + ":<input type=\"text\">");
+                    out.println(subentry.getKey() + ":<input name=\""+ subentry.getKey()+ "-" +entry.getKey().getId()+"\" type=\"text\">");
                 }
             }
-            out.println("<input value=\"Submit\" type=\"submit\">");
-            out.println("</form>");
         }
-
+        out.println("<input value=\"Submit\" type=\"submit\">");
+        out.println("</form>");
     %>
 </ul>
 
