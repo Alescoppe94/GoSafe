@@ -48,6 +48,38 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
+    public Set<TroncoEntity> getTronchiPiano(int pianoId){
+        Set<TroncoEntity> allTronchiPiano = new HashSet<>();
+        tabella.select();
+        tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");      //per ora controlla solo il piano di un beacon
+        List<Map<String, Object>> rs = tabella.fetch();
+        BeaconDAO beaconDAO = new BeaconDAO();
+        for (int i = 0; i<rs.size(); i++) {
+            ArrayList<BeaconEntity> estremiOrdinati = new ArrayList<>();
+            ArrayList<BeaconEntity> estremiInvertiti = new ArrayList<>();
+            estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
+            estremiOrdinati.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+            estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+            estremiInvertiti.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
+            TroncoEntity troncoOrd = new TroncoEntity(
+                    Integer.parseInt(rs.get(i).get("id").toString()),
+                    Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
+                    estremiOrdinati,
+                    Float.parseFloat(rs.get(i).get("area").toString())
+            );
+            TroncoEntity troncoInv = new TroncoEntity(
+                    Integer.parseInt(rs.get(i).get("id").toString()),
+                    Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
+                    estremiInvertiti,
+                    Float.parseFloat(rs.get(i).get("area").toString())
+            );
+            allTronchiPiano.add(troncoOrd);
+            allTronchiPiano.add(troncoInv);
+        }
+        return allTronchiPiano;
+    }
+
     public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();

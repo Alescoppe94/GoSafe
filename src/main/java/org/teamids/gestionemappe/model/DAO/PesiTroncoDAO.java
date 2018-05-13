@@ -44,7 +44,12 @@ public class PesiTroncoDAO {
         tabella.innerjoin("peso", "pesoId = peso.id");
         tabella.where("troncoId = '" + troncoId +"' AND peso.nome = '" + peso + "'");
         List<Map<String, Object>> rs = tabella.fetch();
-         return Float.parseFloat(rs.get(0).get("valore").toString());
+        Float valore = null;
+
+        if(rs.size() != 0)
+            valore = Float.parseFloat(rs.get(0).get("valore").toString());
+
+        return valore;
     }
 
     public void losToDefault() {

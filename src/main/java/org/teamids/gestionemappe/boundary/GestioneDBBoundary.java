@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
+import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Path("/db")
@@ -45,6 +43,20 @@ public class GestioneDBBoundary {
         return test;
     }
 
+
+    @GET
+    @Path("/piano/{pianoId}")
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable showTronchiPiano(@PathParam("pianoId") int pianoId){
+
+        HashMap<TroncoEntity, HashMap<String, Float>> model = gestionedb.getTronchiPiano(pianoId);
+        /*Map<String, Float> model = new HashMap<>();
+        for(TroncoEntity tronco : tronchiPiano){
+            model.put(String.valueOf(tronco.getId()), tronco.getArea());
+        }*/
+        return new Viewable("/tronchipiano", model);
+
+    }
 
     @GET
     @Path("/aggiornadb/{timestamp}")
