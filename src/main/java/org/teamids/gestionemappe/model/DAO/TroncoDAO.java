@@ -52,7 +52,7 @@ public class TroncoDAO {
         Set<TroncoEntity> allTronchiPiano = new HashSet<>();
         tabella.select("tronco.*");
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
-        tabella.where("beacon.pianoId = '" + pianoId +"'");      //per ora controlla solo il piano di un beacon
+        tabella.where("beacon.pianoId = '" + pianoId +"'");      //TODO: per ora controlla solo il piano di un beacon
         List<Map<String, Object>> rs = tabella.fetch();
         BeaconDAO beaconDAO = new BeaconDAO();
         for (int i = 0; i<rs.size(); i++) {

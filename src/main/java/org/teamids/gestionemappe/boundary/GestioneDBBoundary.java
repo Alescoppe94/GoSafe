@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teamids.gestionemappe.control.GestioneDB;
+import org.teamids.gestionemappe.model.DbTable.Peso;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
+import javax.annotation.Generated;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -99,9 +101,50 @@ public class GestioneDBBoundary {
             String nomePeso = theKey.split("-")[0];
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
             float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
-            gestionedb.aggiornaPesi(nomePeso, idTronco, valorePeso);
+            gestionedb.aggiornaPesiTronco(nomePeso, idTronco, valorePeso);
             //parameters.put(theKey,formParams.getFirst(theKey));
         }
+
+    }
+
+    @POST
+    @Path("/modificaPesi")
+    public void modificaPesi(final MultivaluedMap<String, String> formParams){
+
+        gestionedb.eliminapesi();
+
+        Iterator<String> it = formParams.keySet().iterator();
+
+        while(it.hasNext()){
+            String theKey = (String)it.next();
+            String nomePeso = theKey.split("-")[0];
+            int idTronco = Integer.parseInt(theKey.split("-")[1]);
+            float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
+            //gestionedb.aggiornaPesi();
+            //parameters.put(theKey,formParams.getFirst(theKey));
+        }
+
+    }
+
+    /*@GET
+    @Path("/mostraPesi")
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable mostraPesi(){
+
+        ArrayList<Peso> pesi = gestionedb.getPesi();
+        Map<String, Integer> model = new HashMap<>();
+        for(Peso peso : pesi){
+            model.put(String.valueOf(peso.getId()), peso.getPiano());
+        }
+        new Viewable("/pesi", model);
+
+    }*/
+
+    @GET
+    @Path("/download")
+    public String downloadDb(){
+
+        return gestionedb.downloadDb();
 
     }
 

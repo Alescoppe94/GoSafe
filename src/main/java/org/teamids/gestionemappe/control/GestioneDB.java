@@ -62,7 +62,7 @@ public class GestioneDB {
 
     }
 
-    public void aggiornaPesi(String peso, int troncoId, float valore){
+    public void aggiornaPesiTronco(String peso, int troncoId, float valore){
 
         pesiTroncoDAO.aggiornaPesiTronco(troncoId, peso, valore);
     }
@@ -169,6 +169,53 @@ public class GestioneDB {
         troncoDAO.inserisciTronchi(nuoviTronchi);
 
         return null;
+
+    }
+
+    public void aggiornaPesi(com.google.gson.JsonObject jsonRequest, String path){
+
+        creaFileCsv(path, "pesi", jsonRequest);
+
+        String line = "";
+
+        try(BufferedReader br = new BufferedReader(new FileReader(path+"pesi.csv"))){
+
+            while((line = br.readLine()) != null){
+
+                String[] field = line.split(",");
+
+                pesoDAO.inserisciPeso(field[0], Float.parseFloat(field[1])); //primo argomento nome(String) secondo coefficiente(float)
+
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public String downloadDb(){
+
+        JsonArray tronchiTable = troncoDAO.getTable();
+        JsonArray pianiTable = pianoDAO.getTable();
+        JsonArray beaconTable = beaconDAO.getTable();
+        JsonArray pesoTable = pesoDAO.getTable();
+        JsonArray pesitroncoTable = pesiTroncoDAO.getTable();
+        JsonObject db = Json.createObjectBuilder()
+                .add("tronco", tronchiTable)
+                .add("piano", pianiTable)
+                .add("beacon", beaconTable)
+                .add("peso", pesoTable)
+                .add("pesitronco", pesitroncoTable)
+                .build();
+        return db.toString();
+
+    }
+
+    public void eliminapesi(){
+
+        pesoDAO.eliminaPesi();
 
     }
 

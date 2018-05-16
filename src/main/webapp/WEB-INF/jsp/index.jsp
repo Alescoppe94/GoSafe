@@ -21,6 +21,12 @@
             </form>
         </div>
         <div>
+            <form>
+                <input id="csvpesi" type="file"/>
+                <input id="aggiungipesi" type="button" value="aggiungi Pesi">
+            </form>
+        </div>
+        <div>
             <input id="lanciaemergenza" type="button" value="LanciaEmergenza">
             <input id="backtonormal" type="button"  value="Backtonormal">
         </div>
