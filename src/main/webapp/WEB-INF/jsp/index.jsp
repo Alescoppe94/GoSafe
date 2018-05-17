@@ -21,6 +21,12 @@
             </form>
         </div>
         <div>
+            <form>
+                <input id="csvpesi" type="file"/>
+                <input id="aggiungipesi" type="button" value="aggiungi Pesi">
+            </form>
+        </div>
+        <div>
             <input id="lanciaemergenza" type="button" value="LanciaEmergenza">
             <input id="backtonormal" type="button"  value="Backtonormal">
         </div>
@@ -29,7 +35,7 @@
             <%
             Map<String, Integer> map = (Map)request.getAttribute("model");
             for(Map.Entry<String, Integer> entry : map.entrySet()) {
-                out.println("<li>"+entry.getKey()+ " " + entry.getValue() +"</li>");
+                out.println("<li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+ entry.getKey() +"\">"+entry.getKey()+ " " + entry.getValue() +"</a></li>");
             } %>
         </ul>
     </div>

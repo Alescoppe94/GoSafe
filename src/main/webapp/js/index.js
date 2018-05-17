@@ -32,7 +32,7 @@ $(document).ready(function() {
         //Send the proper header information along with the request
         xhr.setRequestHeader("Content-type", "application/json");
 
-        var name = document.getElementById("name")
+        var name = document.getElementById("name");
         nameencoded = encodeURIComponent(name.value);
         var image = document.getElementById("target");
 
@@ -81,4 +81,30 @@ $(document).ready(function() {
 
         //xhr.send(params);
     });
+
+    $("#aggiungipesi").click(function(){
+
+        var url = "http://localhost:8080/gestionemappe/db/modificapesi";
+        //var params = "lorem=ipsum&name=alpha";
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        var reader = new FileReader();
+        var file = document.querySelector('#csvpesi').files[0];
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+
+            xhr.send(JSON.stringify({pesi:reader.result}));
+
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+
+
+    });
+
 });

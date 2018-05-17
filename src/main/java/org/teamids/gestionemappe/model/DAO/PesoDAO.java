@@ -33,6 +33,20 @@ public class PesoDAO {
         return pesiAggiornati.build();
     }
 
+    public ArrayList<String> getPesiNames(){
+
+        ArrayList<String> nomiPesi = new ArrayList<>();
+        tabella.select("nome");
+        List<Map<String, Object>> rs = tabella.fetch();
+        for (int i = 0; i<rs.size(); i++) {
+
+            nomiPesi.add(rs.get(i).get("nome").toString());
+        }
+
+        return nomiPesi;
+
+    }
+
     public JsonArray getTable() {
         JsonArrayBuilder pesi = Json.createArrayBuilder();
         tabella.select();

@@ -48,6 +48,28 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
+    public Set<TroncoEntity> getTronchiPiano(int pianoId){
+        Set<TroncoEntity> allTronchiPiano = new HashSet<>();
+        tabella.select("tronco.*");
+        tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
+        tabella.where("beacon.pianoId = '" + pianoId +"'");      //TODO: per ora controlla solo il piano di un beacon
+        List<Map<String, Object>> rs = tabella.fetch();
+        BeaconDAO beaconDAO = new BeaconDAO();
+        for (int i = 0; i<rs.size(); i++) {
+            ArrayList<BeaconEntity> estremi = new ArrayList<>();
+            estremi.add(beaconDAO.getBeaconById(rs.get(i).get("beaconAId").toString()));
+            estremi.add(beaconDAO.getBeaconById(rs.get(i).get("beaconBId").toString()));
+            TroncoEntity tronco = new TroncoEntity(
+                    Integer.parseInt(rs.get(i).get("id").toString()),
+                    Boolean.parseBoolean(rs.get(i).get("agibile").toString()),
+                    estremi,
+                    Float.parseFloat(rs.get(i).get("area").toString())
+            );
+            allTronchiPiano.add(tronco);
+        }
+        return allTronchiPiano;
+    }
+
     public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB){
 
         tabella.select();
@@ -148,7 +170,7 @@ public class TroncoDAO {
             tabella.execute();
         }
     }
-    public void eliminaTronchiPerPiano(int pianoId){
+    public void eliminaTronchiPerPiano(int pianoId){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
         tabella.delete();
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");

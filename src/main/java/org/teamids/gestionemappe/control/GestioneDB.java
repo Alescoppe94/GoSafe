@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.control;
 
 import org.teamids.gestionemappe.model.DAO.*;
+import org.teamids.gestionemappe.model.DbTable.PesiTronco;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Set;
 
 
 public class GestioneDB {
@@ -40,6 +43,28 @@ public class GestioneDB {
 
     public ArrayList<PianoEntity> getPiani(){
         return pianoDAO.getAllPiani();
+    }
+
+    public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
+
+        HashMap<TroncoEntity, HashMap<String, Float>> troncopesi = new HashMap<>();
+        Set<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId);
+        ArrayList<String> nomiPesi = pesoDAO.getPesiNames();
+        for(TroncoEntity tronco : tronchi){
+            HashMap<String, Float> nomeval = new HashMap<>();
+            for(String peso : nomiPesi) {
+                nomeval.put(peso, pesiTroncoDAO.geValoreByPesoId(tronco.getId(), peso));
+            }
+            troncopesi.put(tronco, nomeval);
+        }
+
+        return troncopesi;
+
+    }
+
+    public void aggiornaPesiTronco(String peso, int troncoId, float valore){
+
+        pesiTroncoDAO.aggiornaPesiTronco(troncoId, peso, valore);
     }
 
     public String aggiornaDB(Timestamp timestamp_client){
@@ -144,6 +169,53 @@ public class GestioneDB {
         troncoDAO.inserisciTronchi(nuoviTronchi);
 
         return null;
+
+    }
+
+    public void aggiornaPesi(com.google.gson.JsonObject jsonRequest, String path){
+
+        creaFileCsv(path, "pesi", jsonRequest);
+
+        String line = "";
+
+        try(BufferedReader br = new BufferedReader(new FileReader(path+"pesi.csv"))){
+
+            while((line = br.readLine()) != null){
+
+                String[] field = line.split(",");
+
+                pesoDAO.inserisciPeso(field[0], Float.parseFloat(field[1])); //primo argomento nome(String) secondo coefficiente(float)
+
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public String downloadDb(){
+
+        JsonArray tronchiTable = troncoDAO.getTable();
+        JsonArray pianiTable = pianoDAO.getTable();
+        JsonArray beaconTable = beaconDAO.getTable();
+        JsonArray pesoTable = pesoDAO.getTable();
+        JsonArray pesitroncoTable = pesiTroncoDAO.getTable();
+        JsonObject db = Json.createObjectBuilder()
+                .add("tronco", tronchiTable)
+                .add("piano", pianiTable)
+                .add("beacon", beaconTable)
+                .add("peso", pesoTable)
+                .add("pesitronco", pesitroncoTable)
+                .build();
+        return db.toString();
+
+    }
+
+    public void eliminapesi(){
+
+        pesoDAO.eliminaPesi();
 
     }
 
