@@ -21,9 +21,8 @@
             </form>
         </div>
         <div>
-            <form>
-                <input id="csvpesi" type="file"/>
-                <input id="aggiungipesi" type="button" value="aggiungi Pesi">
+            <form action="http://localhost:8080/gestionemappe/db/mostraPesi" method="get">
+                <input id="aggiungipesi" type="submit" value="aggiungi Pesi">
             </form>
         </div>
         <div>

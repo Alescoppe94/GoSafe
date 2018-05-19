@@ -2,6 +2,7 @@ package org.teamids.gestionemappe.control;
 
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.DbTable.PesiTronco;
+import org.teamids.gestionemappe.model.DbTable.Peso;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
@@ -17,10 +18,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 
 public class GestioneDB {
@@ -49,11 +47,12 @@ public class GestioneDB {
 
         HashMap<TroncoEntity, HashMap<String, Float>> troncopesi = new HashMap<>();
         Set<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId);
-        ArrayList<String> nomiPesi = pesoDAO.getPesiNames();
+        Map<Integer, Map<String,Float>> nomiPesi = pesoDAO.getPesi();
         for(TroncoEntity tronco : tronchi){
             HashMap<String, Float> nomeval = new HashMap<>();
-            for(String peso : nomiPesi) {
-                nomeval.put(peso, pesiTroncoDAO.geValoreByPesoId(tronco.getId(), peso));
+            for(Map.Entry<Integer, Map<String,Float>> peso : nomiPesi.entrySet()) {
+                Map.Entry<String, Float> entry = peso.getValue().entrySet().iterator().next();
+                nomeval.put(entry.getKey(), pesiTroncoDAO.geValoreByPesoId(tronco.getId(), entry.getKey()));
             }
             troncopesi.put(tronco, nomeval);
         }
@@ -172,26 +171,15 @@ public class GestioneDB {
 
     }
 
-    public void aggiornaPesi(com.google.gson.JsonObject jsonRequest, String path){
+    public void aggiornaPesi(int id, String nome, Float valore){
 
-        creaFileCsv(path, "pesi", jsonRequest);
+        pesoDAO.aggiornaPeso(id, nome, valore);
 
-        String line = "";
+    }
 
-        try(BufferedReader br = new BufferedReader(new FileReader(path+"pesi.csv"))){
+    public void inserisciPeso(ArrayList<String> peso){
 
-            while((line = br.readLine()) != null){
-
-                String[] field = line.split(",");
-
-                pesoDAO.inserisciPeso(field[0], Float.parseFloat(field[1])); //primo argomento nome(String) secondo coefficiente(float)
-
-            }
-
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
+        pesoDAO.inserisciPeso(peso.get(1), Float.valueOf(peso.get(0)));
 
     }
 
@@ -216,6 +204,14 @@ public class GestioneDB {
     public void eliminapesi(){
 
         pesoDAO.eliminaPesi();
+
+    }
+
+    public Map<Integer, Map<String,Float>> mostraPesi(){
+
+        Map<Integer, Map<String,Float>> pesi = pesoDAO.getPesi();
+
+        return pesi;
 
     }
 
