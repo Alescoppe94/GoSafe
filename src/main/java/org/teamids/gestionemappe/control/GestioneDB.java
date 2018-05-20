@@ -171,6 +171,15 @@ public class GestioneDB {
 
     }
 
+    public void eliminaPiano(int idPiano){
+
+        pesiTroncoDAO.eliminaPesiTronco(idPiano);
+        troncoDAO.eliminaTronchiPerPiano(idPiano);
+        pianoDAO.eliminaPiano(idPiano);
+        beaconDAO.eliminaBeaconsPerPiano(idPiano);
+
+    }
+
     public void aggiornaPesi(int id, String nome, Float valore){
 
         pesoDAO.aggiornaPeso(id, nome, valore);

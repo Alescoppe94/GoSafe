@@ -34,7 +34,7 @@
             <%
             Map<String, Integer> map = (Map)request.getAttribute("model");
             for(Map.Entry<String, Integer> entry : map.entrySet()) {
-                out.println("<li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+ entry.getKey() +"\">"+entry.getKey()+ " " + entry.getValue() +"</a></li>");
+                out.println("<li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+ entry.getKey() +"\">"+entry.getKey()+ " " + entry.getValue() +"</a></li><button id=\"piano-"+ entry.getKey() +"\" name=\""+ entry.getKey() +"-"+ entry.getValue() +"\" type=\"button\">Elimina Piano</button>");
             } %>
         </ul>
     </div>

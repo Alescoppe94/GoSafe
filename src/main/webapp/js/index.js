@@ -82,5 +82,22 @@ $(document).ready(function() {
         //xhr.send(params);
     });
 
+    $('[id^="piano-"]').click(function() {
+        // do something
+        var name = $(this).attr('name');
+        console.log(name);
+        var id = name.split('-');
+        var idPiano = id[0];
+        var url = "http://localhost:8080/gestionemappe/db/eliminapiano/"+ idPiano;
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send();
+
+
+    });
+
 
 });

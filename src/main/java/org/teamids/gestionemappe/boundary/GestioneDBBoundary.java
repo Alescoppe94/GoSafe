@@ -86,6 +86,14 @@ public class GestioneDBBoundary {
         }*/
     }
 
+    @DELETE
+    @Path("/eliminapiano/{idPiano}")
+    public void eliminaPiano(@PathParam("idPiano")int idPiano){
+
+        gestionedb.eliminaPiano(idPiano);
+
+    }
+
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiornapesitronco")

@@ -171,11 +171,11 @@ public class TroncoDAO {
         }
     }
     public void eliminaTronchiPerPiano(int pianoId){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
-        tabella.delete();
+        tabella.delete2();
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");
         tabella.execute();
-        tabella.delete();
+        tabella.delete2();
         tabella.innerjoin("beacon", "tronco.beaconBId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");
         tabella.execute();
