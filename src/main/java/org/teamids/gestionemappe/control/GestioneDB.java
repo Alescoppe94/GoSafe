@@ -210,9 +210,10 @@ public class GestioneDB {
 
     }
 
-    public void eliminapesi(){
+    public void eliminapeso(int idPeso){
 
-        pesoDAO.eliminaPesi();
+        pesiTroncoDAO.eliminaPesiTroncoByPiano(idPeso);
+        pesoDAO.eliminaPeso(idPeso);
 
     }
 

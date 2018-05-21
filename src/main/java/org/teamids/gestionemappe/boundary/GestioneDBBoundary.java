@@ -154,6 +154,14 @@ public class GestioneDBBoundary {
         gestionedb.inserisciPeso(peso);
     }
 
+    @DELETE
+    @Path("/eliminapeso/{idPeso}")
+    public void eliminaPeso(@PathParam("idPeso")int idPeso){
+
+        gestionedb.eliminapeso(idPeso);
+
+    }
+
     @GET
     @Path("/mostraPesi")
     @Produces(MediaType.TEXT_HTML)

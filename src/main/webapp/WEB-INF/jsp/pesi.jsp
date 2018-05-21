@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/pesi.js"></script>
 </head>
 <body>
 
@@ -13,7 +15,7 @@
             for(Map.Entry<Integer, Map<String, Float>> entry : map.entrySet()) {
 
                 Map.Entry<String, Float> subentry = entry.getValue().entrySet().iterator().next();
-                out.println(subentry.getKey() + ":<input name=\""+ subentry.getKey()+ "-" +entry.getKey()+"\" type=\"text\" value=\"" + subentry.getValue() + "\">");
+                out.println(subentry.getKey() + ":<input name=\""+ subentry.getKey()+ "-" +entry.getKey()+"\" type=\"text\" value=\"" + subentry.getValue() + "\"><button id=\"peso-"+ entry.getKey() +"\">Elimina</button>");
 
             }
             out.println("<input value=\"Submit\" type=\"submit\">");

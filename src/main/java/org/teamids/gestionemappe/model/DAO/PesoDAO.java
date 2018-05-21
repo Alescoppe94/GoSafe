@@ -84,8 +84,9 @@ public class PesoDAO {
 
     }
 
-    public void eliminaPesi(){
+    public void eliminaPeso(int idPeso){
         tabella.delete();
+        tabella.where("id = '" + idPeso +"'");
         tabella.execute();
     }
 }

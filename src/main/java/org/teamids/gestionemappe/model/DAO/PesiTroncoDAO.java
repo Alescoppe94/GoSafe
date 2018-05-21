@@ -131,4 +131,12 @@ public class PesiTroncoDAO {
 
     }
 
+    public void eliminaPesiTroncoByPiano(int idPeso){
+
+        tabella.delete();
+        tabella.where("pesoId = '" + idPeso +"'");
+        tabella.execute();
+
+    }
+
 }
