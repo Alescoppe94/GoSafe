@@ -120,8 +120,6 @@ public class GestioneDBBoundary {
     @Path("/modificaPesi")
     public void modificaPesi(final MultivaluedMap<String, String> formParams){
 
-        //gestionedb.eliminapesi();   //TODO:eliminare pure pesitronco
-
         Iterator<String> it = formParams.keySet().iterator();
 
         while(it.hasNext()){
