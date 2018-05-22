@@ -28,6 +28,23 @@ $(document).ready(function() {
         xhr.send();
         //xhr.send(params);
     });
+    $('#lanciaemergenza').click(  function () {
+        var url = "http://localhost:8080/gestionemappe/mappe/lanciaemergenza";
+        //var params = "lorem=ipsum&name=alpha";
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                location.reload();
+            }
+        }
+        xhr.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        xhr.send();
+        //xhr.send(params);
+    });
     $('#aggiungipiano').click(  function () {
         var url = "http://localhost:8080/gestionemappe/db/aggiungipiano";
         //var params = "lorem=ipsum&name=alpha";
