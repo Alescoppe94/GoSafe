@@ -39,14 +39,24 @@ public class GestioneDB {
         this.pesiTroncoDAO = new PesiTroncoDAO();
     }
 
-    public ArrayList<PianoEntity> getPiani(){
-        return pianoDAO.getAllPiani();
+    public Map<String, Integer> getAllPiani(){
+
+        ArrayList<PianoEntity> piani = pianoDAO.getAllPiani();
+        Map<String, Integer> model = new HashMap<>();
+        for(PianoEntity piano : piani){
+            model.put(String.valueOf(piano.getId()), piano.getPiano());
+        }
+        return model;
     }
+
+    //public ArrayList<PianoEntity> getPiani(){
+     //   return pianoDAO.getAllPiani();
+    //}
 
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
         HashMap<TroncoEntity, HashMap<String, Float>> troncopesi = new HashMap<>();
-        Set<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId);
+        ArrayList<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId);
         Map<Integer, Map<String,Float>> nomiPesi = pesoDAO.getPesi();
         for(TroncoEntity tronco : tronchi){
             HashMap<String, Float> nomeval = new HashMap<>();

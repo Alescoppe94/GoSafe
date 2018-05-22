@@ -40,7 +40,7 @@ public class DbTableHelpers {
     }
 
     public void order(String clausola){
-        sql = sql + "ORDER BY " + clausola;
+        sql = sql + "ORDER BY " + clausola + " asc";
     }
 
     public int count(List<Map<String, Object>> tuple){
