@@ -52,14 +52,14 @@ public class GestioneDBBoundary {
         for(TroncoEntity tronco : tronchiPiano){
             model.put(String.valueOf(tronco.getId()), tronco.getArea());
         }*/
-        /*TreeMap<TroncoEntity, HashMap<String, Float>> map = new TreeMap<TroncoEntity, HashMap<String, Float>>(new Comparator<TroncoEntity>() {
+        TreeMap<TroncoEntity, HashMap<String, Float>> map = new TreeMap<TroncoEntity, HashMap<String, Float>>(new Comparator<TroncoEntity>() {
             @Override
             public int compare(TroncoEntity o1, TroncoEntity o2) {
-                return ;
+                return o1.compareTo(o2);
             }
         });
-        map.or*/
-        return new Viewable("/tronchipiano", model);
+        map.putAll(model);
+        return new Viewable("/tronchipiano", map);
 
     }
 

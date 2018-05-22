@@ -4,7 +4,7 @@ import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
 
 import java.util.*;
 
-public class TroncoEntity {
+public class TroncoEntity implements Comparable<TroncoEntity> {
 
     private int id;
     private boolean agibile;
@@ -73,5 +73,13 @@ public class TroncoEntity {
         }
         return costo;
 
+    }
+
+    @Override
+    public int compareTo(TroncoEntity o) {
+        if(id<o.getId()){
+            return -1;
+        }
+        return 1;
     }
 }
