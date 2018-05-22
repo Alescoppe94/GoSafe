@@ -6,6 +6,7 @@ import org.teamids.gestionemappe.model.DbTable.Peso;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +115,27 @@ public class PesiTroncoDAO {
         }else{
             updateValorePeso(troncoId, peso, valore);
         }
+
+    }
+
+    public void eliminaPesiTronco(int idPiano){
+
+        tabella.delete2();
+        tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconAId=beacon.id");
+        tabella.where("beacon.pianoId = '" + idPiano +"'");
+        tabella.execute();
+        tabella.delete2();
+        tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconBId=beacon.id");
+        tabella.where("beacon.pianoId = '" + idPiano +"'");
+        tabella.execute();
+
+    }
+
+    public void eliminaPesiTroncoByPiano(int idPeso){
+
+        tabella.delete();
+        tabella.where("pesoId = '" + idPeso +"'");
+        tabella.execute();
 
     }
 

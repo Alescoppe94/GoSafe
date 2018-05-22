@@ -23,6 +23,10 @@ public class DbTableHelpers {
         sql = "delete from "+name;
     }
 
+    public void delete2(){
+        sql = "delete "+name+" from "+name;
+    }
+
     public void select(){
         sql="SELECT * FROM " + name;
     }
@@ -49,6 +53,11 @@ public class DbTableHelpers {
 
     public void innerjoin(String tabella, String uguaglianza){
         sql = sql + " INNER JOIN " + tabella + " ON " + uguaglianza;
+    }
+
+    public void doubleinnerjoin(String tabella1, String uguaglianza1, String tabella2, String uguaglianza2){
+        sql = sql + " INNER JOIN " + tabella1 + " ON " + uguaglianza1;
+        sql = sql + " INNER JOIN " + tabella2 + " ON " + uguaglianza2;
     }
 
     public boolean execute(){

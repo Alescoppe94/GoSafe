@@ -86,6 +86,14 @@ public class GestioneDBBoundary {
         }*/
     }
 
+    @DELETE
+    @Path("/eliminapiano/{idPiano}")
+    public void eliminaPiano(@PathParam("idPiano")int idPiano){
+
+        gestionedb.eliminaPiano(idPiano);
+
+    }
+
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiornapesitronco")
@@ -108,10 +116,9 @@ public class GestioneDBBoundary {
     }
 
     @POST
+    @Consumes("application/x-www-form-urlencoded")
     @Path("/modificaPesi")
     public void modificaPesi(final MultivaluedMap<String, String> formParams){
-
-        gestionedb.eliminapesi();
 
         Iterator<String> it = formParams.keySet().iterator();
 
@@ -120,25 +127,48 @@ public class GestioneDBBoundary {
             String nomePeso = theKey.split("-")[0];
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
             float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
-            //gestionedb.aggiornaPesi();
+            gestionedb.aggiornaPesi(idTronco, nomePeso, valorePeso);
             //parameters.put(theKey,formParams.getFirst(theKey));
         }
 
     }
 
-    /*@GET
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
+    @Path("/aggiungiPeso")
+    public void aggiungiPeso(final MultivaluedMap<String, String> formParams){
+
+        Iterator<String> it = formParams.keySet().iterator();
+
+        ArrayList<String> peso = new ArrayList<>();
+
+        while(it.hasNext()){
+
+            String theKey = (String)it.next();
+            peso.add(formParams.getFirst(theKey));
+
+        }
+
+        gestionedb.inserisciPeso(peso);
+    }
+
+    @DELETE
+    @Path("/eliminapeso/{idPeso}")
+    public void eliminaPeso(@PathParam("idPeso")int idPeso){
+
+        gestionedb.eliminapeso(idPeso);
+
+    }
+
+    @GET
     @Path("/mostraPesi")
     @Produces(MediaType.TEXT_HTML)
     public Viewable mostraPesi(){
 
-        ArrayList<Peso> pesi = gestionedb.getPesi();
-        Map<String, Integer> model = new HashMap<>();
-        for(Peso peso : pesi){
-            model.put(String.valueOf(peso.getId()), peso.getPiano());
-        }
-        new Viewable("/pesi", model);
+        Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
+        return new Viewable("/pesi", model);
 
-    }*/
+    }
 
     @GET
     @Path("/download")

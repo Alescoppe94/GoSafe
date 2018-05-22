@@ -21,9 +21,8 @@
             </form>
         </div>
         <div>
-            <form>
-                <input id="csvpesi" type="file"/>
-                <input id="aggiungipesi" type="button" value="aggiungi Pesi">
+            <form action="http://localhost:8080/gestionemappe/db/mostraPesi" method="get">
+                <input id="aggiungipesi" type="submit" value="aggiungi Pesi">
             </form>
         </div>
         <div>
@@ -35,7 +34,7 @@
             <%
             Map<String, Integer> map = (Map)request.getAttribute("model");
             for(Map.Entry<String, Integer> entry : map.entrySet()) {
-                out.println("<li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+ entry.getKey() +"\">"+entry.getKey()+ " " + entry.getValue() +"</a></li>");
+                out.println("<li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+ entry.getKey() +"\">"+entry.getKey()+ " " + entry.getValue() +"</a></li><button id=\"piano-"+ entry.getKey() +"\" name=\""+ entry.getKey() +"-"+ entry.getValue() +"\" type=\"button\">Elimina Piano</button>");
             } %>
         </ul>
     </div>
