@@ -1,12 +1,55 @@
 body{
     display: flex;
     justify-content: center;
+    padding:0;
+    margin: 0;
 }
 
 #page{
+    width: 100vw;
+}
+
+#page > div{
+    display:flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+#piani-container{
+    display: flex;
+    flex-grow: 1;
+    background-color: aquamarine;
     flex-direction: column;
 }
 
+#piani-container > div{
+    display: flex;
+}
+
+#newpianoform > div {
+    display: flex;
+    flex-direction: column;
+}
+
+#newpianoform {
+    display:flex;
+    flex-grow: 1;
+}
+
 #inserimentopianoblock{
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-grow: 1;
+    background-color: beige;
+}
+
+#inserimentopianoblock > div{
+     display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+ }
+
+#inserimentopianoblock > div > div{
+    display: flex;
 }
