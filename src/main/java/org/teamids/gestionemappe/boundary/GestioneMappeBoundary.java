@@ -15,7 +15,7 @@ public class GestioneMappeBoundary {
     GestioneMappe gestionemappe = new GestioneMappe();
 
     @POST
-    @Path("lanciaemergenza")
+    @Path("/lanciaemergenza")
     public void lanciaEmergenza(){
         gestionemappe.lanciaEmergenza();
     }

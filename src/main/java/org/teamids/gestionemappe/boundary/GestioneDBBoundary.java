@@ -35,15 +35,10 @@ public class GestioneDBBoundary {
     @GET
     @Path("/admin")
     @Produces(MediaType.TEXT_HTML)
-    public Viewable showAdmin(@Context HttpServletRequest request) {
+    public Viewable showAdmin() {
 
-        ArrayList<PianoEntity> piani = gestionedb.getPiani();
-        Map<String, Integer> model = new HashMap<>();
-        for(PianoEntity piano : piani){
-            model.put(String.valueOf(piano.getId()), piano.getPiano());
-        }
-        Viewable test = new Viewable("/index", model);
-        return test;
+        Map<String, Integer> model = gestionedb.getAllPiani();
+        return new Viewable("/index", model);
     }
 
 
@@ -57,7 +52,14 @@ public class GestioneDBBoundary {
         for(TroncoEntity tronco : tronchiPiano){
             model.put(String.valueOf(tronco.getId()), tronco.getArea());
         }*/
-        return new Viewable("/tronchipiano", model);
+        TreeMap<TroncoEntity, HashMap<String, Float>> map = new TreeMap<TroncoEntity, HashMap<String, Float>>(new Comparator<TroncoEntity>() {
+            @Override
+            public int compare(TroncoEntity o1, TroncoEntity o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        map.putAll(model);
+        return new Viewable("/tronchipiano", map);
 
     }
 
@@ -88,21 +90,22 @@ public class GestioneDBBoundary {
 
     @DELETE
     @Path("/eliminapiano/{idPiano}")
-    public void eliminaPiano(@PathParam("idPiano")int idPiano){
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable eliminaPiano(@PathParam("idPiano")int idPiano){
 
         gestionedb.eliminaPiano(idPiano);
+        Map<String, Integer> model = gestionedb.getAllPiani();
+        return new Viewable("/index", model);
 
     }
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiornapesitronco")
-    public void aggiornaPesiTronco(final MultivaluedMap<String, String> formParams){
-
-        //Map<String,String> parameters = new HashMap<String,String>();
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable aggiornaPesiTronco(final MultivaluedMap<String, String> formParams){
 
         Iterator<String> it = formParams.keySet().iterator();
-
 
         while(it.hasNext()){
             String theKey = (String)it.next();
@@ -113,12 +116,16 @@ public class GestioneDBBoundary {
             //parameters.put(theKey,formParams.getFirst(theKey));
         }
 
+        Map<String, Integer> model = gestionedb.getAllPiani();
+        return new Viewable("/index", model);
+
     }
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/modificaPesi")
-    public void modificaPesi(final MultivaluedMap<String, String> formParams){
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable modificaPesi(final MultivaluedMap<String, String> formParams){
 
         Iterator<String> it = formParams.keySet().iterator();
 
@@ -130,13 +137,16 @@ public class GestioneDBBoundary {
             gestionedb.aggiornaPesi(idTronco, nomePeso, valorePeso);
             //parameters.put(theKey,formParams.getFirst(theKey));
         }
+        Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
+        return new Viewable("/pesi", model);
 
     }
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiungiPeso")
-    public void aggiungiPeso(final MultivaluedMap<String, String> formParams){
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable aggiungiPeso(final MultivaluedMap<String, String> formParams){
 
         Iterator<String> it = formParams.keySet().iterator();
 
@@ -150,6 +160,8 @@ public class GestioneDBBoundary {
         }
 
         gestionedb.inserisciPeso(peso);
+        Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
+        return new Viewable("/pesi", model);
     }
 
     @DELETE

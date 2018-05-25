@@ -15,7 +15,29 @@ $(document).ready(function() {
         var url = "http://localhost:8080/gestionemappe/mappe/backtonormalmode";
         //var params = "lorem=ipsum&name=alpha";
         var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                location.reload();
+            }
+        }
         xhr.open("PUT", url, true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        xhr.send();
+        //xhr.send(params);
+    });
+    $('#lanciaemergenza').click(  function () {
+        var url = "http://localhost:8080/gestionemappe/mappe/lanciaemergenza";
+        //var params = "lorem=ipsum&name=alpha";
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                location.reload();
+            }
+        }
+        xhr.open("POST", url, true);
 
         //Send the proper header information along with the request
         xhr.setRequestHeader("Content-type", "application/json");
@@ -27,6 +49,11 @@ $(document).ready(function() {
         var url = "http://localhost:8080/gestionemappe/db/aggiungipiano";
         //var params = "lorem=ipsum&name=alpha";
         var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                location.reload();
+            }
+        }
         xhr.open("POST", url, true);
 
         //Send the proper header information along with the request
@@ -90,6 +117,11 @@ $(document).ready(function() {
         var idPiano = id[0];
         var url = "http://localhost:8080/gestionemappe/db/eliminapiano/"+ idPiano;
         var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                location.reload();
+            }
+        }
         xhr.open("DELETE", url, true);
 
         //Send the proper header information along with the request

@@ -8,10 +8,10 @@
 
 <ul>
     <%
-        HashMap<TroncoEntity, HashMap<String, Float>> map = (HashMap)request.getAttribute("model");
+        TreeMap<TroncoEntity, HashMap<String, Float>> map = (TreeMap)request.getAttribute("model");
         out.println("<form action=\"http://localhost:8080/gestionemappe/db/aggiornapesitronco\" method=\"post\">");
         for(Map.Entry<TroncoEntity, HashMap<String, Float>> entry : map.entrySet()) {
-            out.println("<li>"+entry.getKey().getId()+ " " + entry.getKey().getArea() +"</li>");
+            out.println("<li>"+entry.getKey().getId()+ " "+ entry.getKey().getBeaconEstremi().get(0).getId() +" "+ entry.getKey().getBeaconEstremi().get(1).getId() +" " + entry.getKey().getArea() +"</li>");
             for(Map.Entry<String, Float> subentry : entry.getValue().entrySet()){
 
                 if(subentry.getValue() != null) {
