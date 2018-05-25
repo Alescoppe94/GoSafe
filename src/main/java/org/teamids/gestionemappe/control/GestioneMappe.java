@@ -131,18 +131,18 @@ public class GestioneMappe extends ResourceConfig implements Observer {
             Map<LinkedList<BeaconEntity>, Float> percorsoOttimo_costoOttimo =  calcoloDijkstra(partenza, arrivo, emergenza);
 
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            int idPercorso =  percorsoDAO.insertPercorso(partenza); //TODO: elimina l'insert del percorso sul db, settare il percorso su utente
+            //int idPercorso =  percorsoDAO.insertPercorso(partenza); //TODO: elimina l'insert del percorso sul db, settare il percorso su utente
 
             Map.Entry<LinkedList<BeaconEntity>, Float> entry = percorsoOttimo_costoOttimo.entrySet().iterator().next();
 
             for(int i = 0; i < entry.getKey().size()-1; i++) {
                 TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1));
                 boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo);
-                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso, direzione);
+                TappaEntity tappaOttima = new TappaEntity(troncoOttimo, direzione);
                 tappeOttime.add(tappaOttima);
-                tappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
+                //tappaDAO.insertTappa(tappaOttima); //TODO: elimina l'insert delle tappe sul db
             }
-            percorso = new PercorsoEntity(idPercorso, tappeOttime, partenza);
+            percorso = new PercorsoEntity(tappeOttime, partenza);
         }else{
             percorso = null;
         }
