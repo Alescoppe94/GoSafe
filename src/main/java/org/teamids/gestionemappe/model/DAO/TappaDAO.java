@@ -21,26 +21,26 @@ public class TappaDAO {
         this.tabella = new Tappa();
     }
 
-    public void insertTappa(TappaEntity tappa){
+    public void insertTappa(TappaEntity tappa, Connection db){          //TODO:valutare se eliminare metodo
         String dati= "0";
         dati=dati+",'"+ tappa.getPercorsoId()+"'";
         dati=dati+",'"+ tappa.getTronco().getId()+"'";
         dati=dati+","+ tappa.isDirezione()+"";//vedere se va bene
         tabella.insert(dati);
-        int id_tappa = tabella.executeForKey();
+        int id_tappa = tabella.executeForKey(db);
         tappa.setId(id_tappa);
 
     }
 
-    public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId) {
+    public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId, Connection db) {
         LinkedList<TappaEntity> tappe = new LinkedList<>();
         tabella.select();
         tabella.where("percorsoId = '" + percorsoId + "'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         TroncoDAO troncoDAO = new TroncoDAO();
         for (int i = 0; i<rs.size(); i++) {
             boolean direzione = Boolean.parseBoolean(rs.get(i).get("direzione").toString());
-            TroncoEntity tronco = troncoDAO.getTroncoById(rs.get(i).get("troncoId").toString(), direzione);
+            TroncoEntity tronco = troncoDAO.getTroncoById(rs.get(i).get("troncoId").toString(), direzione, db);
             TappaEntity tappa = new TappaEntity(
                     Integer.parseInt(rs.get(i).get("id").toString()),
                     Integer.parseInt(rs.get(i).get("percorsoId").toString()),
@@ -52,20 +52,18 @@ public class TappaDAO {
         return tappe;
     }
 
-    public void removeTappeByPercorsoId(int percorsoId) {
+    public void removeTappeByPercorsoId(int percorsoId, Connection db) {            //TODO:valutare se eliminare metodo
         tabella.delete();
         tabella.where("percorsoId = '" + percorsoId + "'");
-        tabella.execute();
+        tabella.execute(db);
     }
 
-    public void removeAllTappe() {
+    public void removeAllTappe(Connection db) {
         tabella.delete();
-        tabella.execute();
+        tabella.execute(db);
     }
 
-    public void aggiornaTappe(int percorsoId, LinkedList<TappaEntity> tappeOttime) {
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
+    public void aggiornaTappe(int percorsoId, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
             db.setAutoCommit(false);
         } catch (SQLException e) {
@@ -99,12 +97,9 @@ public class TappaDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        connector.disconnect();
     }
 
-    public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime) {
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
+    public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
             db.setAutoCommit(false);
         } catch (SQLException e) {
@@ -140,6 +135,5 @@ public class TappaDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        connector.disconnect();
     }
 }

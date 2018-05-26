@@ -6,6 +6,7 @@ import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -17,10 +18,10 @@ public class BeaconDAO {
         this.tabella = new Beacon();
     }
 
-    public BeaconEntity getBeaconById(String beaconId){
+    public BeaconEntity getBeaconById(String beaconId, Connection db){
         tabella.select();
         tabella.where("id = '" + beaconId + "'" );
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         BeaconEntity beacon = new BeaconEntity();
         beacon.setId(rs.get(0).get("id").toString());
         beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));
@@ -29,17 +30,17 @@ public class BeaconDAO {
         return beacon;
     }
 
-    public Set<BeaconEntity> getAllPuntiDiRaccolta(){
+    public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){
         Set<BeaconEntity> allPuntiDiRaccolta = new HashSet<>();
         tabella.select();
         tabella.where("is_puntodiraccolta = '1'" );
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         PianoDAO pianoDAO = new PianoDAO();
         for (int i = 0; i<rs.size(); i++) {
             BeaconEntity beaconDiRaccolta = new BeaconEntity(
                     rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
-                    pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString())),
+                    pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString()), db),
                     Float.parseFloat(rs.get(i).get("coordx").toString()),
                     Float.parseFloat(rs.get(i).get("coordy").toString())
             );
@@ -48,11 +49,11 @@ public class BeaconDAO {
         return allPuntiDiRaccolta;
     }
 
-    public JsonArray getAllBeaconAggiornati(Timestamp timestamp) {
+    public JsonArray getAllBeaconAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder beaconAggiornati = Json.createArrayBuilder();
         tabella.select();
         tabella.where("last_update>'"+timestamp+"'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         for (int i = 0; i<rs.size(); i++) {
             beaconAggiornati.add(Json.createObjectBuilder()
                     .add("id",rs.get(i).get("id").toString())
@@ -65,10 +66,10 @@ public class BeaconDAO {
         return beaconAggiornati.build();
     }
 
-    public JsonArray getTable() {
+    public JsonArray getTable(Connection db) {
         JsonArrayBuilder beacon = Json.createArrayBuilder();
         tabella.select();
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         for (int i = 0; i<rs.size(); i++) {
             beacon.add(Json.createObjectBuilder()
                     .add("id",rs.get(i).get("id").toString())
@@ -81,7 +82,7 @@ public class BeaconDAO {
         return beacon.build();
     }
 
-    public void inserisciBeacons(ArrayList<BeaconEntity> beacons){
+    public void inserisciBeacons(ArrayList<BeaconEntity> beacons, Connection db){
         for (BeaconEntity beacon : beacons){
             int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
             String dati= String.valueOf(beacon.getId());
@@ -91,12 +92,12 @@ public class BeaconDAO {
             dati=dati+",'"+beacon.getCoordy()+"'";
             dati=dati+",null";
             tabella.insert(dati);
-            tabella.execute();
+            tabella.execute(db);
         }
     }
-    public void eliminaBeaconsPerPiano(int pianoId){
+    public void eliminaBeaconsPerPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("pianoId = '" + pianoId + "'");
-        tabella.execute();
+        tabella.execute(db);
     }
 }

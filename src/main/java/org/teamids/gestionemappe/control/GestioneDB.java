@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.control;
 
+import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.DbTable.PesiTronco;
 import org.teamids.gestionemappe.model.DbTable.Peso;
@@ -17,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -41,11 +43,14 @@ public class GestioneDB {
 
     public Map<String, Integer> getAllPiani(){
 
-        ArrayList<PianoEntity> piani = pianoDAO.getAllPiani();
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        ArrayList<PianoEntity> piani = pianoDAO.getAllPiani(db);
         Map<String, Integer> model = new HashMap<>();
         for(PianoEntity piano : piani){
             model.put(String.valueOf(piano.getId()), piano.getPiano());
         }
+        connector.disconnect();
         return model;
     }
 
@@ -55,35 +60,42 @@ public class GestioneDB {
 
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
         HashMap<TroncoEntity, HashMap<String, Float>> troncopesi = new HashMap<>();
-        ArrayList<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId);
-        Map<Integer, Map<String,Float>> nomiPesi = pesoDAO.getPesi();
+        ArrayList<TroncoEntity> tronchi = troncoDAO.getTronchiPiano(pianoId, db);
+        Map<Integer, Map<String,Float>> nomiPesi = pesoDAO.getPesi(db);
         for(TroncoEntity tronco : tronchi){
             HashMap<String, Float> nomeval = new HashMap<>();
             for(Map.Entry<Integer, Map<String,Float>> peso : nomiPesi.entrySet()) {
                 Map.Entry<String, Float> entry = peso.getValue().entrySet().iterator().next();
-                nomeval.put(entry.getKey(), pesiTroncoDAO.geValoreByPesoId(tronco.getId(), entry.getKey()));
+                nomeval.put(entry.getKey(), pesiTroncoDAO.geValoreByPesoId(tronco.getId(), entry.getKey(), db));
             }
             troncopesi.put(tronco, nomeval);
         }
-
+        connector.disconnect();
         return troncopesi;
 
     }
 
     public void aggiornaPesiTronco(String peso, int troncoId, float valore){
 
-        pesiTroncoDAO.aggiornaPesiTronco(troncoId, peso, valore);
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        pesiTroncoDAO.aggiornaPesiTronco(troncoId, peso, valore, db);
+        connector.disconnect();
     }
 
     public String aggiornaDB(Timestamp timestamp_client){
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
         if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
-            JsonArray tronchiTable = troncoDAO.getTable();
-            JsonArray pianiTable = pianoDAO.getTable();
-            JsonArray beaconTable = beaconDAO.getTable();
-            JsonArray pesoTable = pesoDAO.getTable();
-            JsonArray pesitroncoTable = pesiTroncoDAO.getTable();
-            JsonObject db = Json.createObjectBuilder()
+            JsonArray tronchiTable = troncoDAO.getTable(db);
+            JsonArray pianiTable = pianoDAO.getTable(db);
+            JsonArray beaconTable = beaconDAO.getTable(db);
+            JsonArray pesoTable = pesoDAO.getTable(db);
+            JsonArray pesitroncoTable = pesiTroncoDAO.getTable(db);
+            JsonObject database = Json.createObjectBuilder()
                     .add("tipologia", "ricrea")
                     .add("tronco", tronchiTable)
                     .add("piano", pianiTable)
@@ -91,13 +103,14 @@ public class GestioneDB {
                     .add("peso", pesoTable)
                     .add("pesitronco", pesitroncoTable)
                     .build();
-            return db.toString();
+            connector.disconnect();
+            return database.toString();
         } else {
-            JsonArray tronchiaggionati = troncoDAO.getAllTronchiAggiornati(timestamp_client);
-            JsonArray pianiaggionati = pianoDAO.getAllPianiAggiornati(timestamp_client);
-            JsonArray beaconaggiornati = beaconDAO.getAllBeaconAggiornati(timestamp_client);
-            JsonArray pesoaggiornati = pesoDAO.getAllPesiAggiornati(timestamp_client);
-            JsonArray pesitroncoaggiornati = pesiTroncoDAO.getAllPesiTroncoAggiornati(timestamp_client);
+            JsonArray tronchiaggionati = troncoDAO.getAllTronchiAggiornati(timestamp_client, db);
+            JsonArray pianiaggionati = pianoDAO.getAllPianiAggiornati(timestamp_client, db);
+            JsonArray beaconaggiornati = beaconDAO.getAllBeaconAggiornati(timestamp_client, db);
+            JsonArray pesoaggiornati = pesoDAO.getAllPesiAggiornati(timestamp_client, db);
+            JsonArray pesitroncoaggiornati = pesiTroncoDAO.getAllPesiTroncoAggiornati(timestamp_client, db);
             JsonObject dbAggiornato = Json.createObjectBuilder()
                     .add("tipologia", "modifica")
                     .add("tronco", tronchiaggionati)
@@ -106,18 +119,22 @@ public class GestioneDB {
                     .add("peso", pesoaggiornati)
                     .add("pesitronco", pesitroncoaggiornati)
                     .build();
+            connector.disconnect();
             return dbAggiornato.toString();
         }
     }
 
     public String aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
         int numeropiano = jsonRequest.get("piano").getAsInt();
         String immagine =  jsonRequest.get("immagine").getAsString().split(",")[1];
         PianoEntity newpiano = new PianoEntity(immagine, numeropiano);
 
         PianoDAO pianoDAO = new PianoDAO();
-        pianoDAO.inserisciPiano(newpiano);
+        pianoDAO.inserisciPiano(newpiano, db);
 
         creaFileCsv(path, "beaconcsv", jsonRequest);
         creaFileCsv(path, "troncocsv", jsonRequest);
@@ -147,7 +164,7 @@ public class GestioneDB {
         }
 
         BeaconDAO beaconDAO = new BeaconDAO();
-        beaconDAO.inserisciBeacons(nuoviBeacon);
+        beaconDAO.inserisciBeacons(nuoviBeacon, db);
 
         ArrayList<TroncoEntity> nuoviTronchi = new ArrayList<>();
 
@@ -175,7 +192,9 @@ public class GestioneDB {
         }
 
         TroncoDAO troncoDAO = new TroncoDAO();
-        troncoDAO.inserisciTronchi(nuoviTronchi);
+        troncoDAO.inserisciTronchi(nuoviTronchi, db);
+
+        connector.disconnect();
 
         return null;
 
@@ -183,54 +202,79 @@ public class GestioneDB {
 
     public void eliminaPiano(int idPiano){
 
-        pesiTroncoDAO.eliminaPesiTronco(idPiano);
-        troncoDAO.eliminaTronchiPerPiano(idPiano);
-        pianoDAO.eliminaPiano(idPiano);
-        beaconDAO.eliminaBeaconsPerPiano(idPiano);
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        pesiTroncoDAO.eliminaPesiTronco(idPiano, db);
+        troncoDAO.eliminaTronchiPerPiano(idPiano, db);
+        pianoDAO.eliminaPiano(idPiano, db);
+        beaconDAO.eliminaBeaconsPerPiano(idPiano, db);
+
+        connector.disconnect();
 
     }
 
     public void aggiornaPesi(int id, String nome, Float valore){
 
-        pesoDAO.aggiornaPeso(id, nome, valore);
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        pesoDAO.aggiornaPeso(id, nome, valore, db);
+        connector.disconnect();
 
     }
 
     public void inserisciPeso(ArrayList<String> peso){
 
-        pesoDAO.inserisciPeso(peso.get(1), Float.valueOf(peso.get(0)));
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        pesoDAO.inserisciPeso(peso.get(1), Float.valueOf(peso.get(0)), db);
+        connector.disconnect();
 
     }
 
     public String downloadDb(){
 
-        JsonArray tronchiTable = troncoDAO.getTable();
-        JsonArray pianiTable = pianoDAO.getTable();
-        JsonArray beaconTable = beaconDAO.getTable();
-        JsonArray pesoTable = pesoDAO.getTable();
-        JsonArray pesitroncoTable = pesiTroncoDAO.getTable();
-        JsonObject db = Json.createObjectBuilder()
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        JsonArray tronchiTable = troncoDAO.getTable(db);
+        JsonArray pianiTable = pianoDAO.getTable(db);
+        JsonArray beaconTable = beaconDAO.getTable(db);
+        JsonArray pesoTable = pesoDAO.getTable(db);
+        JsonArray pesitroncoTable = pesiTroncoDAO.getTable(db);
+        JsonObject database = Json.createObjectBuilder()
                 .add("tronco", tronchiTable)
                 .add("piano", pianiTable)
                 .add("beacon", beaconTable)
                 .add("peso", pesoTable)
                 .add("pesitronco", pesitroncoTable)
                 .build();
-        return db.toString();
+
+        connector.disconnect();
+        return database.toString();
 
     }
 
     public void eliminapeso(int idPeso){
 
-        pesiTroncoDAO.eliminaPesiTroncoByPiano(idPeso);
-        pesoDAO.eliminaPeso(idPeso);
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        pesiTroncoDAO.eliminaPesiTroncoByPiano(idPeso, db);
+        pesoDAO.eliminaPeso(idPeso, db);
+
+        connector.disconnect();
 
     }
 
     public Map<Integer, Map<String,Float>> mostraPesi(){
 
-        Map<Integer, Map<String,Float>> pesi = pesoDAO.getPesi();
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
 
+        Map<Integer, Map<String,Float>> pesi = pesoDAO.getPesi(db);
+
+        connector.disconnect();
         return pesi;
 
     }
