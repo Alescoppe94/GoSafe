@@ -111,16 +111,20 @@ public class GestioneDB {
             JsonArray beaconaggiornati = beaconDAO.getAllBeaconAggiornati(timestamp_client, db);
             JsonArray pesoaggiornati = pesoDAO.getAllPesiAggiornati(timestamp_client, db);
             JsonArray pesitroncoaggiornati = pesiTroncoDAO.getAllPesiTroncoAggiornati(timestamp_client, db);
-            JsonObject dbAggiornato = Json.createObjectBuilder()
-                    .add("tipologia", "modifica")
-                    .add("tronco", tronchiaggionati)
-                    .add("piano", pianiaggionati)
-                    .add("beacon", beaconaggiornati)
-                    .add("peso", pesoaggiornati)
-                    .add("pesitronco", pesitroncoaggiornati)
-                    .build();
-            connector.disconnect();
-            return dbAggiornato.toString();
+            if(tronchiaggionati.size() == 0 && pianiaggionati.size() == 0 && beaconaggiornati.size() == 0 && pesoaggiornati.size() == 0 && pesitroncoaggiornati.size() == 0){
+                return null;        //da vedere se piace
+            }else {
+                JsonObject dbAggiornato = Json.createObjectBuilder()
+                        .add("tipologia", "modifica")
+                        .add("tronco", tronchiaggionati)
+                        .add("piano", pianiaggionati)
+                        .add("beacon", beaconaggiornati)
+                        .add("peso", pesoaggiornati)
+                        .add("pesitronco", pesitroncoaggiornati)
+                        .build();
+                connector.disconnect();
+                return dbAggiornato.toString();
+            }
         }
     }
 
