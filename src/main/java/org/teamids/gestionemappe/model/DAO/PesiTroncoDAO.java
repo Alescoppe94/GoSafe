@@ -6,6 +6,7 @@ import org.teamids.gestionemappe.model.DbTable.Peso;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -20,20 +21,20 @@ public class PesiTroncoDAO {
         this.tabella = new PesiTronco();
     }
 
-    public void updateValorePeso(int troncoId, String peso, float los){
+    public void updateValorePeso(int troncoId, String peso, float los, Connection db){
         String dati= "valore = " + los;
         tabella.update();
         tabella.innerjoin("peso", "pesoId = peso.id");
         tabella.set(dati);
         tabella.where("troncoId = '" + troncoId +"' AND peso.nome = '" + peso + "'");
-        tabella.execute();
+        tabella.execute(db);
     }
 
-    public HashMap<Float,Float> getPesiTronco(int troncoId) {
+    public HashMap<Float,Float> getPesiTronco(int troncoId, Connection db) {
         tabella.select("valore,coefficiente");
         tabella.innerjoin("peso", "peso.id = pesoId");
         tabella.where("troncoId = '" + troncoId +"'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         HashMap<Float, Float> coeffVal = new HashMap<>();
         for (int i = 0; i<rs.size(); i++) {
             coeffVal.put(Float.parseFloat(rs.get(i).get("coefficiente").toString()), Float.parseFloat(rs.get(i).get("valore").toString()));
@@ -41,11 +42,11 @@ public class PesiTroncoDAO {
         return coeffVal;
     }
 
-    public Float geValoreByPesoId(int troncoId, String peso) {
+    public Float geValoreByPesoId(int troncoId, String peso, Connection db) {
         tabella.select("valore");
         tabella.innerjoin("peso", "pesoId = peso.id");
         tabella.where("troncoId = '" + troncoId +"' AND peso.nome = '" + peso + "'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         Float valore = null;
 
         if(rs.size() != 0)
@@ -54,19 +55,19 @@ public class PesiTroncoDAO {
         return valore;
     }
 
-    public void losToDefault() {
+    public void losToDefault(Connection db) {
         tabella.update();
         tabella.innerjoin("peso", "pesoId = peso.id");
         tabella.set("valore = 0");
         tabella.where("peso.nome = 'los'");
-        tabella.execute();
+        tabella.execute(db);
     }
 
-    public JsonArray getAllPesiTroncoAggiornati(Timestamp timestamp) {
+    public JsonArray getAllPesiTroncoAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pesiTroncoAggiornati = Json.createArrayBuilder();
         tabella.select();
         tabella.where("last_update>'"+timestamp+"'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         for (int i = 0; i<rs.size(); i++) {
             pesiTroncoAggiornati.add(Json.createObjectBuilder()
                     .add("id",rs.get(i).get("id").toString())
@@ -78,10 +79,10 @@ public class PesiTroncoDAO {
         return pesiTroncoAggiornati.build();
     }
 
-    public JsonArray getTable() {
+    public JsonArray getTable(Connection db) {
         JsonArrayBuilder pesiTronco = Json.createArrayBuilder();
         tabella.select();
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         for (int i = 0; i<rs.size(); i++) {
             pesiTronco.add(Json.createObjectBuilder()
                     .add("id",rs.get(i).get("id").toString())
@@ -94,48 +95,48 @@ public class PesiTroncoDAO {
     }
 
 
-    public void aggiornaPesiTronco(int troncoId, String peso, float valore){
+    public void aggiornaPesiTronco(int troncoId, String peso, float valore, Connection db){
 
         tabella.select();
         tabella.innerjoin("peso", "pesoId = peso.id");
         tabella.where("troncoId = '" + troncoId +"' AND peso.nome = '" + peso + "'");
-        List<Map<String, Object>> rs = tabella.fetch();
+        List<Map<String, Object>> rs = tabella.fetch(db);
         if(rs.size()==0){
             Peso tabella2 = new Peso();                             //non è bellissima sta cosa ma funziona
             tabella2.select("id");
             tabella2.where("nome = '"+ peso +"'");
-            List<Map<String, Object>> rs2 = tabella2.fetch();
+            List<Map<String, Object>> rs2 = tabella2.fetch(db);
             String dati= "null";
             dati=dati+",'"+troncoId+"'";
             dati=dati+",'"+rs2.get(0).get("id").toString()+"'";
             dati=dati+",'" + valore + "'";
             dati=dati+",null";
             tabella.insert(dati);
-            tabella.execute();
+            tabella.execute(db);
         }else{
-            updateValorePeso(troncoId, peso, valore);
+            updateValorePeso(troncoId, peso, valore, db);
         }
 
     }
 
-    public void eliminaPesiTronco(int idPiano){
+    public void eliminaPesiTronco(int idPiano, Connection db){
 
         tabella.delete2();
         tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconAId=beacon.id");
         tabella.where("beacon.pianoId = '" + idPiano +"'");
-        tabella.execute();
+        tabella.execute(db);
         tabella.delete2();
         tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconBId=beacon.id");
         tabella.where("beacon.pianoId = '" + idPiano +"'");
-        tabella.execute();
+        tabella.execute(db);
 
     }
 
-    public void eliminaPesiTroncoByPiano(int idPeso){
+    public void eliminaPesiTroncoByPiano(int idPeso, Connection db){
 
         tabella.delete();
         tabella.where("pesoId = '" + idPeso +"'");
-        tabella.execute();
+        tabella.execute(db);
 
     }
 

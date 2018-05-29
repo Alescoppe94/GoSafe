@@ -1,9 +1,11 @@
 package org.teamids.gestionemappe.control;
 
 import com.google.gson.Gson;
+import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
+import java.sql.Connection;
 import java.util.HashMap;
 
 public class GestioneUtente{
@@ -17,7 +19,10 @@ public class GestioneUtente{
     }
 
     public String loginUtente(UtenteEntity utente){
-        UtenteEntity utentedb = utenteDAO.getUserByUsername(utente.getUsername());
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        UtenteEntity utentedb = utenteDAO.getUserByUsername(utente.getUsername(), db);
         String esito;
         if(utentedb != null) {
             if(utente.getPassword().equals(utentedb.getPassword())) {
@@ -29,7 +34,7 @@ public class GestioneUtente{
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
-                utenteDAO.updateInfoUtente(utente.getId(), campo);
+                utenteDAO.updateInfoUtente(utente.getId(), campo, db);
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
             }
@@ -38,57 +43,76 @@ public class GestioneUtente{
         }
         else
             esito = "{\"esito\": \"ERROR: Utente non trovato\"}";
+        connector.disconnect();
         return esito;
     }
 
     public boolean autenticazioneUtente(UtenteEntity utente){
-        boolean isAutenticato = utenteDAO.isAutenticato(utente.getUsername(),utente.getPassword());
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        boolean isAutenticato = utenteDAO.isAutenticato(utente.getUsername(),utente.getPassword(), db);
+
+        connector.disconnect();
         return isAutenticato;
     }
 
     public String registrazioneUtente(UtenteEntity utente){
-        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername());
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername(), db);
         String esito;
         if(isUserInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
-            utenteDAO.insertUser(utente);
-            int id_utente = utenteDAO.getUserByUsername(utente.getUsername()).getId();
+            utenteDAO.insertUser(utente, db);
+            int id_utente = utenteDAO.getUserByUsername(utente.getUsername(), db).getId();
             esito = "{\"id_utente\": \""+ id_utente +"\"}";
         }
+        connector.disconnect();
         return esito;
     }
 
     public String updateUtente(UtenteEntity utente){
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
         UtenteDAO utenteDAO = new UtenteDAO();
-        boolean isUsernameInDb = utenteDAO.findUserByUsername(utente.getUsername()) && !utenteDAO.isUsernameIdPresent(utente.getUsername(), utente.getId());
-        System.out.println("isUserinDB"+isUsernameInDb);
+        boolean isUsernameInDb = utenteDAO.findUserByUsername(utente.getUsername(), db) && !utenteDAO.isUsernameIdPresent(utente.getUsername(), utente.getId(), db);
         String esito;
         if(isUsernameInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
-            System.out.println("Sono qua");
             HashMap<String, Object> campo = new HashMap<>();
             campo.put("username", utente.getUsername());
             campo.put("password", utente.getPassword());
             campo.put("nome", utente.getNome());
             campo.put("cognome", utente.getCognome());
-            utenteDAO.updateInfoUtente(utente.getId(), campo);
+            utenteDAO.updateInfoUtente(utente.getId(), campo, db);
             esito = "{\"esito\": \"success\"}";
         }
-        System.out.println(esito);
+        connector.disconnect();
         return esito;
     }
 
     public void logoutUtente(UtenteEntity utente){
-        utenteDAO.logout(utente.getUsername());
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+        utenteDAO.logout(utente.getUsername(), db);
+        connector.disconnect();
     }
 
     public void updateUserPosition(UtenteEntity utente) {
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", utente.getBeaconId());
-        utenteDAO.updateInfoUtente(utente.getId(),campo);
+        utenteDAO.updateInfoUtente(utente.getId(),campo, db);
+
+        connector.disconnect();
     }
 }

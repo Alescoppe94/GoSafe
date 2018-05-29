@@ -60,9 +60,7 @@ public class DbTableHelpers {
         sql = sql + " INNER JOIN " + tabella2 + " ON " + uguaglianza2;
     }
 
-    public boolean execute(){
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
+    public boolean execute(Connection db){
         boolean check = false;
         sql = sql + ";";
         try {
@@ -73,13 +71,10 @@ public class DbTableHelpers {
             e.printStackTrace();
             check=false;
         }
-        connector.disconnect();
         return check;
     }
 
-    public int executeForKey(){
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
+    public int executeForKey(Connection db){
         sql = sql + ";";
         int generated_key = 0;
         try {
@@ -96,15 +91,12 @@ public class DbTableHelpers {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        connector.disconnect();
         return generated_key;
     }
 
-    public List<Map<String, Object>> fetch(){
+    public List<Map<String, Object>> fetch(Connection db){
 
         ResultSet risultato= null;
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
         List<Map<String, Object>> lista;
         sql = sql + ";";
         try {
@@ -115,7 +107,6 @@ public class DbTableHelpers {
             e.printStackTrace();
             lista = null;
         }
-        connector.disconnect();
         return lista;
     }
 

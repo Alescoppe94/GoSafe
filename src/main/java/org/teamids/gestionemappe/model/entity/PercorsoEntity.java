@@ -14,6 +14,11 @@ public class PercorsoEntity {
         this.beaconPartenza = beaconPartenza;
     }
 
+    public PercorsoEntity(LinkedList<TappaEntity> tappe, BeaconEntity beaconPartenza) {
+        this.tappe = tappe;
+        this.beaconPartenza = beaconPartenza;
+    }
+
     public int getId() {
         return id;
     }
