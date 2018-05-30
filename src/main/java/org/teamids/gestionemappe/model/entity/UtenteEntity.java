@@ -11,6 +11,7 @@ public class UtenteEntity {
     private PercorsoEntity percorso;
     private boolean is_autenticato;
     private String token;
+    private String idsessione;
 
     public UtenteEntity(){
 
@@ -83,5 +84,13 @@ public class UtenteEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIdsessione() {
+        return idsessione;
+    }
+
+    public void setIdsessione(String idsessione) {
+        this.idsessione = idsessione;
     }
 }

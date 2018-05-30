@@ -5,6 +5,7 @@ import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.util.HashMap;
 
@@ -34,6 +35,9 @@ public class GestioneUtente{
                 campo.put("is_autenticato", 1);
                 if(utente.getToken()!=null)
                     campo.put("token", utente.getToken());
+                String idsessione = generateSessionId();
+                utente.setIdsessione(idsessione);
+                campo.put("idsessione",idsessione);
                 utenteDAO.updateInfoUtente(utente.getId(), campo, db);
                 Gson gson = new Gson();
                 esito = gson.toJson(utente);
@@ -47,16 +51,6 @@ public class GestioneUtente{
         return esito;
     }
 
-    public boolean autenticazioneUtente(UtenteEntity utente){
-        ConnectorHelpers connector= new ConnectorHelpers();
-        Connection db = connector.connect();
-
-        boolean isAutenticato = utenteDAO.isAutenticato(utente.getUsername(),utente.getPassword(), db);
-
-        connector.disconnect();
-        return isAutenticato;
-    }
-
     public String registrazioneUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -67,9 +61,11 @@ public class GestioneUtente{
             esito = "{\"esito\": \"Username in uso\"}";
         }
         else{
+            String idsessione = generateSessionId();
+            utente.setIdsessione(idsessione);
             utenteDAO.insertUser(utente, db);
             int id_utente = utenteDAO.getUserByUsername(utente.getUsername(), db).getId();
-            esito = "{\"id_utente\": \""+ id_utente +"\"}";
+            esito = "{\"id_utente\": \""+ id_utente +"\", \"idsessione\": \""+ idsessione +"\"}";
         }
         connector.disconnect();
         return esito;
@@ -114,5 +110,15 @@ public class GestioneUtente{
         utenteDAO.updateInfoUtente(utente.getId(),campo, db);
 
         connector.disconnect();
+    }
+
+    private String generateSessionId(){
+        final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder(10);
+        for( int i = 0; i < 10; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
+
     }
 }

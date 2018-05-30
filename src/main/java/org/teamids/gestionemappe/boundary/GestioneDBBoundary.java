@@ -33,6 +33,19 @@ public class GestioneDBBoundary {
     GestioneDB gestionedb = new GestioneDB();
 
     @GET
+    @Path("/secured/aggiornadb/{timestamp}")
+    public String aggiornaDB(@PathParam("timestamp") Timestamp timestamp){
+        return gestionedb.aggiornaDB(timestamp);
+    }
+
+    @GET
+    @Path("/secured/download")
+    public String downloadDb(){
+        return gestionedb.downloadDb();
+
+    }
+
+    @GET
     @Path("/admin")
     @Produces(MediaType.TEXT_HTML)
     public Viewable showAdmin() {
@@ -61,12 +74,6 @@ public class GestioneDBBoundary {
         map.putAll(model);
         return new Viewable("/tronchipiano", map);
 
-    }
-
-    @GET
-    @Path("/aggiornadb/{timestamp}")
-    public String aggiornaDB(@PathParam("timestamp") Timestamp timestamp){
-        return gestionedb.aggiornaDB(timestamp);
     }
 
     @POST
@@ -181,13 +188,4 @@ public class GestioneDBBoundary {
         return new Viewable("/pesi", model);
 
     }
-
-    @GET
-    @Path("/download")
-    public String downloadDb(){
-
-        return gestionedb.downloadDb();
-
-    }
-
 }
