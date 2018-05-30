@@ -26,19 +26,19 @@ public class GestioneUtenteBoundary {
     }
 
     @PUT
-    @Path("/logout")
+    @Path("/secured/logout")
     public void logoutUtente(UtenteEntity utente){
         gestioneutente.logoutUtente(utente);
     }
 
     @POST
-    @Path("modifica")
-    public String updateUtente(UtenteEntity utente){
+    @Path("/secured/modifica")
+    public String updateUtente(UtenteEntity utente,@HeaderParam("authorization") String authString){
         return gestioneutente.updateUtente(utente);
     }
 
     @PUT
-    @Path("/updateposition")
+    @Path("/secured/updateposition")
     public void updateUserPosition(UtenteEntity utente){
         gestioneutente.updateUserPosition(utente);
     }

@@ -21,13 +21,13 @@ public class GestioneMappeBoundary {
     }
 
     @GET
-    @Path("calcolapercorso/{beaconPart}/{beaconArr}")
+    @Path("/secured/calcolapercorso/{beaconPart}/{beaconArr}")
     public PercorsoEntity calcoloPercorsoNoEmergenza(@PathParam("beaconPart")String beaconPart, @PathParam("beaconArr")String beaconArr) {
         return gestionemappe.calcoloPercorsoNoEmergenza(beaconPart,beaconArr);
     }
 
     @GET
-    @Path("visualizzapercorso/{utenteId}/{beaconPart}")
+    @Path("/secured/visualizzapercorso/{utenteId}/{beaconPart}")
     public NotificaEntity visualizzaPercorso(@PathParam("utenteId")int utenteId, @PathParam("beaconPart")String beaconPart){
         return gestionemappe.visualizzaPercorso(utenteId, beaconPart);
     }
