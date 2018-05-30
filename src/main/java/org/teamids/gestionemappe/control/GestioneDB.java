@@ -161,7 +161,7 @@ public class GestioneDB {
 
                 boolean isPuntodiRaccolta = "1".equals(field[1]);
 
-                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, newpiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
+                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, numeropiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
 
                 nuoviBeacon.add(beacon);
 
