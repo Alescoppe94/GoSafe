@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.DbTable.Peso;
+import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
@@ -52,6 +53,15 @@ public class GestioneDBBoundary {
 
         Map<String, Integer> model = gestionedb.getAllPiani();
         return new Viewable("/index", model);
+    }
+
+    @GET
+    @Path("/visualizzastatistiche")
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable visualizzaStatistiche(){
+
+        Map<BeaconEntity, Integer> model = gestionedb.getPeoplePerBeacon();
+        return new Viewable("/statistiche", model);
     }
 
 

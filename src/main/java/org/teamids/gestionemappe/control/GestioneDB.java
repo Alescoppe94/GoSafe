@@ -58,6 +58,10 @@ public class GestioneDB {
      //   return pianoDAO.getAllPiani();
     //}
 
+    public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
+        beaconDAO.get
+    }
+
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
         ConnectorHelpers connector= new ConnectorHelpers();

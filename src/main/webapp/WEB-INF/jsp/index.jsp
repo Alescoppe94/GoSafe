@@ -55,6 +55,7 @@
             <div>
                 <input id="lanciaemergenza" type="button" value="LanciaEmergenza">
                 <input id="backtonormal" type="button"  value="Backtonormal">
+                <input id="visualizzastatistiche" type="button"  value="VisualizzaStatistiche">
             </div>
         </div>
     </div>

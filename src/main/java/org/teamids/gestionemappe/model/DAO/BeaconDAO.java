@@ -30,6 +30,15 @@ public class BeaconDAO {
         return beacon;
     }
 
+    public ArrayList<BeaconEntity> getAllBeacons(Connection db){
+
+        ArrayList<BeaconEntity> beacons = new ArrayList<>();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch(db);
+        
+
+    }
+
     public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){
         Set<BeaconEntity> allPuntiDiRaccolta = new HashSet<>();
         tabella.select();
