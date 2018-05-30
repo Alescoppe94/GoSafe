@@ -115,8 +115,8 @@ public class GestioneUtente{
     private String generateSessionId(){
         final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         SecureRandom rnd = new SecureRandom();
-        StringBuilder sb = new StringBuilder(10);
-        for( int i = 0; i < 10; i++ )
+        StringBuilder sb = new StringBuilder(16);
+        for( int i = 0; i < 16; i++ )
             sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
         return sb.toString();
 
