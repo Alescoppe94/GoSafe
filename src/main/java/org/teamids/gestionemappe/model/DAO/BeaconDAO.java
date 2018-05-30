@@ -36,8 +36,17 @@ public class BeaconDAO {
         ArrayList<BeaconEntity> beacons = new ArrayList<>();
         tabella.select();
         List<Map<String, Object>> rs = tabella.fetch(db);
-        
-
+        for (int i = 0; i<rs.size(); i++) {
+            BeaconEntity beaconDiRaccolta = new BeaconEntity(
+                    rs.get(i).get("id").toString(),
+                    Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
+                    Integer.parseInt(rs.get(i).get("pianoId").toString()),
+                    Float.parseFloat(rs.get(i).get("coordx").toString()),
+                    Float.parseFloat(rs.get(i).get("coordy").toString())
+            );
+            beacons.add(beaconDiRaccolta);
+        }
+        return beacons;
     }
 
     public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){

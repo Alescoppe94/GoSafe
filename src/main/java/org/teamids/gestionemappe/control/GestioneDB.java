@@ -30,6 +30,7 @@ public class GestioneDB {
     private BeaconDAO beaconDAO;
     private PesoDAO pesoDAO;
     private PesiTroncoDAO pesiTroncoDAO;
+    private UtenteDAO utenteDAO;
     private static Timestamp last_time_deleted;
 
     public GestioneDB(){
@@ -39,6 +40,7 @@ public class GestioneDB {
         this.beaconDAO = new BeaconDAO();
         this.pesoDAO = new PesoDAO();
         this.pesiTroncoDAO = new PesiTroncoDAO();
+        this.utenteDAO = new UtenteDAO();
     }
 
     public Map<String, Integer> getAllPiani(){
@@ -59,7 +61,23 @@ public class GestioneDB {
     //}
 
     public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
-        beaconDAO.get
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        ArrayList<BeaconEntity> beacons = beaconDAO.getAllBeacons(db);
+        Map<BeaconEntity, Integer> numPersBeacon = new HashMap<>();
+
+        for(BeaconEntity beacon : beacons){
+
+            int numeroPersone = utenteDAO.countUsersPerBeacon(beacon.getId(), db);
+            if(numeroPersone != 0) {
+                numPersBeacon.put(beacon, numeroPersone);
+            }
+
+        }
+
+        connector.disconnect();
+        return numPersBeacon;
     }
 
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){

@@ -28,18 +28,6 @@ $(document).ready(function() {
         xhr.send();
         //xhr.send(params);
     });
-    $('#visualizzastatistiche').click(  function () {
-        var url = "http://localhost:8080/gestionemappe/db/visualizzastatistiche";
-        //var params = "lorem=ipsum&name=alpha";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-
-        //Send the proper header information along with the request
-        xhr.setRequestHeader("Content-type", "application/json");
-
-        xhr.send();
-        //xhr.send(params);
-    });
     $('#lanciaemergenza').click(  function () {
         var url = "http://localhost:8080/gestionemappe/mappe/lanciaemergenza";
         //var params = "lorem=ipsum&name=alpha";
