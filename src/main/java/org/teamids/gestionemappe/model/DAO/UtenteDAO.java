@@ -27,6 +27,7 @@ public class UtenteDAO extends Observable {
         dati=dati+",null";
         dati=dati+",1";
         dati=dati+",'" + utente.getToken() + "'";
+        dati=dati+",'" + utente.getIdsessione() + "'";
         tabella.insert(dati);
         int id_utente = tabella.executeForKey(db);
         utente.setId(id_utente);
@@ -50,10 +51,10 @@ public class UtenteDAO extends Observable {
         return utente;
     }
 
-    public boolean isAutenticato(String user, String pass, Connection db){
+    public boolean isAutenticato(String idsessione, Connection db){
         boolean success = false;
         tabella.select();
-        tabella.where("username ='" + user + "' and password = '" + pass + "' and is_autenticato = 1 ");
+        tabella.where("idsessione ='" + idsessione + "' and is_autenticato = 1 ");
         if(tabella.fetch(db).size()==1)
             success = true;
         else
@@ -99,7 +100,7 @@ public class UtenteDAO extends Observable {
     }
 
     public void logout(String username, Connection db){
-        String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0";
+        String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0, idsessione = NULL";
         tabella.update(dati);
         tabella.where("username='" + username + "'");
         tabella.execute(db);
