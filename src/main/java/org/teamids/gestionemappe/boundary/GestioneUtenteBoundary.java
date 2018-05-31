@@ -27,8 +27,8 @@ public class GestioneUtenteBoundary {
 
     @PUT
     @Path("/secured/logout")
-    public void logoutUtente(UtenteEntity utente){
-        gestioneutente.logoutUtente(utente);
+    public String logoutUtente(UtenteEntity utente){
+        return gestioneutente.logoutUtente(utente);
     }
 
     @POST
