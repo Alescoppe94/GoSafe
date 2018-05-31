@@ -24,10 +24,29 @@ public class BeaconDAO {
         List<Map<String, Object>> rs = tabella.fetch(db);
         BeaconEntity beacon = new BeaconEntity();
         beacon.setId(rs.get(0).get("id").toString());
+        beacon.setPiano(Integer.parseInt(rs.get(0).get("pianoId").toString()));
         beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));
         beacon.setCoordx(Float.parseFloat(rs.get(0).get("coordx").toString()));
         beacon.setCoordy(Float.parseFloat(rs.get(0).get("coordy").toString()));//TODO: valutare inserimento del piano
         return beacon;
+    }
+
+    public ArrayList<BeaconEntity> getAllBeacons(Connection db){
+
+        ArrayList<BeaconEntity> beacons = new ArrayList<>();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch(db);
+        for (int i = 0; i<rs.size(); i++) {
+            BeaconEntity beaconDiRaccolta = new BeaconEntity(
+                    rs.get(i).get("id").toString(),
+                    Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
+                    Integer.parseInt(rs.get(i).get("pianoId").toString()),
+                    Float.parseFloat(rs.get(i).get("coordx").toString()),
+                    Float.parseFloat(rs.get(i).get("coordy").toString())
+            );
+            beacons.add(beaconDiRaccolta);
+        }
+        return beacons;
     }
 
     public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){
@@ -35,12 +54,11 @@ public class BeaconDAO {
         tabella.select();
         tabella.where("is_puntodiraccolta = '1'" );
         List<Map<String, Object>> rs = tabella.fetch(db);
-        PianoDAO pianoDAO = new PianoDAO();
         for (int i = 0; i<rs.size(); i++) {
             BeaconEntity beaconDiRaccolta = new BeaconEntity(
                     rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
-                    pianoDAO.getPianoById(Integer.parseInt(rs.get(i).get("pianoId").toString()), db),
+                    Integer.parseInt(rs.get(i).get("pianoId").toString()),
                     Float.parseFloat(rs.get(i).get("coordx").toString()),
                     Float.parseFloat(rs.get(i).get("coordy").toString())
             );
@@ -87,7 +105,7 @@ public class BeaconDAO {
             int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
             String dati= String.valueOf(beacon.getId());
             dati=dati+",'"+puntodiraccolta+"'";
-            dati=dati+",'"+beacon.getPiano().getId()+"'";
+            dati=dati+",'"+beacon.getPiano()+"'";
             dati=dati+",'"+beacon.getCoordx()+"'";
             dati=dati+",'"+beacon.getCoordy()+"'";
             dati=dati+",null";

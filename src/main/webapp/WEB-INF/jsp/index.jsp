@@ -55,6 +55,7 @@
             <div>
                 <input id="lanciaemergenza" type="button" value="LanciaEmergenza">
                 <input id="backtonormal" type="button"  value="Backtonormal">
+                <a href="http://localhost:8080/gestionemappe/db/visualizzastatistiche"><input id="visualizzastatistiche" type="button"  value="VisualizzaStatistiche"></a>
             </div>
         </div>
     </div>

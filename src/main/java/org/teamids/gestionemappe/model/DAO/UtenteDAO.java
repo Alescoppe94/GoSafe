@@ -154,6 +154,15 @@ public class UtenteDAO extends Observable {
 
     }
 
+    public int countUsersPerBeacon(String beaconId, Connection db) {
+        int users = 0;
+        tabella.select();
+        tabella.where("beaconId = '" + beaconId + "'");
+        users += tabella.count(tabella.fetch(db));
+        return users;
+
+    }
+
     public boolean isUsernameIdPresent(String username, int id, Connection db){
         boolean success = false;
         tabella.select();

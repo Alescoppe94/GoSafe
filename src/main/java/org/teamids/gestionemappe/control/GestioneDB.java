@@ -30,6 +30,7 @@ public class GestioneDB {
     private BeaconDAO beaconDAO;
     private PesoDAO pesoDAO;
     private PesiTroncoDAO pesiTroncoDAO;
+    private UtenteDAO utenteDAO;
     private static Timestamp last_time_deleted;
 
     public GestioneDB(){
@@ -39,6 +40,7 @@ public class GestioneDB {
         this.beaconDAO = new BeaconDAO();
         this.pesoDAO = new PesoDAO();
         this.pesiTroncoDAO = new PesiTroncoDAO();
+        this.utenteDAO = new UtenteDAO();
     }
 
     public Map<String, Integer> getAllPiani(){
@@ -57,6 +59,26 @@ public class GestioneDB {
     //public ArrayList<PianoEntity> getPiani(){
      //   return pianoDAO.getAllPiani();
     //}
+
+    public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
+        ConnectorHelpers connector= new ConnectorHelpers();
+        Connection db = connector.connect();
+
+        ArrayList<BeaconEntity> beacons = beaconDAO.getAllBeacons(db);
+        Map<BeaconEntity, Integer> numPersBeacon = new HashMap<>();
+
+        for(BeaconEntity beacon : beacons){
+
+            int numeroPersone = utenteDAO.countUsersPerBeacon(beacon.getId(), db);
+            if(numeroPersone != 0) {
+                numPersBeacon.put(beacon, numeroPersone);
+            }
+
+        }
+
+        connector.disconnect();
+        return numPersBeacon;
+    }
 
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
@@ -111,16 +133,20 @@ public class GestioneDB {
             JsonArray beaconaggiornati = beaconDAO.getAllBeaconAggiornati(timestamp_client, db);
             JsonArray pesoaggiornati = pesoDAO.getAllPesiAggiornati(timestamp_client, db);
             JsonArray pesitroncoaggiornati = pesiTroncoDAO.getAllPesiTroncoAggiornati(timestamp_client, db);
-            JsonObject dbAggiornato = Json.createObjectBuilder()
-                    .add("tipologia", "modifica")
-                    .add("tronco", tronchiaggionati)
-                    .add("piano", pianiaggionati)
-                    .add("beacon", beaconaggiornati)
-                    .add("peso", pesoaggiornati)
-                    .add("pesitronco", pesitroncoaggiornati)
-                    .build();
-            connector.disconnect();
-            return dbAggiornato.toString();
+            if(tronchiaggionati.size() == 0 && pianiaggionati.size() == 0 && beaconaggiornati.size() == 0 && pesoaggiornati.size() == 0 && pesitroncoaggiornati.size() == 0){
+                return null;        //da vedere se piace
+            }else {
+                JsonObject dbAggiornato = Json.createObjectBuilder()
+                        .add("tipologia", "modifica")
+                        .add("tronco", tronchiaggionati)
+                        .add("piano", pianiaggionati)
+                        .add("beacon", beaconaggiornati)
+                        .add("peso", pesoaggiornati)
+                        .add("pesitronco", pesitroncoaggiornati)
+                        .build();
+                connector.disconnect();
+                return dbAggiornato.toString();
+            }
         }
     }
 
@@ -153,7 +179,7 @@ public class GestioneDB {
 
                 boolean isPuntodiRaccolta = "1".equals(field[1]);
 
-                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, newpiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
+                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, numeropiano, Float.parseFloat(field[2]), Float.parseFloat(field[3]));
 
                 nuoviBeacon.add(beacon);
 
