@@ -335,6 +335,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
 
     public void backToNormalMode(){
 
+        //TODO: stoppare l'emergenza in corso
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
