@@ -37,7 +37,7 @@ public class SecurityFilter implements ContainerRequestFilter {
             }
             Response unauthorizedStatus = Response
                                             .status(Response.Status.UNAUTHORIZED)
-                                            .entity("Xser cannot access the resource.")
+                                            .entity("User cannot access the resource.")
                                             .build();
             requestContext.abortWith(unauthorizedStatus);
             connector.disconnect();
