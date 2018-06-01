@@ -17,6 +17,7 @@ public class ConnectorHelpers {
             return conn;
         }
         catch(Exception e){
+            e.printStackTrace();
             System.out.println("Errore di connessione al Db");
         }
         return conn;
@@ -27,7 +28,7 @@ public class ConnectorHelpers {
             conn.close();
         }
         catch(Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return;
     }
