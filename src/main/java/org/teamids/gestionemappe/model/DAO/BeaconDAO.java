@@ -26,8 +26,8 @@ public class BeaconDAO {
         beacon.setId(rs.get(0).get("id").toString());
         beacon.setPiano(Integer.parseInt(rs.get(0).get("pianoId").toString()));
         beacon.setIs_puntodiraccolta(Boolean.parseBoolean(rs.get(0).get("is_puntodiraccolta").toString()));
-        beacon.setCoordx(Float.parseFloat(rs.get(0).get("coordx").toString()));
-        beacon.setCoordy(Float.parseFloat(rs.get(0).get("coordy").toString()));//TODO: valutare inserimento del piano
+        beacon.setCoordx(Integer.parseInt(rs.get(0).get("coordx").toString()));
+        beacon.setCoordy(Integer.parseInt(rs.get(0).get("coordy").toString()));
         return beacon;
     }
 
@@ -41,8 +41,8 @@ public class BeaconDAO {
                     rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
                     Integer.parseInt(rs.get(i).get("pianoId").toString()),
-                    Float.parseFloat(rs.get(i).get("coordx").toString()),
-                    Float.parseFloat(rs.get(i).get("coordy").toString())
+                    Integer.parseInt(rs.get(i).get("coordx").toString()),
+                    Integer.parseInt(rs.get(i).get("coordy").toString())
             );
             beacons.add(beaconDiRaccolta);
         }
@@ -59,8 +59,8 @@ public class BeaconDAO {
                     rs.get(i).get("id").toString(),
                     Boolean.parseBoolean(rs.get(i).get("is_puntodiraccolta").toString()),
                     Integer.parseInt(rs.get(i).get("pianoId").toString()),
-                    Float.parseFloat(rs.get(i).get("coordx").toString()),
-                    Float.parseFloat(rs.get(i).get("coordy").toString())
+                    Integer.parseInt(rs.get(i).get("coordx").toString()),
+                    Integer.parseInt(rs.get(i).get("coordy").toString())
             );
             allPuntiDiRaccolta.add(beaconDiRaccolta);
         }

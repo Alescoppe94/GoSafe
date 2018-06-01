@@ -94,11 +94,13 @@ public class GestioneUtente{
         return esito;
     }
 
-    public void logoutUtente(UtenteEntity utente){
+    public String logoutUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         utenteDAO.logout(utente.getUsername(), db);
+        String esito = "{\"esito\": \"success\"}";
         connector.disconnect();
+        return esito;
     }
 
     public void updateUserPosition(UtenteEntity utente) {
