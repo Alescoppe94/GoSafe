@@ -106,8 +106,8 @@ public class TappaDAO {
             e.printStackTrace();
         }
         PreparedStatement query = null;
-        String insertPercorso = "INSERT INTO percorso VALUES(0,"+ partenza.getId() + ");";
-        String selectPercorsoId = "SELECT @ID:=id FROM percorso WHERE beaconPartenzaId="+ partenza.getId()+";";
+        String insertPercorso = "INSERT INTO percorso VALUES(0,'"+ partenza.getId() + "');";
+        String selectPercorsoId = "SELECT @ID:=id FROM percorso WHERE beaconPartenzaId='"+ partenza.getId()+"';";
         try {
             query = db.prepareStatement(insertPercorso);
             query.executeUpdate();
