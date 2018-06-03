@@ -92,6 +92,11 @@ public class GestioneDBBoundary {
         Gson pianojson = new Gson();
         JsonObject jsonRequest = pianojson.fromJson(piano, JsonObject.class);
 
+        File f = new File(request.getSession().getServletContext().getRealPath("/WEB-INF/docs"));
+        if(!f.exists()){
+            f.mkdirs();
+        }
+
         String path = request.getSession().getServletContext().getRealPath("/WEB-INF/docs/");
 
         gestionedb.aggiungiPiano(path, jsonRequest);
