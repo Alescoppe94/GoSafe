@@ -172,16 +172,19 @@ public class GestioneDB {
 
         try (BufferedReader br = new BufferedReader(new FileReader(path+"beaconcsv.csv"))) {
 
+            boolean firstLine = true;
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] field = line.split(cvsSplitBy);
+                if(!firstLine) {
+                    String[] field = line.split(cvsSplitBy);
 
-                boolean isPuntodiRaccolta = "1".equals(field[1]);
+                    boolean isPuntodiRaccolta = "1".equals(field[1]);           //TODO:pensare se ci va il numero del piano o l'id del piano, perchè nel db c'è l'id del piano. l'id del piano per ora è autoincrement quindi potrebbero non combaciare con quello che si scrive nel csv
 
-                BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, numeropiano, Integer.parseInt(field[2]), Integer.parseInt(field[3]));
+                    BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, Integer.parseInt(field[2]), Integer.parseInt(field[3]), Integer.parseInt(field[4]));
 
-                nuoviBeacon.add(beacon);
+                    nuoviBeacon.add(beacon);
+                }
+                firstLine = false;
 
             }
 
@@ -196,21 +199,23 @@ public class GestioneDB {
 
         try (BufferedReader br = new BufferedReader(new FileReader(path+"troncocsv.csv"))) {
 
+            boolean firstLine = true;
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] field = line.split(cvsSplitBy);
+                if(!firstLine) {
+                    String[] field = line.split(cvsSplitBy);
 
-                ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();
-                beaconEstremi.add(new BeaconEntity(field[0]));
-                beaconEstremi.add(new BeaconEntity(field[1]));
+                    ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();              //TODO: pensare se serve che l'admin può settare l'id dei tronchi dal csv
+                    beaconEstremi.add(new BeaconEntity(field[1]));
+                    beaconEstremi.add(new BeaconEntity(field[2]));
 
-                boolean agibile = "1".equals(field[2]);
+                    boolean agibile = "1".equals(field[3]);
 
-                TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[3]));
+                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[4]));
 
-                nuoviTronchi.add(tronco);
-
+                    nuoviTronchi.add(tronco);
+                }
+                firstLine = false;
             }
 
         } catch (IOException e) {
