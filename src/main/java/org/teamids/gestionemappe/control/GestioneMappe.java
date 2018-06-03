@@ -26,6 +26,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
     private NotificaDAO notificaDAO;
     private BeaconDAO beaconDAO;
     private PesiTroncoDAO pesiTroncoDAO;
+    private static boolean emergenza=false;
 
 
     public GestioneMappe() {
@@ -56,22 +57,17 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         Runnable r = new Runnable() {
             public void run() {
                 try{
-                    while(utenteDAO.existUtenteInPericolo(db)){
+                    emergenza = true;
+                    while(emergenza && utenteDAO.existUtenteInPericolo(db)){
                         generaPercorsiEvacuazione(db);
-                        System.out.println("inside");
                     }
-                } catch(Exception e){
+                }
+                finally{
                     connector.disconnect();
-                    System.out.println("catch");
-                }finally{
-                    connector.disconnect();
-                    System.out.println("finally");
                 }
             }
         };
-        Thread emergenza = new Thread(r);
-        emergenza.start();
-        emergenza.setName("Emergenza");
+        new Thread(r).start();
     }
 
 
@@ -346,12 +342,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
 
     public void backToNormalMode(){
 
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        for(Thread thread : threadSet){
-            if(thread.getName().equals("Emergenza")){
-                thread.stop(); //è deprecato non consigliano di usarlo ma funzione
-            }
-        }
+        emergenza = false;
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
