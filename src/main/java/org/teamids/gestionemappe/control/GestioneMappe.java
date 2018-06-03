@@ -6,6 +6,7 @@ import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.*;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -43,7 +44,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
     }
 
     public void lanciaEmergenza(){
-        ConnectorHelpers connector= new ConnectorHelpers();
+        final ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
         generaPercorsiEvacuazione(db);
@@ -52,15 +53,25 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         for(String token : tokensAttivi){
             communication.inviaNotifica(token);
         }
-        //Runnable r = new Runnable() {
-          //  public void run() {
-        while(utenteDAO.existUtenteInPericolo(db)){
-            generaPercorsiEvacuazione(db);
-        }
-        connector.disconnect();
-           // }
-        //};
-        //new Thread(r).start();
+        Runnable r = new Runnable() {
+            public void run() {
+                try{
+                    while(utenteDAO.existUtenteInPericolo(db)){
+                        generaPercorsiEvacuazione(db);
+                        System.out.println("inside");
+                    }
+                } catch(Exception e){
+                    connector.disconnect();
+                    System.out.println("catch");
+                }finally{
+                    connector.disconnect();
+                    System.out.println("finally");
+                }
+            }
+        };
+        Thread emergenza = new Thread(r);
+        emergenza.start();
+        emergenza.setName("Emergenza");
     }
 
 
@@ -335,7 +346,12 @@ public class GestioneMappe extends ResourceConfig implements Observer {
 
     public void backToNormalMode(){
 
-        //TODO: stoppare l'emergenza in corso
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        for(Thread thread : threadSet){
+            if(thread.getName().equals("Emergenza")){
+                thread.stop(); //è deprecato non consigliano di usarlo ma funzione
+            }
+        }
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
