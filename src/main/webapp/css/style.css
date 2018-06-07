@@ -53,3 +53,9 @@ body{
 #inserimentopianoblock > div > div{
     display: flex;
 }
+
+#parenttarget{
+    width: 500px;
+    height: 500px;
+    overflow: scroll;
+}

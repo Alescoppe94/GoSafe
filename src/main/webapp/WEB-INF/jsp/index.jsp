@@ -14,8 +14,8 @@
             <div id="inserimentopianoblock">
                 <div><h1>Form Inserimento Piano</h1></div>
                 <div>
-                    <div>
-                        <img height="500" width="500" id="target"/>
+                    <div id="parenttarget">
+                        <img id="target"/>
                     </div>
                     <div>
                         <form id="newpianoform" method="post">

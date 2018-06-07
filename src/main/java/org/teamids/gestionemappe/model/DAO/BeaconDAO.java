@@ -103,7 +103,7 @@ public class BeaconDAO {
     public void inserisciBeacons(ArrayList<BeaconEntity> beacons, Connection db){
         for (BeaconEntity beacon : beacons){
             int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
-            String dati= String.valueOf(beacon.getId());
+            String dati= "'"+beacon.getId()+"'";
             dati=dati+",'"+puntodiraccolta+"'";
             dati=dati+",'"+beacon.getPiano()+"'";
             dati=dati+",'"+beacon.getCoordx()+"'";
