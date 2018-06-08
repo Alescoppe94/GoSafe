@@ -352,4 +352,8 @@ public class GestioneMappe extends ResourceConfig implements Observer {
 
         connector.disconnect();
     }
+
+    public static boolean isEmergenza(){
+        return emergenza;
+    }
 }

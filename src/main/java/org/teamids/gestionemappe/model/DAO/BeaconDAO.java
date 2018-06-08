@@ -100,22 +100,40 @@ public class BeaconDAO {
         return beacon.build();
     }
 
-    public void inserisciBeacons(ArrayList<BeaconEntity> beacons, Connection db){
+    public ArrayList<String> inserisciBeacons(ArrayList<BeaconEntity> beacons, int piano_id, Connection db){
+        ArrayList<String> beaconDoppi = new ArrayList<>();
         for (BeaconEntity beacon : beacons){
-            int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
-            String dati= String.valueOf(beacon.getId());
-            dati=dati+",'"+puntodiraccolta+"'";
-            dati=dati+",'"+beacon.getPiano()+"'";
-            dati=dati+",'"+beacon.getCoordx()+"'";
-            dati=dati+",'"+beacon.getCoordy()+"'";
-            dati=dati+",null";
-            tabella.insert(dati);
-            tabella.execute(db);
+            if(!isBeaconInDb(beacon.getId(), db)) {
+                int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
+                String dati = String.valueOf(beacon.getId());
+                dati = dati + ",'" + puntodiraccolta + "'";
+                dati = dati + ",'" + piano_id + "'";
+                dati = dati + ",'" + beacon.getCoordx() + "'";
+                dati = dati + ",'" + beacon.getCoordy() + "'";
+                dati = dati + ",null";
+                tabella.insert(dati);
+                tabella.execute(db);
+            } else {
+                beaconDoppi.add(beacon.getId());
+            }
         }
+        return beaconDoppi;
     }
-    public void eliminaBeaconsPerPiano(int pianoId, Connection db){
+
+    public void eliminaBeaconsPerPiano(int pianoId, Connection db){ //TODO: sistemare
         tabella.delete();
         tabella.where("pianoId = '" + pianoId + "'");
         tabella.execute(db);
+    }
+
+    public boolean isBeaconInDb(String idbeacon, Connection db){
+        boolean success = false;
+        tabella.select();
+        tabella.where("id ='" + idbeacon + "'");
+        if(tabella.fetch(db).size()==1)
+            success = true;
+        else
+            success=false;
+        return success;
     }
 }

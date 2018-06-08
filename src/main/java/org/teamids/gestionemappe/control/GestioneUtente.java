@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.control;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
@@ -40,7 +41,10 @@ public class GestioneUtente{
                 campo.put("idsessione",idsessione);
                 utenteDAO.updateInfoUtente(utente.getId(), campo, db);
                 Gson gson = new Gson();
-                esito = gson.toJson(utente);
+                boolean emergenza = GestioneMappe.isEmergenza();
+                String utenteJson = gson.toJson(utente);
+                esito = "{\"utente\":"+ utenteJson+", \"emergenza\":\""+emergenza+"\"}";
+                System.out.println(esito);
             }
             else
                 esito = "{\"esito\": \"ERROR: Password errata\"}";
@@ -65,7 +69,8 @@ public class GestioneUtente{
             utente.setIdsessione(idsessione);
             utenteDAO.insertUser(utente, db);
             int id_utente = utenteDAO.getUserByUsername(utente.getUsername(), db).getId();
-            esito = "{\"id_utente\": \""+ id_utente +"\", \"idsessione\": \""+ idsessione +"\"}";
+            boolean emergenza = GestioneMappe.isEmergenza();
+            esito = "{\"id_utente\": \""+ id_utente +"\", \"idsessione\": \""+ idsessione +"\", \"emergenza\":\""+emergenza+"\"}";
         }
         connector.disconnect();
         return esito;

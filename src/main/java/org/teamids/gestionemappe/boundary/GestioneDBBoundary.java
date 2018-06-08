@@ -88,7 +88,8 @@ public class GestioneDBBoundary {
 
     @POST
     @Path("/aggiungipiano")
-    public void aggiungiPiano(@Context HttpServletRequest request, String piano) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<String> aggiungiPiano(@Context HttpServletRequest request, String piano) {
         Gson pianojson = new Gson();
         JsonObject jsonRequest = pianojson.fromJson(piano, JsonObject.class);
 
@@ -99,7 +100,10 @@ public class GestioneDBBoundary {
 
         String path = request.getSession().getServletContext().getRealPath("/WEB-INF/docs/");
 
-        gestionedb.aggiungiPiano(path, jsonRequest);
+        ArrayList<String> beaconDoppi = gestionedb.aggiungiPiano(path, jsonRequest);
+
+        return beaconDoppi;
+
 
         /*String base64Image = piano.getImmagine().split(",")[1];
         byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);

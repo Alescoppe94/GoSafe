@@ -150,7 +150,7 @@ public class GestioneDB {
         }
     }
 
-    public String aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
+    public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -160,7 +160,7 @@ public class GestioneDB {
         PianoEntity newpiano = new PianoEntity(immagine, numeropiano);
 
         PianoDAO pianoDAO = new PianoDAO();
-        pianoDAO.inserisciPiano(newpiano, db);
+        int piano_id = pianoDAO.inserisciPiano(newpiano, db);
 
         creaFileCsv(path, "beaconcsv", jsonRequest);
         creaFileCsv(path, "troncocsv", jsonRequest);
@@ -193,7 +193,7 @@ public class GestioneDB {
         }
 
         BeaconDAO beaconDAO = new BeaconDAO();
-        beaconDAO.inserisciBeacons(nuoviBeacon, db);
+        ArrayList<String> beaconDoppi = beaconDAO.inserisciBeacons(nuoviBeacon, piano_id, db);
 
         ArrayList<TroncoEntity> nuoviTronchi = new ArrayList<>();
 
@@ -227,7 +227,7 @@ public class GestioneDB {
 
         connector.disconnect();
 
-        return null;
+        return beaconDoppi;
 
     }
 

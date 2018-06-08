@@ -63,7 +63,7 @@ public class PianoDAO {
         return piani.build();
     }
 
-    public void inserisciPiano(PianoEntity piano, Connection db){
+    public int inserisciPiano(PianoEntity piano, Connection db){
 
         String dati= String.valueOf(piano.getId());
         dati=dati+",'"+piano.getImmagine()+"'";
@@ -72,6 +72,7 @@ public class PianoDAO {
         tabella.insert(dati);
         int id_piano = tabella.executeForKey(db);
         piano.setId(id_piano);
+        return id_piano;
 
     }
 
