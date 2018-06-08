@@ -4,7 +4,17 @@ $(document).ready(function() {
     function showImage(src,target) {
         var fr=new FileReader();
         // when image is loaded, set the src of the image where you want to display it
-        fr.onload = function(e) { target.src = this.result; };
+        fr.onload = function(e) {
+            var image = new Image();
+            image.src = this.result;
+            image.onload = function() {
+                // access image size here
+                $("#target").attr("width",this.width);
+                $("#target").attr("height",this.height);
+                target.src = this.src;
+            };
+
+        };
         src.addEventListener("change",function() {
             // fill fr with image data
             fr.readAsDataURL(src.files[0]);

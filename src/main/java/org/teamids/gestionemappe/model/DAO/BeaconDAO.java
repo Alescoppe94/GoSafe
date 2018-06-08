@@ -105,7 +105,7 @@ public class BeaconDAO {
         for (BeaconEntity beacon : beacons){
             if(!isBeaconInDb(beacon.getId(), db)) {
                 int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
-                String dati = String.valueOf(beacon.getId());
+                String dati = "'"+beacon.getId()+"'";
                 dati = dati + ",'" + puntodiraccolta + "'";
                 dati = dati + ",'" + piano_id + "'";
                 dati = dati + ",'" + beacon.getCoordx() + "'";

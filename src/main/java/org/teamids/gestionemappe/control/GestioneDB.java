@@ -14,10 +14,11 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
@@ -157,6 +158,7 @@ public class GestioneDB {
 
         int numeropiano = jsonRequest.get("piano").getAsInt();
         String immagine =  jsonRequest.get("immagine").getAsString().split(",")[1];
+
         PianoEntity newpiano = new PianoEntity(immagine, numeropiano);
 
         PianoDAO pianoDAO = new PianoDAO();
