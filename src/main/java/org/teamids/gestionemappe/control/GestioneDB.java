@@ -151,7 +151,7 @@ public class GestioneDB {
         }
     }
 
-    public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
+    public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){ //TODO: inserire anche i pesitronco?
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
