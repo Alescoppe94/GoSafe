@@ -2,8 +2,6 @@ package org.teamids.gestionemappe.control;
 
 import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
-import org.teamids.gestionemappe.model.DbTable.PesiTronco;
-import org.teamids.gestionemappe.model.DbTable.Peso;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
@@ -12,13 +10,7 @@ import org.teamids.gestionemappe.model.entity.TroncoEntity;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
@@ -225,7 +217,10 @@ public class GestioneDB {
         }
 
         TroncoDAO troncoDAO = new TroncoDAO();
-        troncoDAO.inserisciTronchi(nuoviTronchi, db);
+        ArrayList<Integer> idTronchi = troncoDAO.inserisciTronchi(nuoviTronchi, db);
+
+        PesiTroncoDAO pesiTroncoDAO = new PesiTroncoDAO();
+        pesiTroncoDAO.inserisciPesiTronco(idTronchi, db);
 
         connector.disconnect();
 
@@ -238,7 +233,7 @@ public class GestioneDB {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        pesiTroncoDAO.eliminaPesiTronco(idPiano, db);
+        pesiTroncoDAO.eliminaPesiTroncoPerPiano(idPiano, db);
         troncoDAO.eliminaTronchiPerPiano(idPiano, db);
         pianoDAO.eliminaPiano(idPiano, db);
         beaconDAO.eliminaBeaconsPerPiano(idPiano, db);
@@ -293,7 +288,7 @@ public class GestioneDB {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        pesiTroncoDAO.eliminaPesiTroncoByPiano(idPeso, db);
+        pesiTroncoDAO.eliminaPesiTroncoByPeso(idPeso, db);
         pesoDAO.eliminaPeso(idPeso, db);
 
         connector.disconnect();

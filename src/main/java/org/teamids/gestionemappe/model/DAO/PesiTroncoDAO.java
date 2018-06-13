@@ -6,9 +6,11 @@ import org.teamids.gestionemappe.model.DbTable.Peso;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +121,7 @@ public class PesiTroncoDAO {
 
     }
 
-    public void eliminaPesiTronco(int idPiano, Connection db){
+    public void eliminaPesiTroncoPerPiano(int idPiano, Connection db){ //TODO: sistemare
 
         tabella.delete2();
         tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconAId=beacon.id");
@@ -132,7 +134,7 @@ public class PesiTroncoDAO {
 
     }
 
-    public void eliminaPesiTroncoByPiano(int idPeso, Connection db){
+    public void eliminaPesiTroncoByPeso(int idPeso, Connection db){
 
         tabella.delete();
         tabella.where("pesoId = '" + idPeso +"'");
@@ -140,4 +142,19 @@ public class PesiTroncoDAO {
 
     }
 
+    public void inserisciPesiTronco(ArrayList<Integer> idTronchi, Connection db) {
+        PesoDAO pesoDAO = new PesoDAO();
+        ArrayList<Integer> idPesi = pesoDAO.getIdPesi(db);
+        for(int idTronco: idTronchi){
+            for(int idPeso: idPesi) {
+                String dati= "0";
+                dati=dati+",'"+idTronco+"'";
+                dati=dati+",'"+idPeso+"'";
+                dati=dati+",'0'";
+                dati=dati+",null";
+                tabella.insert(dati);
+                tabella.execute(db);
+            }
+        }
+    }
 }

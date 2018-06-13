@@ -159,7 +159,9 @@ public class TroncoDAO {
         return tronchi.build();
     }
 
-    public void inserisciTronchi(ArrayList<TroncoEntity> tronchi, Connection db){
+    public ArrayList<Integer> inserisciTronchi(ArrayList<TroncoEntity> tronchi, Connection db){
+        ArrayList<Integer> idTronchi = new ArrayList<>();
+        int id;
         for(TroncoEntity tronco : tronchi){
             int agibile = tronco.isAgibile() ? 1 : 0;
             String dati= String.valueOf(tronco.getId());
@@ -169,8 +171,10 @@ public class TroncoDAO {
             dati=dati+",'"+tronco.getArea()+"'";
             dati=dati+",null";
             tabella.insert(dati);
-            tabella.execute(db);
+            id = tabella.executeForKey(db);
+            idTronchi.add(id);
         }
+        return idTronchi;
     }
     public void eliminaTronchiPerPiano(int pianoId, Connection db){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
         tabella.delete2();

@@ -90,4 +90,14 @@ public class PesoDAO {
         tabella.where("id = '" + idPeso +"'");
         tabella.execute(db);
     }
+
+    public ArrayList<Integer> getIdPesi(Connection db) {
+        ArrayList<Integer> idPesi = new ArrayList<>();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch(db);
+        for (int i = 0; i<rs.size(); i++) {
+            idPesi.add(Integer.parseInt(rs.get(i).get("id").toString()));
+        }
+        return idPesi;
+    }
 }
