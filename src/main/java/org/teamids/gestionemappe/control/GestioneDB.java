@@ -143,7 +143,7 @@ public class GestioneDB {
         }
     }
 
-    public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){ //TODO: inserire anche i pesitronco?
+    public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -160,7 +160,7 @@ public class GestioneDB {
         creaFileCsv(path, "troncocsv", jsonRequest);
 
         String line = "";
-        String cvsSplitBy = ",";
+        String cvsSplitBy = ";";
 
         ArrayList<BeaconEntity> nuoviBeacon = new ArrayList<>();
 
@@ -172,7 +172,7 @@ public class GestioneDB {
                 if(!firstLine) {
                     String[] field = line.split(cvsSplitBy);
 
-                    boolean isPuntodiRaccolta = "1".equals(field[1]);           //TODO:pensare se ci va il numero del piano o l'id del piano, perchè nel db c'è l'id del piano. l'id del piano per ora è autoincrement quindi potrebbero non combaciare con quello che si scrive nel csv
+                    boolean isPuntodiRaccolta = "1".equals(field[1]);
 
                     BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, Integer.parseInt(field[2]), Integer.parseInt(field[3]), Integer.parseInt(field[4]));
 
@@ -199,7 +199,7 @@ public class GestioneDB {
                 if(!firstLine) {
                     String[] field = line.split(cvsSplitBy);
 
-                    ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();              //TODO: pensare se serve che l'admin può settare l'id dei tronchi dal csv
+                    ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();
                     beaconEstremi.add(new BeaconEntity(field[1]));
                     beaconEstremi.add(new BeaconEntity(field[2]));
 
