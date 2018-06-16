@@ -160,7 +160,7 @@ public class GestioneDB {
         creaFileCsv(path, "troncocsv", jsonRequest);
 
         String line = "";
-        String cvsSplitBy = ";";
+        String cvsSplitBy = ",";
 
         ArrayList<BeaconEntity> nuoviBeacon = new ArrayList<>();
 
