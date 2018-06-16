@@ -12,11 +12,9 @@
     <div id="page">
         <div>
             <div id="inserimentopianoblock">
-                <div style="background-color: #366666; color: #FFFFFF"><h1>Form Inserimento Piano</h1></div>
+                <div style="background-color: #366666; color: #FFFFFF"><h1>Inserisci un nuovo Piano</h1></div>
                 <div>
-                    <div id="parenttarget">
-                        <img id="target"/>
-                    </div>
+
                     <div style="margin-top: 30px">
                         <form id="newpianoform" method="post">
                             <div>
@@ -27,6 +25,9 @@
                             <input id="aggiungipiano" type="button" value="Aggiungi Piano" class="coolbutton">
                             </div>
                         </form>
+                    </div>
+                    <div id="parenttarget">
+                        <img id="target"/>
                     </div>
                 </div>
             </div>
@@ -55,9 +56,9 @@
                 <br>
             </div>
             <div>
-                <label>Lancia l'emergenza o bloccala</label><br>
+                <label>Lancia o blocca l'emergenza</label><br>
                 <input id="lanciaemergenza" type="button" value="Lancia Emergenza" class="coolbutton">
-                <input id="backtonormal" type="button"  value="Backtonormal" class="coolbutton">
+                <input id="backtonormal" type="button"  value="Blocca Emergenza" class="coolbutton">
             </div>
             <br>
             <div>
