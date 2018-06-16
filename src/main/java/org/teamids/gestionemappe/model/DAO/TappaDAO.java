@@ -21,17 +21,6 @@ public class TappaDAO {
         this.tabella = new Tappa();
     }
 
-    public void insertTappa(TappaEntity tappa, Connection db){          //TODO:valutare se eliminare metodo
-        String dati= "0";
-        dati=dati+",'"+ tappa.getPercorsoId()+"'";
-        dati=dati+",'"+ tappa.getTronco().getId()+"'";
-        dati=dati+","+ tappa.isDirezione()+"";//vedere se va bene
-        tabella.insert(dati);
-        int id_tappa = tabella.executeForKey(db);
-        tappa.setId(id_tappa);
-
-    }
-
     public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId, Connection db) {
         LinkedList<TappaEntity> tappe = new LinkedList<>();
         tabella.select();
@@ -50,12 +39,6 @@ public class TappaDAO {
             tappe.add(tappa);
         }
         return tappe;
-    }
-
-    public void removeTappeByPercorsoId(int percorsoId, Connection db) {            //TODO:valutare se eliminare metodo
-        tabella.delete();
-        tabella.where("percorsoId = '" + percorsoId + "'");
-        tabella.execute(db);
     }
 
     public void removeAllTappe(Connection db) {

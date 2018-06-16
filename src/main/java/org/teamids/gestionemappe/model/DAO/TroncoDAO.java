@@ -53,7 +53,7 @@ public class TroncoDAO {
         ArrayList<TroncoEntity> allTronchiPiano = new ArrayList<>();
         tabella.select("tronco.*");
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
-        tabella.where("beacon.pianoId = '" + pianoId +"'");      //TODO: per ora controlla solo il piano di un beacon
+        tabella.where("beacon.pianoId = '" + pianoId +"'");
         tabella.order("tronco.id");
         List<Map<String, Object>> rs = tabella.fetch(db);
         BeaconDAO beaconDAO = new BeaconDAO();
@@ -179,10 +179,6 @@ public class TroncoDAO {
     public void eliminaTronchiPerPiano(int pianoId, Connection db){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
         tabella.delete2();
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
-        tabella.where("beacon.pianoId = '" + pianoId +"'");
-        tabella.execute(db);
-        tabella.delete2();
-        tabella.innerjoin("beacon", "tronco.beaconBId = beacon.id");
         tabella.where("beacon.pianoId = '" + pianoId +"'");
         tabella.execute(db);
     }

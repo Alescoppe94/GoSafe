@@ -120,7 +120,7 @@ public class BeaconDAO {
         return beaconDoppi;
     }
 
-    public void eliminaBeaconsPerPiano(int pianoId, Connection db){ //TODO: sistemare
+    public void eliminaBeaconsPerPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("pianoId = '" + pianoId + "'");
         tabella.execute(db);

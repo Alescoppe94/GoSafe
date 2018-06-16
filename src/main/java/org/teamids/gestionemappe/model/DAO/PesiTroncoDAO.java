@@ -121,7 +121,7 @@ public class PesiTroncoDAO {
 
     }
 
-    public void eliminaPesiTroncoPerPiano(int idPiano, Connection db){ //TODO: sistemare
+    public void eliminaPesiTroncoPerPiano(int idPiano, Connection db){
 
         tabella.delete2();
         tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconAId=beacon.id");

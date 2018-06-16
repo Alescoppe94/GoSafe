@@ -18,15 +18,6 @@ public class PercorsoDAO {
         this.tabella = new Percorso();
     }
 
-    public int insertPercorso(BeaconEntity beaconPartenza, Connection db){
-
-        String dati= "0";
-        dati=dati+",'"+ beaconPartenza.getId() +"'";  //TODO: forse da levare
-        tabella.insert(dati);
-        return tabella.executeForKey(db);
-
-    }
-
     public PercorsoEntity getPercorsoByBeaconId(String beaconId, Connection db){
         tabella.select();
         tabella.where("beaconPartenzaId = '" + beaconId + "'" );
