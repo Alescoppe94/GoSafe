@@ -18,7 +18,7 @@ body{
 #piani-container{
     display: flex;
     flex-grow: 1;
-    background-color: aquamarine;
+    background-color: #b6e8d7;
     flex-direction: column;
 }
 
@@ -58,4 +58,23 @@ body{
     width: 500px;
     height: 500px;
     overflow: scroll;
+}
+
+
+.coolbutton{
+    display: inline-block;
+    padding:0.3em 1.2em;
+    margin:0 0.3em 0.3em 0;
+    border-radius:0.5em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color:#478F5B;
+    text-align:center;
+    transition: all 0.2s;
+}
+.coolbutton:hover{
+    background-color:#4095c6;
 }
