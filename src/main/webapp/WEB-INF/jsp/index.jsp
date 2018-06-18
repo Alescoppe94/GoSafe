@@ -18,15 +18,15 @@
                     <div style="margin-top: 30px">
                         <form id="newpianoform" method="post">
                             <div>
-                            <label>Immagine Piano: </label><input id="imageselect" type="file">
-                            <label>Csv Beacons: </label><input id="csvbeacons" type="file">
-                            <label>Csv Tronchi: </label><input id="csvtronchi" type="file">
-                            <label>Numero Piano: </label><input id="name" type="text">
+                            <label>Immagine Piano: </label><input id="imageselect" type="file"><br>
+                            <label>Csv Beacons: </label><input id="csvbeacons" type="file"><br>
+                            <label>Csv Tronchi: </label><input id="csvtronchi" type="file"><br>
+                            <label>Numero Piano: </label><input id="name" type="text"><br>
                             <input id="aggiungipiano" type="button" value="Aggiungi Piano" class="coolbutton">
                             </div>
                         </form>
                     </div>
-                    <div id="parenttarget">
+                    <div id="parenttarget" style="padding-top: 30px; margin-bottom: 30px;">
                         <img id="target"/>
                     </div>
                 </div>
