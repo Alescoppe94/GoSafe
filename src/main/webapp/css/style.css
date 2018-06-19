@@ -41,7 +41,7 @@ body{
     flex-direction: column;
     justify-content: space-around;
     flex-grow: 1;
-    background-color: beige;
+    background-color: #9ad0bc;
 }
 
 #inserimentopianoblock > div{
@@ -77,4 +77,8 @@ body{
 }
 .coolbutton:hover{
     background-color:#366666;
+}
+
+form > input{
+    background-color: aliceblue;
 }

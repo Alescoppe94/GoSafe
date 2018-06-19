@@ -182,4 +182,14 @@ public class TroncoDAO {
         tabella.where("beacon.pianoId = '" + pianoId +"'");
         tabella.execute(db);
     }
+
+    public ArrayList<Integer> getAllIdTronchi(Connection db) {
+        ArrayList<Integer> idTronchi = new ArrayList<>();
+        tabella.select();
+        List<Map<String, Object>> rs = tabella.fetch(db);
+        for (int i = 0; i<rs.size(); i++) {
+            idTronchi.add(Integer.parseInt(rs.get(i).get("id").toString()));
+        }
+        return idTronchi;
+    }
 }

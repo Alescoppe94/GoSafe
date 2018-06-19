@@ -157,4 +157,18 @@ public class PesiTroncoDAO {
             }
         }
     }
+
+    public void inserisciPesiTroncoPerNuovoPeso(int idPeso, Connection db) {
+        TroncoDAO troncoDAO = new TroncoDAO();
+        ArrayList<Integer> idTronchi = troncoDAO.getAllIdTronchi(db);
+        for(int idTronco: idTronchi){
+            String dati = "0";
+            dati=dati+",'"+idTronco+"'";
+            dati=dati+",'"+idPeso+"'";
+            dati=dati+",'0'";
+            dati=dati+",null";
+            tabella.insert(dati);
+            tabella.execute(db);
+        }
+    }
 }

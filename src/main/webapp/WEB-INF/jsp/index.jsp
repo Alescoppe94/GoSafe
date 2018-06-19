@@ -47,23 +47,25 @@
                 </div>
             </div>
         </div>
-        <div style="display:block;margin: 20px 0px 50px 20px">
-            <div>
-                <label>Visualizza e modifica i pesi utilizzati per il calcolo del costo dei tronchi</label>
-                <form action="http://localhost:8080/gestionemappe/db/mostraPesi" method="get">
-                    <input id="aggiungipesi" type="submit" value="Modifica Pesi" class="coolbutton">
-                </form>
+        <div>
+            <div style="display:block;margin: 20px 0px 50px 20px">
+                <div>
+                    <label>Visualizza e modifica i pesi utilizzati per il calcolo del costo dei tronchi</label>
+                    <form action="http://localhost:8080/gestionemappe/db/mostraPesi" method="get">
+                        <input id="aggiungipesi" type="submit" value="Modifica Pesi" class="coolbutton">
+                    </form>
+                    <br>
+                </div>
+                <div>
+                    <label>Lancia o blocca l'emergenza</label><br>
+                    <input id="lanciaemergenza" type="button" value="Lancia Emergenza" class="coolbutton">
+                    <input id="backtonormal" type="button"  value="Blocca Emergenza" class="coolbutton">
+                </div>
                 <br>
-            </div>
-            <div>
-                <label>Lancia o blocca l'emergenza</label><br>
-                <input id="lanciaemergenza" type="button" value="Lancia Emergenza" class="coolbutton">
-                <input id="backtonormal" type="button"  value="Blocca Emergenza" class="coolbutton">
-            </div>
-            <br>
-            <div>
-                <label>Visualizza le persone collegate</label><br>
-                <a href="http://localhost:8080/gestionemappe/db/visualizzastatistiche"><input id="visualizzastatistiche" type="button"  value="Visualizza" class="coolbutton"></a>
+                <div>
+                    <label>Visualizza le persone collegate</label><br>
+                    <a href="http://localhost:8080/gestionemappe/db/visualizzastatistiche"><input id="visualizzastatistiche" type="button"  value="Visualizza" class="coolbutton"></a>
+                </div>
             </div>
         </div>
     </div>

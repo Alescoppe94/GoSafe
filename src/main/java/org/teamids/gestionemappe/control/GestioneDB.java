@@ -255,7 +255,8 @@ public class GestioneDB {
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
-        pesoDAO.inserisciPeso(peso.get(1), Float.valueOf(peso.get(0)), db);
+        int idPeso = pesoDAO.inserisciPeso(peso.get(1), Float.valueOf(peso.get(0)), db);
+        pesiTroncoDAO.inserisciPesiTroncoPerNuovoPeso(idPeso, db);
         connector.disconnect();
 
     }

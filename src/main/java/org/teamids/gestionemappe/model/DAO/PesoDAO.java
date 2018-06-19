@@ -74,14 +74,14 @@ public class PesoDAO {
         tabella.execute(db);
     }
 
-    public void inserisciPeso(String nome, float valore, Connection db){
+    public int inserisciPeso(String nome, float valore, Connection db){
 
         String dati= "null";
         dati=dati+",'"+ nome +"'";
         dati=dati+",'"+ valore +"'";
         dati=dati+",null";
         tabella.insert(dati);
-        tabella.execute(db);
+        return tabella.executeForKey(db);
 
     }
 
