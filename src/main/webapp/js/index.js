@@ -59,7 +59,10 @@ $(document).ready(function() {
         var name = document.getElementById("name");
         var file = document.querySelector('#csvbeacons').files[0];
         var file2 = document.querySelector('#csvtronchi').files[0];
-        if(checkForm(name, file, file2)){
+        var arraypiani = JSON.parse(value);
+        var numeropiano = Number(name.value);
+        var pianogiapresente = Object.values(arraypiani).indexOf(numeropiano) > -1;
+        if((checkForm(name, file, file2)) && (!pianogiapresente)){
             var url = "http://localhost:8080/gestionemappe/db/aggiungipiano";
             //var params = "lorem=ipsum&name=alpha";
             var xhr = new XMLHttpRequest();
@@ -140,7 +143,11 @@ $(document).ready(function() {
             var base = getBase64(file); // prints the base64 string
 
         } else {
-            alert("Completa la form per aggiungere il piano");
+            if(!pianogiapresente) {
+                alert("Completa la form per aggiungere il piano");
+            }else{
+                alert("Numero Piano gia' esistente.")
+            }
         }
 
         function checkForm(nome, file, file2) {

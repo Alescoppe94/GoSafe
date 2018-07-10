@@ -38,9 +38,11 @@
                 <div style="margin-top: 16px">
                     <ul>
                         <%
+                            ArrayList<Integer> piani = new ArrayList<>();
                             Map<String, Integer> map = (Map)request.getAttribute("model");
                             for(Map.Entry<String, Integer> entry : map.entrySet()) {
                                 out.println("<li> Numero piano: "+ entry.getValue() +"</li><a href=\"http://localhost:8080/gestionemappe/db/piano/"+entry.getKey()+"\" ><button type=\"button\" class=\"coolbutton\">Modifica Piano</button></a><button id=\"piano-"+ entry.getKey() +"\" name=\""+ entry.getKey() +"-"+ entry.getValue() +"\" type=\"button\" class=\"coolbutton\">Elimina Piano</button>");
+                                piani.add(entry.getValue());
                             }
                         %>
                     </ul>
@@ -70,4 +72,9 @@
         </div>
     </div>
 </body>
+
+<script type="text/javascript">
+    var value = "<%= piani %>";
+</script>
+
 </html>
