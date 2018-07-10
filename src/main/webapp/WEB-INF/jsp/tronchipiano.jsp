@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="/../../css/style.css">
 </head>
-<body style="display: block; background-color: #B6E8DF">
+<body style="display: block;">
 
 <%@ page import = "java.util.*" %>
 <%@ page import="org.teamids.gestionemappe.model.entity.TroncoEntity" %>
