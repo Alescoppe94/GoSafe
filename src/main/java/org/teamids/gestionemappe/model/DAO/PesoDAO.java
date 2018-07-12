@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PesoDAO {
+public class PesoDAO implements PesoDAOInterface {
 
     protected Peso tabella;
 
@@ -20,6 +20,7 @@ public class PesoDAO {
         this.tabella = new Peso();
     }
 
+    @Override
     public JsonArray getAllPesiAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pesiAggiornati = Json.createArrayBuilder();
         tabella.select();
@@ -35,6 +36,7 @@ public class PesoDAO {
         return pesiAggiornati.build();
     }
 
+    @Override
     public Map<Integer, Map<String,Float>> getPesi(Connection db){
 
         Map<Integer, Map<String,Float>> pesi = new HashMap<>();
@@ -51,6 +53,7 @@ public class PesoDAO {
 
     }
 
+    @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder pesi = Json.createArrayBuilder();
         tabella.select();
@@ -65,7 +68,8 @@ public class PesoDAO {
         return pesi.build();
     }
 
-    public void aggiornaPeso(int id, String nome,float coefficiente, Connection db){
+    @Override
+    public void aggiornaPeso(int id, String nome, float coefficiente, Connection db){
 
         String dati= "coefficiente = " + coefficiente;
         tabella.update();
@@ -74,6 +78,7 @@ public class PesoDAO {
         tabella.execute(db);
     }
 
+    @Override
     public int inserisciPeso(String nome, float valore, Connection db){
 
         String dati= "null";
@@ -85,12 +90,14 @@ public class PesoDAO {
 
     }
 
+    @Override
     public void eliminaPeso(int idPeso, Connection db){
         tabella.delete();
         tabella.where("id = '" + idPeso +"'");
         tabella.execute(db);
     }
 
+    @Override
     public ArrayList<Integer> getIdPesi(Connection db) {
         ArrayList<Integer> idPesi = new ArrayList<>();
         tabella.select();

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teamids.gestionemappe.control.GestioneDB;
+import org.teamids.gestionemappe.control.GestioneDBInterface;
 import org.teamids.gestionemappe.model.DbTable.Peso;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
@@ -31,7 +32,7 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneDBBoundary {
 
-    GestioneDB gestionedb = new GestioneDB();
+    GestioneDBInterface gestionedb = new GestioneDB();
 
     @GET
     @Path("/secured/aggiornadb/{timestamp}")

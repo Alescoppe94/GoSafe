@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class BeaconDAO {
+public class BeaconDAO implements BeaconDAOInterface {
 
     protected Beacon tabella;
 
@@ -18,6 +18,7 @@ public class BeaconDAO {
         this.tabella = new Beacon();
     }
 
+    @Override
     public BeaconEntity getBeaconById(String beaconId, Connection db){
         tabella.select();
         tabella.where("id = '" + beaconId + "'" );
@@ -31,6 +32,7 @@ public class BeaconDAO {
         return beacon;
     }
 
+    @Override
     public ArrayList<BeaconEntity> getAllBeacons(Connection db){
 
         ArrayList<BeaconEntity> beacons = new ArrayList<>();
@@ -49,6 +51,7 @@ public class BeaconDAO {
         return beacons;
     }
 
+    @Override
     public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){
         Set<BeaconEntity> allPuntiDiRaccolta = new HashSet<>();
         tabella.select();
@@ -67,6 +70,7 @@ public class BeaconDAO {
         return allPuntiDiRaccolta;
     }
 
+    @Override
     public JsonArray getAllBeaconAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder beaconAggiornati = Json.createArrayBuilder();
         tabella.select();
@@ -84,6 +88,7 @@ public class BeaconDAO {
         return beaconAggiornati.build();
     }
 
+    @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder beacon = Json.createArrayBuilder();
         tabella.select();
@@ -100,6 +105,7 @@ public class BeaconDAO {
         return beacon.build();
     }
 
+    @Override
     public ArrayList<String> inserisciBeacons(ArrayList<BeaconEntity> beacons, int piano_id, Connection db){
         ArrayList<String> beaconDoppi = new ArrayList<>();
         for (BeaconEntity beacon : beacons){
@@ -120,12 +126,14 @@ public class BeaconDAO {
         return beaconDoppi;
     }
 
+    @Override
     public void eliminaBeaconsPerPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("pianoId = '" + pianoId + "'");
         tabella.execute(db);
     }
 
+    @Override
     public boolean isBeaconInDb(String idbeacon, Connection db){
         boolean success = false;
         tabella.select();
