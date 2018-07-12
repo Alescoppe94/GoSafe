@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @ApplicationPath("gestionemappe")
-public class GestioneMappe extends ResourceConfig implements Observer {
+public class GestioneMappe extends ResourceConfig implements GestioneMappeInterface {
 
 
     private UtenteDAO utenteDAO;
@@ -44,6 +44,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         property("jersey.config.server.mvc.templateBasePath.jsp", "/WEB-INF/jsp");
     }
 
+    @Override
     public void lanciaEmergenza(){
         final ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -133,6 +134,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         }
     }
 
+    @Override
     public PercorsoEntity calcoloPercorsoNoEmergenza(String beaconPart, String beaconArr){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -290,6 +292,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
 
     }
 
+    @Override
     public NotificaEntity visualizzaPercorso(int utenteId, String beaconPart) {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -340,6 +343,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         pesiTroncoDAO.updateValorePeso(tronco.getId(), "los", los, db);
     }
 
+    @Override
     public void backToNormalMode(){
 
         emergenza = false;
@@ -353,7 +357,7 @@ public class GestioneMappe extends ResourceConfig implements Observer {
         connector.disconnect();
     }
 
-    public static boolean isEmergenza(){
+    static boolean isEmergenza(){
         return emergenza;
     }
 }

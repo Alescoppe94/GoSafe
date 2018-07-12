@@ -10,7 +10,7 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.util.HashMap;
 
-public class GestioneUtente{
+public class GestioneUtente implements GestioneUtenteInterface {
 
     private UtenteDAO utenteDAO;
     private BeaconDAO beaconDAO;
@@ -20,6 +20,7 @@ public class GestioneUtente{
         this.beaconDAO = new BeaconDAO();
     }
 
+    @Override
     public String loginUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -55,6 +56,7 @@ public class GestioneUtente{
         return esito;
     }
 
+    @Override
     public String registrazioneUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -76,6 +78,7 @@ public class GestioneUtente{
         return esito;
     }
 
+    @Override
     public String updateUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -99,6 +102,7 @@ public class GestioneUtente{
         return esito;
     }
 
+    @Override
     public String logoutUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -108,6 +112,7 @@ public class GestioneUtente{
         return esito;
     }
 
+    @Override
     public void updateUserPosition(UtenteEntity utente) {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();

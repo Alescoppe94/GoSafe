@@ -5,7 +5,7 @@ import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
 import java.sql.Connection;
 import java.util.*;
 
-public class TroncoEntity implements Comparable<TroncoEntity> {
+public class TroncoEntity implements TroncoEntityInterface {
 
     private int id;
     private boolean agibile;
@@ -63,6 +63,7 @@ public class TroncoEntity implements Comparable<TroncoEntity> {
         this.area = area;
     }
 
+    @Override
     public float calcolaCosto(Connection db){
         PesiTroncoDAO pesiTroncoDAO = new PesiTroncoDAO();
         HashMap<Float, Float> coeffVal = pesiTroncoDAO.getPesiTronco(this.id, db);

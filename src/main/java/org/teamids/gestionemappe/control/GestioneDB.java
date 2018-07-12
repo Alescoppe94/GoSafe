@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 
-public class GestioneDB {
+public class GestioneDB implements GestioneDBInterface {
 
     private TroncoDAO troncoDAO;
     private PianoDAO pianoDAO;
@@ -36,6 +36,7 @@ public class GestioneDB {
         this.utenteDAO = new UtenteDAO();
     }
 
+    @Override
     public Map<String, Integer> getAllPiani(){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -53,6 +54,7 @@ public class GestioneDB {
      //   return pianoDAO.getAllPiani();
     //}
 
+    @Override
     public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -73,6 +75,7 @@ public class GestioneDB {
         return numPersBeacon;
     }
 
+    @Override
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -93,6 +96,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public void aggiornaPesiTronco(String peso, int troncoId, float valore){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -101,6 +105,7 @@ public class GestioneDB {
         connector.disconnect();
     }
 
+    @Override
     public String aggiornaDB(Timestamp timestamp_client){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
@@ -143,6 +148,7 @@ public class GestioneDB {
         }
     }
 
+    @Override
     public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -228,6 +234,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public void eliminaPiano(int idPiano){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -242,6 +249,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public void aggiornaPesi(int id, String nome, Float valore){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -251,6 +259,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public void inserisciPeso(ArrayList<String> peso){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -261,6 +270,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public String downloadDb(){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -284,6 +294,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public void eliminapeso(int idPeso){
 
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -296,6 +307,7 @@ public class GestioneDB {
 
     }
 
+    @Override
     public Map<Integer, Map<String,Float>> mostraPesi(){
 
         ConnectorHelpers connector= new ConnectorHelpers();
