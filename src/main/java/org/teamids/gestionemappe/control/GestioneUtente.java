@@ -1,7 +1,6 @@
 package org.teamids.gestionemappe.control;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
@@ -12,12 +11,12 @@ import java.util.HashMap;
 
 public class GestioneUtente implements GestioneUtenteInterface {
 
-    private UtenteDAO utenteDAO;
-    private BeaconDAO beaconDAO;
+    private UtenteDAOInterface utenteDAOInterface;
+    private BeaconDAOInterface beaconDAOInterface;
 
     public GestioneUtente() {
-        this.utenteDAO = new UtenteDAO();
-        this.beaconDAO = new BeaconDAO();
+        this.utenteDAOInterface = new UtenteDAO();
+        this.beaconDAOInterface = new BeaconDAO();
     }
 
     @Override
@@ -25,7 +24,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        UtenteEntity utentedb = utenteDAO.getUserByUsername(utente.getUsername(), db);
+        UtenteEntity utentedb = utenteDAOInterface.getUserByUsername(utente.getUsername(), db);
         String esito;
         if(utentedb != null) {
             if(utente.getPassword().equals(utentedb.getPassword())) {
@@ -40,7 +39,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
                 String idsessione = generateSessionId();
                 utente.setIdsessione(idsessione);
                 campo.put("idsessione",idsessione);
-                utenteDAO.updateInfoUtente(utente.getId(), campo, db);
+                utenteDAOInterface.updateInfoUtente(utente.getId(), campo, db);
                 Gson gson = new Gson();
                 boolean emergenza = GestioneMappe.isEmergenza();
                 String utenteJson = gson.toJson(utente);
@@ -61,7 +60,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        boolean isUserInDb = utenteDAO.findUserByUsername(utente.getUsername(), db);
+        boolean isUserInDb = utenteDAOInterface.findUserByUsername(utente.getUsername(), db);
         String esito;
         if(isUserInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
@@ -69,8 +68,8 @@ public class GestioneUtente implements GestioneUtenteInterface {
         else{
             String idsessione = generateSessionId();
             utente.setIdsessione(idsessione);
-            utenteDAO.insertUser(utente, db);
-            int id_utente = utenteDAO.getUserByUsername(utente.getUsername(), db).getId();
+            utenteDAOInterface.insertUser(utente, db);
+            int id_utente = utenteDAOInterface.getUserByUsername(utente.getUsername(), db).getId();
             boolean emergenza = GestioneMappe.isEmergenza();
             esito = "{\"id_utente\": \""+ id_utente +"\", \"idsessione\": \""+ idsessione +"\", \"emergenza\":\""+emergenza+"\"}";
         }
@@ -83,8 +82,8 @@ public class GestioneUtente implements GestioneUtenteInterface {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        UtenteDAO utenteDAO = new UtenteDAO();
-        boolean isUsernameInDb = utenteDAO.findUserByUsername(utente.getUsername(), db) && !utenteDAO.isUsernameIdPresent(utente.getUsername(), utente.getId(), db);
+        UtenteDAOInterface utenteDAOInterface = new UtenteDAO();
+        boolean isUsernameInDb = utenteDAOInterface.findUserByUsername(utente.getUsername(), db) && !utenteDAOInterface.isUsernameIdPresent(utente.getUsername(), utente.getId(), db);
         String esito;
         if(isUsernameInDb) {
             esito = "{\"esito\": \"Username in uso\"}";
@@ -95,7 +94,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
             campo.put("password", utente.getPassword());
             campo.put("nome", utente.getNome());
             campo.put("cognome", utente.getCognome());
-            utenteDAO.updateInfoUtente(utente.getId(), campo, db);
+            utenteDAOInterface.updateInfoUtente(utente.getId(), campo, db);
             esito = "{\"esito\": \"success\"}";
         }
         connector.disconnect();
@@ -106,7 +105,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
     public String logoutUtente(UtenteEntity utente){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
-        utenteDAO.logout(utente.getUsername(), db);
+        utenteDAOInterface.logout(utente.getUsername(), db);
         String esito = "{\"esito\": \"success\"}";
         connector.disconnect();
         return esito;
@@ -119,7 +118,7 @@ public class GestioneUtente implements GestioneUtenteInterface {
 
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("beaconId", utente.getBeaconId());
-        utenteDAO.updateInfoUtente(utente.getId(),campo, db);
+        utenteDAOInterface.updateInfoUtente(utente.getId(),campo, db);
 
         connector.disconnect();
     }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PianoDAO {
+public class PianoDAO implements PianoDAOInterface {
 
     protected Piano tabella;
 
@@ -22,6 +22,7 @@ public class PianoDAO {
 
     }
 
+    @Override
     public PianoEntity getPianoById(int idpiano, Connection db){
         tabella.select();
         tabella.where("id = '" + idpiano + "'" );
@@ -33,6 +34,7 @@ public class PianoDAO {
         return piano;
     }
 
+    @Override
     public JsonArray getAllPianiAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pianiAggiornati = Json.createArrayBuilder();
         tabella.select();
@@ -49,6 +51,7 @@ public class PianoDAO {
 
     }
 
+    @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder piani = Json.createArrayBuilder();
         tabella.select();
@@ -63,6 +66,7 @@ public class PianoDAO {
         return piani.build();
     }
 
+    @Override
     public int inserisciPiano(PianoEntity piano, Connection db){
 
         String dati= String.valueOf(piano.getId());
@@ -76,12 +80,14 @@ public class PianoDAO {
 
     }
 
+    @Override
     public void eliminaPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("id = '" + pianoId + "'");
         tabella.execute(db);
     }
 
+    @Override
     public ArrayList<PianoEntity> getAllPiani(Connection db){
 
         ArrayList<PianoEntity> piani = new ArrayList<>();

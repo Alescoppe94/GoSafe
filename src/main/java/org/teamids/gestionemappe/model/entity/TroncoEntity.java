@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.model.entity;
 
 import org.teamids.gestionemappe.model.DAO.PesiTroncoDAO;
+import org.teamids.gestionemappe.model.DAO.PesiTroncoDAOInterface;
 
 import java.sql.Connection;
 import java.util.*;
@@ -65,8 +66,8 @@ public class TroncoEntity implements TroncoEntityInterface {
 
     @Override
     public float calcolaCosto(Connection db){
-        PesiTroncoDAO pesiTroncoDAO = new PesiTroncoDAO();
-        HashMap<Float, Float> coeffVal = pesiTroncoDAO.getPesiTronco(this.id, db);
+        PesiTroncoDAOInterface pesiTroncoDAOInterface = new PesiTroncoDAO();
+        HashMap<Float, Float> coeffVal = pesiTroncoDAOInterface.getPesiTronco(this.id, db);
         Iterator<Map.Entry<Float, Float>> it = coeffVal.entrySet().iterator();
         float costo = 0;
         while (it.hasNext()) {

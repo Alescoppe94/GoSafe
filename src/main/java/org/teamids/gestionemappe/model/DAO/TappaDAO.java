@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class TappaDAO {
+public class TappaDAO implements TappaDAOInterface {
 
     protected Tappa tabella;
 
@@ -21,6 +21,7 @@ public class TappaDAO {
         this.tabella = new Tappa();
     }
 
+    @Override
     public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId, Connection db) {
         LinkedList<TappaEntity> tappe = new LinkedList<>();
         tabella.select();
@@ -41,11 +42,13 @@ public class TappaDAO {
         return tappe;
     }
 
+    @Override
     public void removeAllTappe(Connection db) {
         tabella.delete();
         tabella.execute(db);
     }
 
+    @Override
     public void aggiornaTappe(int percorsoId, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
             db.setAutoCommit(false);
@@ -82,6 +85,7 @@ public class TappaDAO {
         }
     }
 
+    @Override
     public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
             db.setAutoCommit(false);

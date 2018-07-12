@@ -2,6 +2,7 @@ package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.Communication;
 import org.teamids.gestionemappe.control.GestioneMappe;
+import org.teamids.gestionemappe.control.GestioneMappeInterface;
 import org.teamids.gestionemappe.model.entity.*;
 
 import javax.ws.rs.*;
@@ -12,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneMappeBoundary {
 
-    GestioneMappe gestionemappe = new GestioneMappe();
+    GestioneMappeInterface gestionemappe = new GestioneMappe();
 
     @POST
     @Path("/lanciaemergenza")

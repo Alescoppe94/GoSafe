@@ -1,6 +1,7 @@
 package org.teamids.gestionemappe.boundary;
 
 import org.teamids.gestionemappe.control.GestioneUtente;
+import org.teamids.gestionemappe.control.GestioneUtenteInterface;
 import org.teamids.gestionemappe.model.entity.UtenteEntity;
 
 import javax.ws.rs.*;
@@ -11,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GestioneUtenteBoundary {
 
-    GestioneUtente gestioneutente = new GestioneUtente();
+    GestioneUtenteInterface gestioneutente = new GestioneUtente();
 
     @POST
     @Path("/login")

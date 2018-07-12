@@ -6,11 +6,7 @@ import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.*;
 import org.teamids.gestionemappe.model.entity.*;
 
-import javax.inject.Singleton;
-import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
 import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -20,23 +16,23 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
 
     private UtenteDAO utenteDAO;
-    private TroncoDAO troncoDAO;
-    private PercorsoDAO percorsoDAO;
-    private TappaDAO tappaDAO;
-    private NotificaDAO notificaDAO;
-    private BeaconDAO beaconDAO;
-    private PesiTroncoDAO pesiTroncoDAO;
+    private TroncoDAOInterface troncoDAOInterface;
+    private PercorsoDAOInterface percorsoDAOInterface;
+    private TappaDAOInterface tappaDAOInterface;
+    private NotificaDAOInterface notificaDAOInterface;
+    private BeaconDAOInterface beaconDAOInterface;
+    private PesiTroncoDAOInterface pesiTroncoDAOInterface;
     private static boolean emergenza=false;
 
 
     public GestioneMappe() {
         this.utenteDAO = new UtenteDAO();
-        this.troncoDAO = new TroncoDAO();
-        this.percorsoDAO = new PercorsoDAO();
-        this.tappaDAO = new TappaDAO();
-        this.notificaDAO = new NotificaDAO();
-        this.beaconDAO = new BeaconDAO();
-        this.pesiTroncoDAO = new PesiTroncoDAO();
+        this.troncoDAOInterface = new TroncoDAO();
+        this.percorsoDAOInterface = new PercorsoDAO();
+        this.tappaDAOInterface = new TappaDAO();
+        this.notificaDAOInterface = new NotificaDAO();
+        this.beaconDAOInterface = new BeaconDAO();
+        this.pesiTroncoDAOInterface = new PesiTroncoDAO();
         utenteDAO.addObserver(this);
         packages("org.teamids.gestionemappe");
         register(JspMvcFeature.class);
@@ -80,8 +76,8 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
     }
 
     private void calcoloPercorsoEvacuazione(String beaconPart, Connection db) {
-        Set<BeaconEntity> pdr = beaconDAO.getAllPuntiDiRaccolta(db);
-        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart, db);
+        Set<BeaconEntity> pdr = beaconDAOInterface.getAllPuntiDiRaccolta(db);
+        BeaconEntity partenza = beaconDAOInterface.getBeaconById(beaconPart, db);
         if (partenza != null) {
             boolean emergenza = true;
             Map<LinkedList<BeaconEntity>, Float> percorsi_ottimi = new HashMap<>();
@@ -111,25 +107,25 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
                 percorso_def.add(partenza);
             }
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
-            boolean existPercorso = percorsoDAO.findPercorsoByBeaconId(beaconPart, db);
+            boolean existPercorso = percorsoDAOInterface.findPercorsoByBeaconId(beaconPart, db);
             int idPercorso;
             if(existPercorso) {
-                idPercorso = percorsoDAO.getPercorsoByBeaconId(beaconPart, db).getId();
+                idPercorso = percorsoDAOInterface.getPercorsoByBeaconId(beaconPart, db).getId();
                 for(int i = 0; i < percorso_def.size()-1; i++) {
-                    TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1), db);
-                    boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo, db);
+                    TroncoEntity troncoOttimo = troncoDAOInterface.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1), db);
+                    boolean direzione = troncoDAOInterface.checkDirezioneTronco(troncoOttimo, db);
                     TappaEntity tappaOttima = new TappaEntity(troncoOttimo, idPercorso, direzione);
                     tappeOttime.add(tappaOttima);
                 }
-                tappaDAO.aggiornaTappe(idPercorso, tappeOttime, db);
+                tappaDAOInterface.aggiornaTappe(idPercorso, tappeOttime, db);
             } else {
                 for(int i = 0; i < percorso_def.size()-1; i++) {
-                    TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1), db);
-                    boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo, db);
+                    TroncoEntity troncoOttimo = troncoDAOInterface.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1), db);
+                    boolean direzione = troncoDAOInterface.checkDirezioneTronco(troncoOttimo, db);
                     TappaEntity tappaOttima = new TappaEntity(troncoOttimo, direzione);
                     tappeOttime.add(tappaOttima);
                 }
-                tappaDAO.creaPercorsoConTappe(partenza, tappeOttime, db);
+                tappaDAOInterface.creaPercorsoConTappe(partenza, tappeOttime, db);
             }
         }
     }
@@ -139,9 +135,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        BeaconEntity partenza = beaconDAO.getBeaconById(beaconPart, db);
+        BeaconEntity partenza = beaconDAOInterface.getBeaconById(beaconPart, db);
         boolean emergenza = false;
-        BeaconEntity arrivo = beaconDAO.getBeaconById(beaconArr, db);
+        BeaconEntity arrivo = beaconDAOInterface.getBeaconById(beaconArr, db);
         PercorsoEntity percorso;
 
         if (partenza != null && arrivo != null) {
@@ -154,8 +150,8 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
             Map.Entry<LinkedList<BeaconEntity>, Float> entry = percorsoOttimo_costoOttimo.entrySet().iterator().next();
 
             for(int i = 0; i < entry.getKey().size()-1; i++) {
-                TroncoEntity troncoOttimo = troncoDAO.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1), db);
-                boolean direzione = troncoDAO.checkDirezioneTronco(troncoOttimo, db);
+                TroncoEntity troncoOttimo = troncoDAOInterface.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1), db);
+                boolean direzione = troncoDAOInterface.checkDirezioneTronco(troncoOttimo, db);
                 TappaEntity tappaOttima = new TappaEntity(troncoOttimo, direzione);
                 tappeOttime.add(tappaOttima);
                 //tappaDAO.insertTappa(tappaOttima);
@@ -171,7 +167,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
     private Map<LinkedList<BeaconEntity>, Float> calcoloDijkstra(BeaconEntity partenza, BeaconEntity arrivo, boolean emergenza, Connection db){
 
-        Set<TroncoEntity> allTronchiEdificio = troncoDAO.getAllTronchi(db);
+        Set<TroncoEntity> allTronchiEdificio = troncoDAOInterface.getAllTronchi(db);
         Map<LinkedList<BeaconEntity>, Float> costi_percorsi = new HashMap<>();
         BeaconEntity beacon_controllato = partenza;
         ArrayList<BeaconEntity> beacon_visitati = new ArrayList<>();
@@ -215,7 +211,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
                 if (emergenza){
                     costo = tronco.calcolaCosto(db);
                 }else{
-                    costo = pesiTroncoDAO.geValoreByPesoId(tronco.getId(), "l", db);
+                    costo = pesiTroncoDAOInterface.geValoreByPesoId(tronco.getId(), "l", db);
                 }
                 costo_percorso_parziale += costo;
                 BeaconEntity beacon_finale = percorso_parziale.getLast();
@@ -297,16 +293,16 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        PercorsoEntity percorso = percorsoDAO.getPercorsoByBeaconId(beaconPart, db);
+        PercorsoEntity percorso = percorsoDAOInterface.getPercorsoByBeaconId(beaconPart, db);
         if(percorso == null){
             synchronized (this) {
                 calcoloPercorsoEvacuazione(beaconPart, db);
-                percorso = percorsoDAO.getPercorsoByBeaconId(beaconPart, db);
+                percorso = percorsoDAOInterface.getPercorsoByBeaconId(beaconPart, db);
             }
         }
         LocalDateTime ora = LocalDateTime.now();
         NotificaEntity notifica = new NotificaEntity(utenteId, percorso, ora,"Sii prudente!");
-        notificaDAO.insertNotifica(notifica, db);
+        notificaDAOInterface.insertNotifica(notifica, db);
         HashMap<String, Object> campo = new HashMap<>();
         campo.put("percorsoId", percorso.getId());
         utenteDAO.updateInfoUtente(utenteId, campo, db);
@@ -328,7 +324,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
            Di questi percorsi prendiamo l'id. */
         ArrayList<PercorsoEntity> percorsi = new ArrayList<>();
         for(int i = 0; i < 2; i++){
-            PercorsoEntity percorso = percorsoDAO.getPercorsoByBeaconId(estremi.get(i).getId(), db);
+            PercorsoEntity percorso = percorsoDAOInterface.getPercorsoByBeaconId(estremi.get(i).getId(), db);
             if(percorso != null) percorsi.add(percorso);
         }
         ArrayList<Integer> percorsiId = new ArrayList<>();
@@ -340,7 +336,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         // Infine, sulla tabella utente, contiamo quante sono le persone che hanno uno tra quei due percosoId.
         int numUserInTronco = utenteDAO.countUsersPerTronco(percorsiId, db);
         float los = numUserInTronco/tronco.getArea();
-        pesiTroncoDAO.updateValorePeso(tronco.getId(), "los", los, db);
+        pesiTroncoDAOInterface.updateValorePeso(tronco.getId(), "los", los, db);
     }
 
     @Override
@@ -350,9 +346,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
-        pesiTroncoDAO.losToDefault(db);
-        tappaDAO.removeAllTappe(db);
-        percorsoDAO.removeAllPercorsi(db);
+        pesiTroncoDAOInterface.losToDefault(db);
+        tappaDAOInterface.removeAllTappe(db);
+        percorsoDAOInterface.removeAllPercorsi(db);
 
         connector.disconnect();
     }
