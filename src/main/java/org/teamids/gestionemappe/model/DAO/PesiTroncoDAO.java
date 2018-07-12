@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PesiTroncoDAO {
+public class PesiTroncoDAO implements PesiTroncoDAOInterface {
 
     protected PesiTronco tabella;
 
@@ -23,6 +23,7 @@ public class PesiTroncoDAO {
         this.tabella = new PesiTronco();
     }
 
+    @Override
     public void updateValorePeso(int troncoId, String peso, float los, Connection db){
         String dati= "valore = " + los;
         tabella.update();
@@ -32,6 +33,7 @@ public class PesiTroncoDAO {
         tabella.execute(db);
     }
 
+    @Override
     public HashMap<Float,Float> getPesiTronco(int troncoId, Connection db) {
         tabella.select("valore,coefficiente");
         tabella.innerjoin("peso", "peso.id = pesoId");
@@ -44,6 +46,7 @@ public class PesiTroncoDAO {
         return coeffVal;
     }
 
+    @Override
     public Float geValoreByPesoId(int troncoId, String peso, Connection db) {
         tabella.select("valore");
         tabella.innerjoin("peso", "pesoId = peso.id");
@@ -57,6 +60,7 @@ public class PesiTroncoDAO {
         return valore;
     }
 
+    @Override
     public void losToDefault(Connection db) {
         tabella.update();
         tabella.innerjoin("peso", "pesoId = peso.id");
@@ -65,6 +69,7 @@ public class PesiTroncoDAO {
         tabella.execute(db);
     }
 
+    @Override
     public JsonArray getAllPesiTroncoAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pesiTroncoAggiornati = Json.createArrayBuilder();
         tabella.select();
@@ -81,6 +86,7 @@ public class PesiTroncoDAO {
         return pesiTroncoAggiornati.build();
     }
 
+    @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder pesiTronco = Json.createArrayBuilder();
         tabella.select();
@@ -97,6 +103,7 @@ public class PesiTroncoDAO {
     }
 
 
+    @Override
     public void aggiornaPesiTronco(int troncoId, String peso, float valore, Connection db){
 
         tabella.select();
@@ -121,6 +128,7 @@ public class PesiTroncoDAO {
 
     }
 
+    @Override
     public void eliminaPesiTroncoPerPiano(int idPiano, Connection db){
 
         tabella.delete2();
@@ -134,6 +142,7 @@ public class PesiTroncoDAO {
 
     }
 
+    @Override
     public void eliminaPesiTroncoByPeso(int idPeso, Connection db){
 
         tabella.delete();
@@ -142,6 +151,7 @@ public class PesiTroncoDAO {
 
     }
 
+    @Override
     public void inserisciPesiTronco(ArrayList<Integer> idTronchi, Connection db) {
         PesoDAO pesoDAO = new PesoDAO();
         ArrayList<Integer> idPesi = pesoDAO.getIdPesi(db);
@@ -158,6 +168,7 @@ public class PesiTroncoDAO {
         }
     }
 
+    @Override
     public void inserisciPesiTroncoPerNuovoPeso(int idPeso, Connection db) {
         TroncoDAO troncoDAO = new TroncoDAO();
         ArrayList<Integer> idTronchi = troncoDAO.getAllIdTronchi(db);

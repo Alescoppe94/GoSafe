@@ -7,7 +7,7 @@ import org.teamids.gestionemappe.model.entity.UtenteEntity;
 import java.sql.Connection;
 import java.util.*;
 
-public class UtenteDAO extends Observable {
+public class UtenteDAO extends Observable implements UtenteDAOInterface {
 
     protected Utente tabella;
 
@@ -17,6 +17,7 @@ public class UtenteDAO extends Observable {
 
     }
 
+    @Override
     public void insertUser(UtenteEntity utente, Connection db){
         String dati= String.valueOf(utente.getId());
         dati=dati+",'"+utente.getUsername()+"'";
@@ -33,6 +34,7 @@ public class UtenteDAO extends Observable {
         utente.setId(id_utente);
     }
 
+    @Override
     public UtenteEntity getUserByUsername(String username, Connection db){
         tabella.select();
         tabella.where("username = '" + username + "'" );
@@ -51,6 +53,7 @@ public class UtenteDAO extends Observable {
         return utente;
     }
 
+    @Override
     public boolean isAutenticato(String idsessione, Connection db){
         boolean success = false;
         tabella.select();
@@ -62,6 +65,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
+    @Override
     public boolean findUserByUsername(String user, Connection db){
         boolean success = false;
         tabella.select();
@@ -73,6 +77,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
+    @Override
     public void updatePositionInEmergency(int id, String beaconId, TroncoEntity tronco, Connection db){
         String dati = "beaconId = '" + beaconId + "'";
         tabella.update(dati);
@@ -85,7 +90,8 @@ public class UtenteDAO extends Observable {
         notifyObservers(parametri);
     }
 
-    public void updateInfoUtente(int id, Map<String,Object> campoutente, Connection db){
+    @Override
+    public void updateInfoUtente(int id, Map<String, Object> campoutente, Connection db){
         String dati = "";
         Iterator<Map.Entry<String, Object>> itr = campoutente.entrySet().iterator();
         while (itr.hasNext()) {
@@ -99,6 +105,7 @@ public class UtenteDAO extends Observable {
         tabella.execute(db);
     }
 
+    @Override
     public void logout(String username, Connection db){
         String dati = "percorsoId = NULL, beaconId = NULL, is_autenticato = 0, idsessione = NULL";
         tabella.update(dati);
@@ -106,6 +113,7 @@ public class UtenteDAO extends Observable {
         tabella.execute(db);
     }
 
+    @Override
     public ArrayList<String> getBeaconsIdAttivi(Connection db) {
         tabella.select("beaconId");
         tabella.innerjoin("beacon","utente.beaconId = beacon.id");
@@ -119,6 +127,7 @@ public class UtenteDAO extends Observable {
         return beaconsAttivi;
     }
 
+    @Override
     public ArrayList<String> getTokensAttivi(Connection db) {
         tabella.select("token");
         tabella.where("is_autenticato = 1 ");
@@ -131,6 +140,7 @@ public class UtenteDAO extends Observable {
         return tokensAttivi;
     }
 
+    @Override
     public boolean existUtenteInPericolo(Connection db) {
         boolean success = false;
         tabella.select("beaconId");
@@ -143,6 +153,7 @@ public class UtenteDAO extends Observable {
         return success;
     }
 
+    @Override
     public int countUsersPerTronco(ArrayList<Integer> percorsiId, Connection db) {
         int users = 0;
         for(int percorsoId: percorsiId){
@@ -154,6 +165,7 @@ public class UtenteDAO extends Observable {
 
     }
 
+    @Override
     public int countUsersPerBeacon(String beaconId, Connection db) {
         int users = 0;
         tabella.select();
@@ -163,6 +175,7 @@ public class UtenteDAO extends Observable {
 
     }
 
+    @Override
     public boolean isUsernameIdPresent(String username, int id, Connection db){
         boolean success = false;
         tabella.select();

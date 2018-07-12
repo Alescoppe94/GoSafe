@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class PercorsoDAO {
+public class PercorsoDAO implements PercorsoDAOInterface {
 
     protected Percorso tabella;
 
@@ -18,6 +18,7 @@ public class PercorsoDAO {
         this.tabella = new Percorso();
     }
 
+    @Override
     public PercorsoEntity getPercorsoByBeaconId(String beaconId, Connection db){
         tabella.select();
         tabella.where("beaconPartenzaId = '" + beaconId + "'" );
@@ -37,6 +38,7 @@ public class PercorsoDAO {
         return percorso;
     }
 
+    @Override
     public boolean findPercorsoByBeaconId(String beaconPart, Connection db) {
         boolean success = false;
         tabella.select();
@@ -48,6 +50,7 @@ public class PercorsoDAO {
         return success;
     }
 
+    @Override
     public void removeAllPercorsi(Connection db) {
         tabella.delete();
         tabella.execute(db);

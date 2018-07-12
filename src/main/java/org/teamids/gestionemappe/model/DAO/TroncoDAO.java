@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class TroncoDAO {
+public class TroncoDAO implements TroncoDAOInterface {
 
     protected Tronco tabella;
 
@@ -19,6 +19,7 @@ public class TroncoDAO {
         this.tabella = new Tronco();
     }
 
+    @Override
     public Set<TroncoEntity> getAllTronchi(Connection db){
         Set<TroncoEntity> allTronchiEdificio = new HashSet<>();
         tabella.select();
@@ -49,6 +50,7 @@ public class TroncoDAO {
         return allTronchiEdificio;
     }
 
+    @Override
     public ArrayList<TroncoEntity> getTronchiPiano(int pianoId, Connection db){
         ArrayList<TroncoEntity> allTronchiPiano = new ArrayList<>();
         tabella.select("tronco.*");
@@ -72,6 +74,7 @@ public class TroncoDAO {
         return allTronchiPiano;
     }
 
+    @Override
     public TroncoEntity getTroncoByBeacons(BeaconEntity beaconA, BeaconEntity beaconB, Connection db){
 
         tabella.select();
@@ -89,6 +92,7 @@ public class TroncoDAO {
         return tronco;
     }
 
+    @Override
     public TroncoEntity getTroncoById(String troncoId, boolean direzione, Connection db) {
         tabella.select();
         tabella.where("id = '" + troncoId + "'" );
@@ -115,6 +119,7 @@ public class TroncoDAO {
         return tronco;
     }
 
+    @Override
     public boolean checkDirezioneTronco(TroncoEntity troncoOttimo, Connection db) {
         boolean success = false;
         tabella.select();
@@ -126,6 +131,7 @@ public class TroncoDAO {
         return success;
     }
 
+    @Override
     public JsonArray getAllTronchiAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder tronchiAggiornati = Json.createArrayBuilder();
         tabella.select();
@@ -143,6 +149,7 @@ public class TroncoDAO {
         return tronchiAggiornati.build();
     }
 
+    @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder tronchi = Json.createArrayBuilder();
         tabella.select();
@@ -159,6 +166,7 @@ public class TroncoDAO {
         return tronchi.build();
     }
 
+    @Override
     public ArrayList<Integer> inserisciTronchi(ArrayList<TroncoEntity> tronchi, Connection db){
         ArrayList<Integer> idTronchi = new ArrayList<>();
         int id;
@@ -176,6 +184,7 @@ public class TroncoDAO {
         }
         return idTronchi;
     }
+    @Override
     public void eliminaTronchiPerPiano(int pianoId, Connection db){    //se dovesse cancellare i tronchi sbagliati bisogna fare come nel select di gettronchiPiano
         tabella.delete2();
         tabella.innerjoin("beacon", "tronco.beaconAId = beacon.id");
@@ -183,6 +192,7 @@ public class TroncoDAO {
         tabella.execute(db);
     }
 
+    @Override
     public ArrayList<Integer> getAllIdTronchi(Connection db) {
         ArrayList<Integer> idTronchi = new ArrayList<>();
         tabella.select();

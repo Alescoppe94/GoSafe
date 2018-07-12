@@ -5,7 +5,7 @@ import org.teamids.gestionemappe.model.entity.NotificaEntity;
 
 import java.sql.Connection;
 
-public class NotificaDAO {
+public class NotificaDAO implements NotificaDAOInterface {
 
     protected Notifica tabella;
 
@@ -13,6 +13,7 @@ public class NotificaDAO {
         this.tabella = new Notifica();
     }
 
+    @Override
     public void insertNotifica(NotificaEntity notifica, Connection db) {
         String dati= String.valueOf(notifica.getId());
         dati=dati+",'"+notifica.getUtenteId()+"'";

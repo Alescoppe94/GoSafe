@@ -3,6 +3,7 @@ package org.teamids.gestionemappe;
 import org.glassfish.jersey.internal.util.Base64;
 import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DAO.UtenteDAO;
+import org.teamids.gestionemappe.model.DAO.UtenteDAOInterface;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -18,7 +19,7 @@ public class SecurityFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "basic ";
     private static final String SECURED_URL_PREFIX = "secured";
-    UtenteDAO utenteDAO = new UtenteDAO();
+    UtenteDAOInterface utenteDAOInterface = new UtenteDAO();
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException{
@@ -30,7 +31,7 @@ public class SecurityFilter implements ContainerRequestFilter {
                 String authToken = authHeader.get(0);
                 authToken = authToken.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
                 String idsessione = Base64.decodeAsString(authToken);
-                if (utenteDAO.isAutenticato(idsessione, db)) {
+                if (utenteDAOInterface.isAutenticato(idsessione, db)) {
                     connector.disconnect();
                     return;
                 }
