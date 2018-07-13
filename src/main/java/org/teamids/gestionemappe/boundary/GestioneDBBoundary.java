@@ -205,7 +205,7 @@ public class GestioneDBBoundary {
     }
 
     /**
-     * Permette l'aggiunta di un peso per i vari tronchi
+     * Permette l'aggiunta di un peso per i tronchi
      * @param formParams gli elementi inseriti nella form
      * @return la vista della pagina di gestione dei pesi, incluso l'elenco dei pesi
      */
