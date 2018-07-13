@@ -6,7 +6,6 @@ import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -16,6 +15,10 @@ import java.sql.Timestamp;
 import java.util.*;
 
 
+/**
+ * Classe che si occupa di implementare i metodi utili alla gestione del database
+ * e all'ottenimento di informazioni presenti nel database
+ */
 public class GestioneDB implements GestioneDBInterface {
 
     private TroncoDAOInterface troncoDAOInterface;
@@ -26,6 +29,9 @@ public class GestioneDB implements GestioneDBInterface {
     private UtenteDAOInterface utenteDAOInterface;
     private static Timestamp last_time_deleted;
 
+    /**
+     * Costruttore della classe GestioneDB
+     */
     public GestioneDB(){
 
         this.troncoDAOInterface = new TroncoDAO();
@@ -50,10 +56,6 @@ public class GestioneDB implements GestioneDBInterface {
         return model;
     }
 
-    //public ArrayList<PianoEntity> getPiani(){
-     //   return pianoDAO.getAllPiani();
-    //}
-
     @Override
     public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -63,12 +65,10 @@ public class GestioneDB implements GestioneDBInterface {
         Map<BeaconEntity, Integer> numPersBeacon = new HashMap<>();
 
         for(BeaconEntity beacon : beacons){
-
             int numeroPersone = utenteDAOInterface.countUsersPerBeacon(beacon.getId(), db);
             if(numeroPersone != 0) {
                 numPersBeacon.put(beacon, numeroPersone);
             }
-
         }
 
         connector.disconnect();
@@ -98,7 +98,6 @@ public class GestioneDB implements GestioneDBInterface {
 
     @Override
     public void aggiornaPesiTronco(String peso, int troncoId, float valore){
-
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         pesiTroncoDAOInterface.aggiornaPesiTronco(troncoId, peso, valore, db);
@@ -272,7 +271,6 @@ public class GestioneDB implements GestioneDBInterface {
 
     @Override
     public String downloadDb(){
-
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
@@ -288,10 +286,8 @@ public class GestioneDB implements GestioneDBInterface {
                 .add("peso", pesoTable)
                 .add("pesitronco", pesitroncoTable)
                 .build();
-
         connector.disconnect();
         return database.toString();
-
     }
 
     @Override

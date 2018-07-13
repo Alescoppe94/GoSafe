@@ -5,28 +5,21 @@ import com.google.gson.JsonObject;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.control.GestioneDBInterface;
-import org.teamids.gestionemappe.model.DbTable.Peso;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
-import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
-import javax.annotation.Generated;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.*;
 
-
+/**
+ * Classe che fornisce le API relative alla gestione del database
+ */
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -34,12 +27,21 @@ public class GestioneDBBoundary {
 
     GestioneDBInterface gestionedb = new GestioneDB();
 
+    /**
+     * Fornisce le informazioni aggiornate del database al client
+     * @param timestamp orario dell'utimo aggiornamento del database del client
+     * @return json con tutte le informazioni aggiorante del database
+     */
     @GET
     @Path("/secured/aggiornadb/{timestamp}")
     public String aggiornaDB(@PathParam("timestamp") Timestamp timestamp){
         return gestionedb.aggiornaDB(timestamp);
     }
 
+    /**
+     * Fornisce la parte di database del server utile al client
+     * @return json del database del server
+     */
     @GET
     @Path("/secured/download")
     public String downloadDb(){
@@ -47,6 +49,10 @@ public class GestioneDBBoundary {
 
     }
 
+    /**
+     * Richiama la homepage della sezione dell'amministratore
+     * @return la vista della homepage dell'amministratore, incluso l'elenco dei piani
+     */
     @GET
     @Path("/admin")
     @Produces(MediaType.TEXT_HTML)
@@ -56,6 +62,10 @@ public class GestioneDBBoundary {
         return new Viewable("/index", model);
     }
 
+    /**
+     * Richiama la pagina in cui l'amministratore può visualizzare le statistiche
+     * @return la vista della pagina delle statistiche dell'amministratore, incluse le statistiche
+     */
     @GET
     @Path("/visualizzastatistiche")
     @Produces(MediaType.TEXT_HTML)
@@ -66,16 +76,17 @@ public class GestioneDBBoundary {
     }
 
 
+    /**
+     * Richiama la pagina in cui l'amministatore può gestire un piano
+     * @param pianoId l'id del piano che vuole gestire
+     * @return la vista della pagina di gestione di un piano, incluse le info del piano
+     */
     @GET
     @Path("/piano/{pianoId}")
     @Produces(MediaType.TEXT_HTML)
     public Viewable showTronchiPiano(@PathParam("pianoId") int pianoId){
 
         HashMap<TroncoEntity, HashMap<String, Float>> model = gestionedb.getTronchiPiano(pianoId);
-        /*Map<String, Float> model = new HashMap<>();
-        for(TroncoEntity tronco : tronchiPiano){
-            model.put(String.valueOf(tronco.getId()), tronco.getArea());
-        }*/
         TreeMap<TroncoEntity, HashMap<String, Float>> map = new TreeMap<TroncoEntity, HashMap<String, Float>>(new Comparator<TroncoEntity>() {
             @Override
             public int compare(TroncoEntity o1, TroncoEntity o2) {
@@ -87,6 +98,12 @@ public class GestioneDBBoundary {
 
     }
 
+    /**
+     * Permette l'aggiunta di un nuovo piano nel database
+     * @param request le informazioni del nuovo piano
+     * @param piano il nome del piano
+     * @return la lista dei beacon eventualmente già presenti nel database
+     */
     @POST
     @Path("/aggiungipiano")
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,17 +121,13 @@ public class GestioneDBBoundary {
         ArrayList<String> beaconDoppi = gestionedb.aggiungiPiano(path, jsonRequest);
 
         return beaconDoppi;
-
-
-        /*String base64Image = piano.getImmagine().split(",")[1];
-        byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
-        try {
-            BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
+    /**
+     * Permette l'eliminazione di un piano dal database
+     * @param idPiano l'id del piano da eliminare
+     * @return la vista della homepage dell'amministratore, incluso l'elenco dei piani
+     */
     @DELETE
     @Path("/eliminapiano/{idPiano}")
     @Produces(MediaType.TEXT_HTML)
@@ -126,6 +139,11 @@ public class GestioneDBBoundary {
 
     }
 
+    /**
+     * Permette l'aggiornamento delle informazioni di un piano, in particolare i pesi di un tronco
+     * @param formParams gli elementi inseriti nella form di modifica
+     * @return la vista della homepage dell'amministratore, incluso l'elenco dei piani
+     */
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiornapesitronco")
@@ -140,7 +158,6 @@ public class GestioneDBBoundary {
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
             float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
             gestionedb.aggiornaPesiTronco(nomePeso, idTronco, valorePeso);
-            //parameters.put(theKey,formParams.getFirst(theKey));
         }
 
         Map<String, Integer> model = gestionedb.getAllPiani();
@@ -148,6 +165,25 @@ public class GestioneDBBoundary {
 
     }
 
+    /**
+     * Richiama la pagina in cui l'amministatore può gestire i pesi associati ai parametri dei tronchi
+     * @return la vista della pagina di gestione dei pesi, incluso l'elenco dei pesi
+     */
+    @GET
+    @Path("/mostraPesi")
+    @Produces(MediaType.TEXT_HTML)
+    public Viewable mostraPesi(){
+
+        Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
+        return new Viewable("/pesi", model);
+
+    }
+
+    /**
+     * Permette la modifica dei pesi associati ai parametri dei tronchi
+     * @param formParams gli elementi inseriti nella form di modifica
+     * @return la vista della pagina di gestione dei pesi, incluso l'elenco dei pesi
+     */
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/modificaPesi")
@@ -162,13 +198,17 @@ public class GestioneDBBoundary {
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
             float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
             gestionedb.aggiornaPesi(idTronco, nomePeso, valorePeso);
-            //parameters.put(theKey,formParams.getFirst(theKey));
         }
         Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
         return new Viewable("/pesi", model);
 
     }
 
+    /**
+     * Permette l'aggiunta di un peso per i vari tronchi
+     * @param formParams gli elementi inseriti nella form
+     * @return la vista della pagina di gestione dei pesi, incluso l'elenco dei pesi
+     */
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Path("/aggiungiPeso")
@@ -191,6 +231,10 @@ public class GestioneDBBoundary {
         return new Viewable("/pesi", model);
     }
 
+    /**
+     * Permette l'eliminazione di un peso già presente
+     * @param idPeso l'id del peso che si vuole rimuovere
+     */
     @DELETE
     @Path("/eliminapeso/{idPeso}")
     public void eliminaPeso(@PathParam("idPeso")int idPeso){
@@ -199,13 +243,4 @@ public class GestioneDBBoundary {
 
     }
 
-    @GET
-    @Path("/mostraPesi")
-    @Produces(MediaType.TEXT_HTML)
-    public Viewable mostraPesi(){
-
-        Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
-        return new Viewable("/pesi", model);
-
-    }
 }
