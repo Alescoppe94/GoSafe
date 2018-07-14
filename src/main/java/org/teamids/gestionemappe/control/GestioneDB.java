@@ -6,7 +6,6 @@ import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 import org.teamids.gestionemappe.model.entity.TroncoEntity;
 
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -16,6 +15,10 @@ import java.sql.Timestamp;
 import java.util.*;
 
 
+/**
+ * Classe che si occupa di implementare i metodi utili alla gestione del database
+ * e all'ottenimento di informazioni presenti nel database
+ */
 public class GestioneDB implements GestioneDBInterface {
 
     private TroncoDAOInterface troncoDAOInterface;
@@ -24,8 +27,11 @@ public class GestioneDB implements GestioneDBInterface {
     private PesoDAOInterface pesoDAOInterface;
     private PesiTroncoDAOInterface pesiTroncoDAOInterface;
     private UtenteDAOInterface utenteDAOInterface;
-    private static Timestamp last_time_deleted;
+    private static Timestamp last_time_deleted; //TODO: non va mai istanziato? forse va fatto nei dao ogniqualvolta si eliminano righe da tabelle sensibili?
 
+    /**
+     * Costruttore della classe GestioneDB
+     */
     public GestioneDB(){
 
         this.troncoDAOInterface = new TroncoDAO();
@@ -36,6 +42,10 @@ public class GestioneDB implements GestioneDBInterface {
         this.utenteDAOInterface = new UtenteDAO();
     }
 
+    /**
+     * Recupera tutti i piani con le relative informazioni
+     * @return la lista dei piani
+     */
     @Override
     public Map<String, Integer> getAllPiani(){
 
@@ -50,10 +60,10 @@ public class GestioneDB implements GestioneDBInterface {
         return model;
     }
 
-    //public ArrayList<PianoEntity> getPiani(){
-     //   return pianoDAO.getAllPiani();
-    //}
-
+    /**
+     * Recupera il numero di utenti collegati ad ogni beacon
+     * @return la lista dei beacon e per ogni beacon il numero di utenti connessi
+     */
     @Override
     public Map<BeaconEntity, Integer> getPeoplePerBeacon(){
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -63,18 +73,21 @@ public class GestioneDB implements GestioneDBInterface {
         Map<BeaconEntity, Integer> numPersBeacon = new HashMap<>();
 
         for(BeaconEntity beacon : beacons){
-
             int numeroPersone = utenteDAOInterface.countUsersPerBeacon(beacon.getId(), db);
             if(numeroPersone != 0) {
                 numPersBeacon.put(beacon, numeroPersone);
             }
-
         }
 
         connector.disconnect();
         return numPersBeacon;
     }
 
+    /**
+     * Recupera tutti i tronchi di un piano e i relativi pesi
+     * @param pianoId l'id del piano di cui si vuole avere le informazioni
+     * @return la lista dei tronchi del piano e per ogni tronco i pesi associati
+     */
     @Override
     public HashMap<TroncoEntity, HashMap<String, Float>> getTronchiPiano(int pianoId){
 
@@ -96,19 +109,31 @@ public class GestioneDB implements GestioneDBInterface {
 
     }
 
+    /**
+     * Aggiorna il valore di un peso di un tronco
+     * @param peso il peso che si vuole modificare
+     * @param troncoId l'id del tronco che si vuole aggiornare
+     * @param valore il nuovo valore del peso
+     */
     @Override
     public void aggiornaPesiTronco(String peso, int troncoId, float valore){
-
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
         pesiTroncoDAOInterface.aggiornaPesiTronco(troncoId, peso, valore, db);
         connector.disconnect();
     }
 
+    /**
+     * Recupera le informazioni aggiornate rispetto a un orario
+     * @param timestamp_client orario di ultimo aggiornamento del database del client che fa la richiesta
+     * @return le informazioni aggiornate sotto forma di json
+     */
     @Override
     public String aggiornaDB(Timestamp timestamp_client){
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
+        /* Se l'ultimo orario di aggiornamento del database del client è precedente a quello di un'eliminazione di una riga dal
+           database del server, viene restituito l'intero database, specificando al client che dovrà ricrearlo */
         if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
             JsonArray tronchiTable = troncoDAOInterface.getTable(db);
             JsonArray pianiTable = pianoDAOInterface.getTable(db);
@@ -125,14 +150,17 @@ public class GestioneDB implements GestioneDBInterface {
                     .build();
             connector.disconnect();
             return database.toString();
-        } else {
+        }
+        /* Altrimenti verranno restituite soltanto le informazioni aggiornate delle tabelle utili */
+        else {
             JsonArray tronchiaggionati = troncoDAOInterface.getAllTronchiAggiornati(timestamp_client, db);
             JsonArray pianiaggionati = pianoDAOInterface.getAllPianiAggiornati(timestamp_client, db);
             JsonArray beaconaggiornati = beaconDAOInterface.getAllBeaconAggiornati(timestamp_client, db);
             JsonArray pesoaggiornati = pesoDAOInterface.getAllPesiAggiornati(timestamp_client, db);
             JsonArray pesitroncoaggiornati = pesiTroncoDAOInterface.getAllPesiTroncoAggiornati(timestamp_client, db);
+            /* Se nessuna riga è stata aggiornata a seguito dell'orario fornito dal client, non verrà restituito nulla */
             if(tronchiaggionati.size() == 0 && pianiaggionati.size() == 0 && beaconaggiornati.size() == 0 && pesoaggiornati.size() == 0 && pesitroncoaggiornati.size() == 0){
-                return null;        //da vedere se piace
+                return null;
             }else {
                 JsonObject dbAggiornato = Json.createObjectBuilder()
                         .add("tipologia", "modifica")
@@ -148,6 +176,12 @@ public class GestioneDB implements GestioneDBInterface {
         }
     }
 
+    /**
+     * Aggiunge un piano nel database
+     * @param path path in cui andare a salvare i file csv dei tronchi e dei beacon
+     * @param jsonRequest richiesta json contenente le informazioni del piano da aggiungere
+     * @return lista dei beacon doppi, cioè che erano già presenti nel database
+     */
     @Override
     public ArrayList<String> aggiungiPiano(String path, com.google.gson.JsonObject jsonRequest){
 
@@ -170,6 +204,7 @@ public class GestioneDB implements GestioneDBInterface {
 
         ArrayList<BeaconEntity> nuoviBeacon = new ArrayList<>();
 
+        /* Legge il file csv dei beacon, estrae una riga alla volta che corrisponde a un beacon e lo inserisce nel database */
         try (BufferedReader br = new BufferedReader(new FileReader(path+"beaconcsv.csv"))) {
 
             boolean firstLine = true;
@@ -197,6 +232,7 @@ public class GestioneDB implements GestioneDBInterface {
 
         ArrayList<TroncoEntity> nuoviTronchi = new ArrayList<>();
 
+        /* Legge il file csv dei tronchi, estrae una riga alla volta che corrisponde a un tronco e lo inserisce nel database */
         try (BufferedReader br = new BufferedReader(new FileReader(path+"troncocsv.csv"))) {
 
             boolean firstLine = true;
@@ -234,6 +270,10 @@ public class GestioneDB implements GestioneDBInterface {
 
     }
 
+    /**
+     * Elimina un piano dal database, eliminando di conseguenza i beacon, i tronchi e i pesi dei tronchi associati al piano
+     * @param idPiano l'id del piano da eliminare
+     */
     @Override
     public void eliminaPiano(int idPiano){
 
@@ -249,6 +289,12 @@ public class GestioneDB implements GestioneDBInterface {
 
     }
 
+    /**
+     * Aggiorna il peso di un parametro dei tronchi
+     * @param id l'id del peso da aggiornare
+     * @param nome il nome del peso da aggiornare
+     * @param valore il nuovo valore del peso
+     */
     @Override
     public void aggiornaPesi(int id, String nome, Float valore){
 
@@ -259,6 +305,10 @@ public class GestioneDB implements GestioneDBInterface {
 
     }
 
+    /**
+     * Inserisce un nuovo peso per i tronchi
+     * @param peso le informazioni del nuovo peso, cioè il nome e il valore
+     */
     @Override
     public void inserisciPeso(ArrayList<String> peso){
 
@@ -270,9 +320,12 @@ public class GestioneDB implements GestioneDBInterface {
 
     }
 
+    /**
+     * Recupera le tabelle del database del server utili al client
+     * @return
+     */
     @Override
     public String downloadDb(){
-
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
@@ -288,44 +341,51 @@ public class GestioneDB implements GestioneDBInterface {
                 .add("peso", pesoTable)
                 .add("pesitronco", pesitroncoTable)
                 .build();
-
         connector.disconnect();
         return database.toString();
-
     }
 
+    /**
+     * Elimina un peso già presente
+     * @param idPeso l'id del peso da eliminare
+     */
     @Override
     public void eliminapeso(int idPeso){
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
-
         pesiTroncoDAOInterface.eliminaPesiTroncoByPeso(idPeso, db);
         pesoDAOInterface.eliminaPeso(idPeso, db);
-
         connector.disconnect();
 
     }
 
+    /**
+     * Recupera i pesi dei parametri dei tronchi
+     * @return la lista dei pesi con informazioni quali id, nome e valore
+     */
     @Override
     public Map<Integer, Map<String,Float>> mostraPesi(){
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
-
         Map<Integer, Map<String,Float>> pesi = pesoDAOInterface.getPesi(db);
-
         connector.disconnect();
         return pesi;
 
     }
 
+    /**
+     * Scrive un file csv, usato per i beacon e per i tronchi
+     * @param path il path in cui scrivere il file
+     * @param filename il nome del file da scrivere
+     * @param jsonRequest le informazioni che saranno memorizzate nel file
+     */
     private void creaFileCsv(String path, String filename, com.google.gson.JsonObject jsonRequest) {
         String base64 = jsonRequest.get(filename).getAsString().split(",")[1];
         byte[] decoded = Base64.getDecoder().decode(base64);
         try (FileOutputStream fos = new FileOutputStream(path + filename +".csv")) {
             fos.write(decoded);
-            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try. And this will automatically close the OutputStream
         }catch (Exception e){
             e.printStackTrace();
         }
