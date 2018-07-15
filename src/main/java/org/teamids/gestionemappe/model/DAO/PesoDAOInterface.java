@@ -6,6 +6,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Interfaccia della classe PesoDAO,
+ * include l'elenco delle funzionalità che la classe PesoDAO implementa
+ */
 public interface PesoDAOInterface {
     JsonArray getAllPesiAggiornati(Timestamp timestamp, Connection db);
 
@@ -13,7 +17,7 @@ public interface PesoDAOInterface {
 
     JsonArray getTable(Connection db);
 
-    void aggiornaPeso(int id, String nome, float coefficiente, Connection db);
+    void aggiornaPeso(int id, float coefficiente, Connection db);
 
     int inserisciPeso(String nome, float valore, Connection db);
 

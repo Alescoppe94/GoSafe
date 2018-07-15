@@ -11,6 +11,10 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Classe che si occupa di implementare i metodi necessari per lanciare un'emergenza, per calcolare i percorsi sia in fase di
+ * emergenza che non, di ripristinare la fase ordinaria
+ */
 @ApplicationPath("gestionemappe")
 public class GestioneMappe extends ResourceConfig implements GestioneMappeInterface {
 
@@ -25,6 +29,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
     private static boolean emergenza=false;
 
 
+    /**
+     * Costruttore della classe GestioneMappe
+     */
     public GestioneMappe() {
         this.utenteDAO = new UtenteDAO();
         this.troncoDAOInterface = new TroncoDAO();
@@ -40,6 +47,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         property("jersey.config.server.mvc.templateBasePath.jsp", "/WEB-INF/jsp");
     }
 
+    /**
+     * Permette lanciare un'emergenza e notificarla a tutti gli utenti connessi
+     */
     @Override
     public void lanciaEmergenza(){
         final ConnectorHelpers connector= new ConnectorHelpers();
@@ -68,6 +78,10 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
     }
 
 
+    /**
+     * Permette di generare, in fase di emergenza, i percorsi più sicuri per ogni beacon a cui sono collegati gli utenti
+     * @param db parametro utilizzato per la connessione al database
+     */
     private void generaPercorsiEvacuazione(Connection db){
         ArrayList<String> beaconsDiPartenzaId = utenteDAO.getBeaconsIdAttivi(db);
         for(String beaconId: beaconsDiPartenzaId){
@@ -75,13 +89,20 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         }
     }
 
+    /**
+     * Permette di calcolare un percorso in fase di emergenza
+     * @param beaconPart stringa contenente l'identificativo del beacon di partenza
+     * @param db parametro utilizzato per la connessione al database
+     */
     private void calcoloPercorsoEvacuazione(String beaconPart, Connection db) {
         Set<BeaconEntity> pdr = beaconDAOInterface.getAllPuntiDiRaccolta(db);
         BeaconEntity partenza = beaconDAOInterface.getBeaconById(beaconPart, db);
+        //Per calcolare correttamente un percorso, il beacon di partenza non può essere nullo
         if (partenza != null) {
             boolean emergenza = true;
             Map<LinkedList<BeaconEntity>, Float> percorsi_ottimi = new HashMap<>();
             Iterator<BeaconEntity> n = pdr.iterator();
+            //Individiaumo tutti i possibili percorsi che partono dal beacon di partenza ed arriva ad uno dei possibili punti di raccolta
             while (n.hasNext()) {
                 BeaconEntity arrivo = n.next();
 
@@ -94,6 +115,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
             LinkedList<BeaconEntity> percorso_def = new LinkedList<>();
             float costo_percorso_def = Float.MAX_VALUE;
             Iterator<Map.Entry<LinkedList<BeaconEntity>, Float>> iter = percorsi_ottimi.entrySet().iterator();
+            //Per ogni possibile percorso individuato, il percorso ottimo sarà quello con costo minore
             while (iter.hasNext()) {
                 //Log.d("scelta percorso", "entrato");
                 Map.Entry<LinkedList<BeaconEntity>, Float> percorso_costo = iter.next();
@@ -109,6 +131,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
             LinkedList<TappaEntity> tappeOttime = new LinkedList<>();
             boolean existPercorso = percorsoDAOInterface.findPercorsoByBeaconId(beaconPart, db);
             int idPercorso;
+            //Se un percorso che parte da quel beacon di partenza aggiorniamo solamente le tappe che compongono il percorso
             if(existPercorso) {
                 idPercorso = percorsoDAOInterface.getPercorsoByBeaconId(beaconPart, db).getId();
                 for(int i = 0; i < percorso_def.size()-1; i++) {
@@ -118,7 +141,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
                     tappeOttime.add(tappaOttima);
                 }
                 tappaDAOInterface.aggiornaTappe(idPercorso, tappeOttime, db);
-            } else {
+            }
+            //Altrimenti se un percorso che parte da quel beacon non esiste, lo creiamo insieme alle tappe
+            else {
                 for(int i = 0; i < percorso_def.size()-1; i++) {
                     TroncoEntity troncoOttimo = troncoDAOInterface.getTroncoByBeacons(percorso_def.get(i), percorso_def.get(i+1), db);
                     boolean direzione = troncoDAOInterface.checkDirezioneTronco(troncoOttimo, db);
@@ -130,6 +155,12 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         }
     }
 
+    /**
+     * Permette di calcolare un percorso in condizioni ordinarie
+     * @param beaconPart stringa contenente l'identificativo del beacon di partenza
+     * @param beaconArr stringa contenente l'identificativo del beacon di arrivo
+     * @return percorso che consente di andare dal beacon di partenza a quello di destinazione
+     */
     @Override
     public PercorsoEntity calcoloPercorsoNoEmergenza(String beaconPart, String beaconArr){
         ConnectorHelpers connector= new ConnectorHelpers();
@@ -140,6 +171,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         BeaconEntity arrivo = beaconDAOInterface.getBeaconById(beaconArr, db);
         PercorsoEntity percorso;
 
+        //Per calcolare correttamente un percorso, il beacon di partenza e quello di arrivo non possono essere nulli
         if (partenza != null && arrivo != null) {
 
             Map<LinkedList<BeaconEntity>, Float> percorsoOttimo_costoOttimo =  calcoloDijkstra(partenza, arrivo, emergenza, db);
@@ -149,6 +181,7 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
             Map.Entry<LinkedList<BeaconEntity>, Float> entry = percorsoOttimo_costoOttimo.entrySet().iterator().next();
 
+            //Creo il percorso come insieme di tappe, a partire dalla lista di beacon
             for(int i = 0; i < entry.getKey().size()-1; i++) {
                 TroncoEntity troncoOttimo = troncoDAOInterface.getTroncoByBeacons(entry.getKey().get(i), entry.getKey().get(i+1), db);
                 boolean direzione = troncoDAOInterface.checkDirezioneTronco(troncoOttimo, db);
@@ -157,14 +190,24 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
                 //tappaDAO.insertTappa(tappaOttima);
             }
             percorso = new PercorsoEntity(tappeOttime, partenza);
-        }else{
+        }
+        //Se il beacon di partenza o di arrivo è nullo allora il percorso restituito sarà nullo.
+        else{
             percorso = null;
         }
         connector.disconnect();
         return percorso;
     }
 
-
+    /**
+     * Permette di implementare l'algoritmo di Dijkstra utilizzato per il calcolo del percorso,
+     * sia in fase di emergenza che non
+     * @param partenza oggetto di tipo BeaconEntity contenente tutte le informazioni del beacon di partenza
+     * @param arrivo oggetto di tipo BeaconEntity contenente tutte le informazioni del beacon di arrivo
+     * @param emergenza variabile che indica se il percorso deve essere calcolato per la fase di emergenza o per quella ordinaria
+     * @param db parametro utilizzato per la connessione al database
+     * @return Hashmap che contiene una coppia chiave-valore in cui la chiave è una lista ordinata di BeaconEntity e il valore è il costo complessivo del percorso
+     */
     private Map<LinkedList<BeaconEntity>, Float> calcoloDijkstra(BeaconEntity partenza, BeaconEntity arrivo, boolean emergenza, Connection db){
 
         Set<TroncoEntity> allTronchiEdificio = troncoDAOInterface.getAllTronchi(db);
@@ -208,9 +251,14 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
                     }
                 }
                 Float costo;
+                //Se il percorso deve essere calcolato per la fase d'emergenza, il costo di un tronco è determinato
+                //valutando diversi criteri quali la lunghezza, il los, il rischio di vita, l’indice di fumo ecc.
                 if (emergenza){
                     costo = tronco.calcolaCosto(db);
-                }else{
+                }
+                //Se il percorso deve essere calcolato per la fase di non emergenza, il costo di un tronco è determinato
+                //esclusivamente dalla lunghezza
+                else{
                     costo = pesiTroncoDAOInterface.geValoreByPesoId(tronco.getId(), "l", db);
                 }
                 costo_percorso_parziale += costo;
@@ -262,6 +310,12 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
     }
 
+    /**
+     * Permette di verificare se un certo beacon è presente in un array di beacon
+     * @param beacons Array di oggetti di tipo BeaconEntity
+     * @param beacon oggetto di tipo BeaconEntity che contiene tutte le informazione del beacon che si intende cercare
+     * @return True se l'identificatore del beacon è uguale all'identificatore di uno dei beacon presenti nell'ArrayList, altrimente False
+     */
     private boolean compare(ArrayList<BeaconEntity> beacons, BeaconEntity beacon){
 
         boolean contenuto = false;
@@ -276,6 +330,12 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
     }
 
+    /**
+     * Permette di verificare se due beacon sono uguali o meno
+     * @param beacon1 oggetto di tipo BeaconEntity contente tutte le informazioni del primo beacon
+     * @param beacon2 oggetto di tipo BeaconEntity contente tutte le informazioni del secondo beacon
+     * @return True se l'identificatore del primo beacon è lo stesso del secondo, altrimenti False
+     */
     private boolean compare(BeaconEntity beacon1, BeaconEntity beacon2){
 
         boolean uguali = false;
@@ -288,12 +348,19 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
 
     }
 
+    /**
+     * Permette di notificare il percorso più sicuro ad un utente in condizioni di emergenza
+     * @param utenteId identificatore dell'utente a cui sarà rivolta la notifica
+     * @param beaconPart stringa contenente l'identificativo del beacon di partenza
+     * @return la notifica per l'utente, incluso il percorso che dovrà seguire, l'orario ed un messaggio
+     */
     @Override
     public NotificaEntity visualizzaPercorso(int utenteId, String beaconPart) {
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
 
         PercorsoEntity percorso = percorsoDAOInterface.getPercorsoByBeaconId(beaconPart, db);
+        //Se non esiste sul database un percorso che parte da quel beacon di partenza viene subito calcolato
         if(percorso == null){
             synchronized (this) {
                 calcoloPercorsoEvacuazione(beaconPart, db);
@@ -312,6 +379,12 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         return notifica;
     }
 
+    /**
+     * Permette di aggiornare automaticamente, sfruttando il design pattern Observer,
+     * il valore del los di un tronco in fase di emergenza
+     * @param o l'oggetto osservabile nel design pattern Observer cioè UtenteDAO
+     * @param arg argomento passato dall'oggetto osservabile
+     */
     @Override
     public void update(Observable o, Object arg) {
 
@@ -339,6 +412,9 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         pesiTroncoDAOInterface.updateValorePeso(tronco.getId(), "los", los, db);
     }
 
+    /**
+     * Permette di cessare la fase di emergenza e ripristinare la fase ordinaria
+     */
     @Override
     public void backToNormalMode(){
 
@@ -353,6 +429,10 @@ public class GestioneMappe extends ResourceConfig implements GestioneMappeInterf
         connector.disconnect();
     }
 
+    /**
+     * Metodo getter dell'attributo emergenza
+     * @return True se la variabile emergenza è True(quindi l'emergenza è in corso), altrimenti False
+     */
     static boolean isEmergenza(){
         return emergenza;
     }

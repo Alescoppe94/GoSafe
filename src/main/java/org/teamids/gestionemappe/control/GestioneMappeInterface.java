@@ -6,6 +6,10 @@ import org.teamids.gestionemappe.model.entity.PercorsoEntity;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Interfaccia della classe GestioneMappe,
+ * include l'elenco delle funzionalità che la classe GestioneMappe implementa
+ */
 public interface GestioneMappeInterface extends Observer {
     void lanciaEmergenza();
 

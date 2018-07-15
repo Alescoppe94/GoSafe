@@ -27,7 +27,7 @@ public class GestioneDB implements GestioneDBInterface {
     private PesoDAOInterface pesoDAOInterface;
     private PesiTroncoDAOInterface pesiTroncoDAOInterface;
     private UtenteDAOInterface utenteDAOInterface;
-    private static Timestamp last_time_deleted; //TODO: non va mai istanziato? forse va fatto nei dao ogniqualvolta si eliminano righe da tabelle sensibili?
+    private static Timestamp last_time_deleted;
 
     /**
      * Costruttore della classe GestioneDB
@@ -134,7 +134,7 @@ public class GestioneDB implements GestioneDBInterface {
         Connection db = connector.connect();
         /* Se l'ultimo orario di aggiornamento del database del client è precedente a quello di un'eliminazione di una riga dal
            database del server, viene restituito l'intero database, specificando al client che dovrà ricrearlo */
-        if(last_time_deleted!= null && timestamp_client.before(last_time_deleted)){
+        if(GestioneDB.getLast_time_deleted()!= null && timestamp_client.before(GestioneDB.getLast_time_deleted())){
             JsonArray tronchiTable = troncoDAOInterface.getTable(db);
             JsonArray pianiTable = pianoDAOInterface.getTable(db);
             JsonArray beaconTable = beaconDAOInterface.getTable(db);
@@ -292,15 +292,14 @@ public class GestioneDB implements GestioneDBInterface {
     /**
      * Aggiorna il peso di un parametro dei tronchi
      * @param id l'id del peso da aggiornare
-     * @param nome il nome del peso da aggiornare
      * @param valore il nuovo valore del peso
      */
     @Override
-    public void aggiornaPesi(int id, String nome, Float valore){
+    public void aggiornaPesi(int id, Float valore){
 
         ConnectorHelpers connector= new ConnectorHelpers();
         Connection db = connector.connect();
-        pesoDAOInterface.aggiornaPeso(id, nome, valore, db);
+        pesoDAOInterface.aggiornaPeso(id, valore, db);
         connector.disconnect();
 
     }
@@ -391,4 +390,19 @@ public class GestioneDB implements GestioneDBInterface {
         }
     }
 
+    /**
+     * Metodo getter per l'attributo last_time_deleted
+     * @return valore dell'attributo
+     */
+    public static Timestamp getLast_time_deleted() {
+        return last_time_deleted;
+    }
+
+    /**
+     * Metodo setter per l'attributo last_time_deleted
+     * @param last_time_deleted nuovo valore per l'attributo
+     */
+    public static void setLast_time_deleted(Timestamp last_time_deleted) {
+        GestioneDB.last_time_deleted = last_time_deleted;
+    }
 }

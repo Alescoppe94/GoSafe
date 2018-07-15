@@ -1,28 +1,40 @@
 package org.teamids.gestionemappe.model.DAO;
 
+import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.DbTable.PesiTronco;
 import org.teamids.gestionemappe.model.DbTable.Peso;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import java.sql.Array;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe che si occupa di implementare i metodi che interagiscono con la tabella PesiTronco del database
+ */
 public class PesiTroncoDAO implements PesiTroncoDAOInterface {
 
     protected PesiTronco tabella;
 
+    /**
+     * Costruttore della classe PesiTroncoDAO
+     */
     public PesiTroncoDAO() {
         this.tabella = new PesiTronco();
     }
 
+    /**
+     * Permette di aggiornare il valore di un PesiTronco, relativo ad un certo peso, di un tronco
+     * @param troncoId identificativo del tronco
+     * @param peso nome del peso
+     * @param los nuovo valore del PesiTronco
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void updateValorePeso(int troncoId, String peso, float los, Connection db){
         String dati= "valore = " + los;
@@ -33,6 +45,13 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         tabella.execute(db);
     }
 
+    /**
+     * Permette di ottenere tutti i valori dei PesiTronco, con i rispettivi coefficienti dei pesi, di un determinato tronco
+     * @param troncoId identificatore del tronco
+     * @param db parametro utilizzato per la connessione al database
+     * @return Hashmap che contiene un insieme di coppie chiave-valore in cui
+     * la chiave è il coefficiente del peso ed il valore è il valore del PesiTronco
+     */
     @Override
     public HashMap<Float,Float> getPesiTronco(int troncoId, Connection db) {
         tabella.select("valore,coefficiente");
@@ -46,6 +65,13 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         return coeffVal;
     }
 
+    /**
+     * Permette di ottenere il valore di un PesiTronco, relativo ad un peso, di un determinato tronco
+     * @param troncoId identificatore del tronco
+     * @param peso nome del peso
+     * @param db parametro utilizzato per la connessione al database
+     * @return Valore del PesiTronco relativo ad un peso di un certo tronco
+     */
     @Override
     public Float geValoreByPesoId(int troncoId, String peso, Connection db) {
         tabella.select("valore");
@@ -60,6 +86,10 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         return valore;
     }
 
+    /**
+     * Permette di settare il valore del los di tutti i tronchi al valore originario(cioè zero)
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void losToDefault(Connection db) {
         tabella.update();
@@ -69,6 +99,13 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         tabella.execute(db);
     }
 
+    /**
+     * Permette di recuperare tutti gli elementi della tabella che sono stati modificati
+     * dopo un certo timestamp, sotto forma di json
+     * @param timestamp orario usato come soglia
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray che contiene le info di tutti quei beacon modificati dopo un certo timestamp
+     */
     @Override
     public JsonArray getAllPesiTroncoAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pesiTroncoAggiornati = Json.createArrayBuilder();
@@ -86,6 +123,11 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         return pesiTroncoAggiornati.build();
     }
 
+    /**
+     * Permette di generare un json contenente le info di tutti gli elementi della tabella
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray contenenti le informazioni di tutti gli elementi memorizzati nel db
+     */
     @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder pesiTronco = Json.createArrayBuilder();
@@ -103,6 +145,13 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
     }
 
 
+    /**
+     * Permette di aggiornare o inserire, se non presente, il valore di un PesiTronco relativo ad un tronco
+     * @param troncoId identificatore del tronco
+     * @param peso nome del peso
+     * @param valore nuovo valore del peso
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void aggiornaPesiTronco(int troncoId, String peso, float valore, Connection db){
 
@@ -128,6 +177,11 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
 
     }
 
+    /**
+     * Permette di eliminare tutti i PesiTronco di tutti i tronchi relativi ad un piano
+     * @param idPiano numero del piano
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void eliminaPesiTroncoPerPiano(int idPiano, Connection db){
 
@@ -139,18 +193,30 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         tabella.doubleinnerjoin("tronco", "pesitronco.troncoId = tronco.id", "beacon", "tronco.beaconBId=beacon.id");
         tabella.where("beacon.pianoId = '" + idPiano +"'");
         tabella.execute(db);
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        GestioneDB.setLast_time_deleted(time);
     }
 
+    /**
+     * Permette di eliminare tutti gli elementi della tabella relativi ad un certo peso
+     * @param idPeso identificatore del peso
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void eliminaPesiTroncoByPeso(int idPeso, Connection db){
 
         tabella.delete();
         tabella.where("pesoId = '" + idPeso +"'");
         tabella.execute(db);
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        GestioneDB.setLast_time_deleted(time);
     }
 
+    /**
+     * Permette di inserire, per ogni tronco contenuto in una lista, tutti i relativi PesiTronco
+     * @param idTronchi ArrayList che contiene gli identificatori dei tronchi
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void inserisciPesiTronco(ArrayList<Integer> idTronchi, Connection db) {
         PesoDAO pesoDAO = new PesoDAO();
@@ -168,6 +234,11 @@ public class PesiTroncoDAO implements PesiTroncoDAOInterface {
         }
     }
 
+    /**
+     * Permette di inserire,qualora fosse aggiunto un nuovo peso, il valore del relativo PesiTronco per tutti i tronchi
+     * @param idPeso identificativo del nuovo peso aggiunto
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void inserisciPesiTroncoPerNuovoPeso(int idPeso, Connection db) {
         TroncoDAO troncoDAO = new TroncoDAO();

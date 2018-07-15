@@ -9,6 +9,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Set;
 
+/**
+ * Interfaccia della classe TroncoDAO,
+ * include l'elenco delle funzionalità che la classe TroncoDAO implementa
+ */
 public interface TroncoDAOInterface {
     Set<TroncoEntity> getAllTronchi(Connection db);
 

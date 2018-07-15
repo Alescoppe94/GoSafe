@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Interfaccia della classe UtenteDAO,
+ * include l'elenco delle funzionalità che la classe UtenteDAO implementa
+ */
 public interface UtenteDAOInterface {
     void insertUser(UtenteEntity utente, Connection db);
 

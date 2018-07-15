@@ -7,8 +7,11 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * Interfaccia della classe PianoDAO,
+ * include l'elenco delle funzionalità che la classe PianoDAO implementa
+ */
 public interface PianoDAOInterface {
-    PianoEntity getPianoById(int idpiano, Connection db);
 
     JsonArray getAllPianiAggiornati(Timestamp timestamp, Connection db);
 

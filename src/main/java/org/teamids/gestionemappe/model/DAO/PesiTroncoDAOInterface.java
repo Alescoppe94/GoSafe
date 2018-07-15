@@ -6,6 +6,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Interfaccia della classe PesiTroncoDAO,
+ * include l'elenco delle funzionalità che la classe PesiTroncoDAO implementa
+ */
 public interface PesiTroncoDAOInterface {
     void updateValorePeso(int troncoId, String peso, float los, Connection db);
 

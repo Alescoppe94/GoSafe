@@ -27,7 +27,7 @@ public interface GestioneDBInterface {
 
     void eliminaPiano(int idPiano);
 
-    void aggiornaPesi(int id, String nome, Float valore);
+    void aggiornaPesi(int id, Float valore);
 
     void inserisciPeso(ArrayList<String> peso);
 
