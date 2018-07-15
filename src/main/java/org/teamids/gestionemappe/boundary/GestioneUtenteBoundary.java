@@ -53,12 +53,11 @@ public class GestioneUtenteBoundary {
     /**
      * Permette la modifica delle informazioni di profilo di un utente
      * @param utente oggetto di tipo Utente contenente le nuove info dell'utente
-     * @param authString
      * @return l'esito della modifica
      */
     @POST
     @Path("/secured/modifica")
-    public String updateUtente(UtenteEntity utente,@HeaderParam("authorization") String authString){ //TODO: serve authString?
+    public String updateUtente(UtenteEntity utente){
         return gestioneutente.updateUtente(utente);
     }
 

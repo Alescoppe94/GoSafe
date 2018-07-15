@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.model.DAO;
 
+import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.DbTable.Beacon;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 
@@ -10,14 +11,27 @@ import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 
+/**
+ * Classe che si occupa di implementare i metodi che interagiscono con la tabella Beacon del database
+ */
 public class BeaconDAO implements BeaconDAOInterface {
 
     protected Beacon tabella;
 
+    /**
+     * Costruttore della classe BeaconDAO
+     */
     public BeaconDAO() {
         this.tabella = new Beacon();
     }
 
+    /**
+     * Permette di recuperare le informazioni di un beacon presente nel database, a partire
+     * dal suo identificatore
+     * @param beaconId identificatore del beacon
+     * @param db parametro utilizzato per la connessione al database
+     * @return oggetto di tipo BeaconEntity contenenti tutte le informazioni ad esso associate
+     */
     @Override
     public BeaconEntity getBeaconById(String beaconId, Connection db){
         tabella.select();
@@ -32,6 +46,12 @@ public class BeaconDAO implements BeaconDAOInterface {
         return beacon;
     }
 
+    /**
+     * Permette di recuperare tutti i beacon memorizzati nel database
+     * @param db parametro utilizzato per la connessione al database
+     * @return Arraylist di oggetti di tipo BeaconEntity in cui ciascun beacon contiene
+     * tutte le informazioni ad esso essociate
+     */
     @Override
     public ArrayList<BeaconEntity> getAllBeacons(Connection db){
 
@@ -51,6 +71,11 @@ public class BeaconDAO implements BeaconDAOInterface {
         return beacons;
     }
 
+    /**
+     * Permette di recuperare tutti i beacon, che rappresentano punti di raccolta, memorizzati nel database
+     * @param db parametro utilizzato per la connessione al database
+     * @return Insieme di oggetti di tipo BeaconEntity che rappresentano punti di raccolta
+     */
     @Override
     public Set<BeaconEntity> getAllPuntiDiRaccolta(Connection db){
         Set<BeaconEntity> allPuntiDiRaccolta = new HashSet<>();
@@ -70,6 +95,13 @@ public class BeaconDAO implements BeaconDAOInterface {
         return allPuntiDiRaccolta;
     }
 
+    /**
+     * Permette di recuperare tutte le informazion di tutti i beacon che sono stati modificati
+     * dopo un certo timestamp, sotto forma di json
+     * @param timestamp orario usato come soglia
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray che contiene le info di tutti quei beacon modificati dopo un certo timestamp
+     */
     @Override
     public JsonArray getAllBeaconAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder beaconAggiornati = Json.createArrayBuilder();
@@ -88,6 +120,11 @@ public class BeaconDAO implements BeaconDAOInterface {
         return beaconAggiornati.build();
     }
 
+    /**
+     * Permette di generare un json contenente le info di tutti i beacon
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray contenenti le informazioni di tutti i beacon memorizzati nel db
+     */
     @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder beacon = Json.createArrayBuilder();
@@ -105,10 +142,18 @@ public class BeaconDAO implements BeaconDAOInterface {
         return beacon.build();
     }
 
+    /**
+     * Permette di inserire un'insieme di beacon, relativi ad un piano, che non siano già presenti nel database
+     * @param beacons Arraylist di oggetti di tipo BeaconEntity che si intende inserire
+     * @param piano_id numero del piano dei beacon
+     * @param db parametro utilizzato per la connessione al database
+     * @return Array di stringhe che contiene l'identificatore di quei beacon che non stati inseriti perchè già presenti
+     */
     @Override
     public ArrayList<String> inserisciBeacons(ArrayList<BeaconEntity> beacons, int piano_id, Connection db){
         ArrayList<String> beaconDoppi = new ArrayList<>();
         for (BeaconEntity beacon : beacons){
+            //Se il beacon che si vuole inserire non è già presente, lo inserisco
             if(!isBeaconInDb(beacon.getId(), db)) {
                 int puntodiraccolta = beacon.isIs_puntodiraccolta() ? 1 : 0;
                 String dati = "'"+beacon.getId()+"'";
@@ -119,20 +164,35 @@ public class BeaconDAO implements BeaconDAOInterface {
                 dati = dati + ",null";
                 tabella.insert(dati);
                 tabella.execute(db);
-            } else {
+            }
+            //Se il beacon è già presente, il suo identificatore lo aggiungo all'arraylist beaconDoppi
+            else {
                 beaconDoppi.add(beacon.getId());
             }
         }
         return beaconDoppi;
     }
 
+    /**
+     * Permette di eliminare tutti i beacon di un piano
+     * @param pianoId numero del piano
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void eliminaBeaconsPerPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("pianoId = '" + pianoId + "'");
         tabella.execute(db);
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        GestioneDB.setLast_time_deleted(time);
     }
 
+    /**
+     * Permette di verificare se un certo beacon è presente nel database
+     * @param idbeacon identificatore del beacon di cui si vuole verificare la presenza
+     * @param db parametro utilizzato per la connessione al database
+     * @return True se esiste un beacon con quel identificatore, altrimenti False
+     */
     @Override
     public boolean isBeaconInDb(String idbeacon, Connection db){
         boolean success = false;

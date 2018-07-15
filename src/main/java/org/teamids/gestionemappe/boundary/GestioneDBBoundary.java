@@ -197,7 +197,7 @@ public class GestioneDBBoundary {
             String nomePeso = theKey.split("-")[0];
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
             float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
-            gestionedb.aggiornaPesi(idTronco, nomePeso, valorePeso);
+            gestionedb.aggiornaPesi(idTronco, valorePeso);
         }
         Map<Integer, Map<String, Float>> model = gestionedb.mostraPesi();
         return new Viewable("/pesi", model);

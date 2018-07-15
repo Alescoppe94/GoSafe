@@ -7,13 +7,21 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import javax.json.Json;
-
+/**
+ * Classe che si occupa di implementare i metodi che dovranno comunicare con il servizio Firebase di Google
+ */
 public class Communication {
 
+    /**
+     * Costruttore della classe Communication
+     */
     public Communication() {
     }
 
+    /**
+     * Permette di inviare a un utente la notifica di emergenza, tramite Firebase.
+     * @param token
+     */
     public void inviaNotifica(String token){
 
         HttpPost post = null;

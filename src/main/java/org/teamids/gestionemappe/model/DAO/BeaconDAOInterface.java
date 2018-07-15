@@ -8,6 +8,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Set;
 
+/**
+ * Interfaccia della classe BeaconDAO,
+ * include l'elenco delle funzionalità che la classe BeaconDAO implementa
+ */
 public interface BeaconDAOInterface {
     BeaconEntity getBeaconById(String beaconId, Connection db);
 

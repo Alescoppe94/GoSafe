@@ -1,5 +1,6 @@
 package org.teamids.gestionemappe.model.DAO;
 
+import org.teamids.gestionemappe.control.GestioneDB;
 import org.teamids.gestionemappe.model.DbTable.Piano;
 import org.teamids.gestionemappe.model.entity.PianoEntity;
 
@@ -12,28 +13,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe che si occupa di implementare i metodi che interagiscono con la tabella Piano del database
+ */
 public class PianoDAO implements PianoDAOInterface {
 
     protected Piano tabella;
 
+    /**
+     * Costruttore della classe PianoDAO
+     */
     public PianoDAO() {
 
          this.tabella = new Piano();
 
     }
 
-    @Override
-    public PianoEntity getPianoById(int idpiano, Connection db){
-        tabella.select();
-        tabella.where("id = '" + idpiano + "'" );
-        List<Map<String, Object>> rs = tabella.fetch(db);
-        PianoEntity piano = new PianoEntity();
-        piano.setId(Integer.parseInt(rs.get(0).get("id").toString()));
-        piano.setImmagine(rs.get(0).get("immagine").toString());
-        piano.setPiano(Integer.parseInt(rs.get(0).get("piano").toString()));
-        return piano;
-    }
-
+    /**
+     * Permette di recuperare le informazioni di tutti i piani che sono stati modificati
+     * dopo un certo timestamp, sotto forma di json
+     * @param timestamp orario usato come soglia
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray che contiene le info di tutti quei piani modificati dopo un certo timestamp
+     */
     @Override
     public JsonArray getAllPianiAggiornati(Timestamp timestamp, Connection db) {
         JsonArrayBuilder pianiAggiornati = Json.createArrayBuilder();
@@ -51,6 +53,11 @@ public class PianoDAO implements PianoDAOInterface {
 
     }
 
+    /**
+     * Permette di generare un json contenente le info di tutti i piani
+     * @param db parametro utilizzato per la connessione al database
+     * @return JsonArray contenenti le informazioni di tutti i piani memorizzati nel db
+     */
     @Override
     public JsonArray getTable(Connection db) {
         JsonArrayBuilder piani = Json.createArrayBuilder();
@@ -66,6 +73,12 @@ public class PianoDAO implements PianoDAOInterface {
         return piani.build();
     }
 
+    /**
+     * Permette di inserire un nuovo piano
+     * @param piano oggetto di tipo PianoEntity che contiene tutte le info del piano da inserire
+     * @param db parametro utilizzato per la connessione al database
+     * @return l'identificatore del piano appena inserito
+     */
     @Override
     public int inserisciPiano(PianoEntity piano, Connection db){
 
@@ -80,13 +93,25 @@ public class PianoDAO implements PianoDAOInterface {
 
     }
 
+    /**
+     * Permette di eliminare un piano
+     * @param pianoId identificatore del piano da eliminare
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void eliminaPiano(int pianoId, Connection db){
         tabella.delete();
         tabella.where("id = '" + pianoId + "'");
         tabella.execute(db);
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        GestioneDB.setLast_time_deleted(time);
     }
 
+    /**
+     * Permette di ottenere tutti i piani memorizzati nel database
+     * @param db parametro utilizzato per la connessione al database
+     * @return ArrayList di oggetti PianoEntity che contiene le info di tutti i piani memorizzati
+     */
     @Override
     public ArrayList<PianoEntity> getAllPiani(Connection db){
 

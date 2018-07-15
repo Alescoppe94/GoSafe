@@ -1,6 +1,5 @@
 package org.teamids.gestionemappe.model.DAO;
 
-import org.teamids.gestionemappe.model.ConnectorHelpers;
 import org.teamids.gestionemappe.model.DbTable.Tappa;
 import org.teamids.gestionemappe.model.entity.BeaconEntity;
 import org.teamids.gestionemappe.model.entity.TappaEntity;
@@ -13,14 +12,26 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe che si occupa di implementare i metodi che interagiscono con la tabella Tappa del database
+ */
 public class TappaDAO implements TappaDAOInterface {
 
     protected Tappa tabella;
 
+    /**
+     * Costruttore della classe TappaDAO
+     */
     public TappaDAO() {
         this.tabella = new Tappa();
     }
 
+    /**
+     * Permette di recuperare tutte le tappe associate ad un certo percorso
+     * @param percorsoId identificatore del percorso
+     * @param db parametro utilizzato per la connessione al database
+     * @return una lista ordinata di tutte le tappe che compongono un certo percorso memorizzato nel database
+     */
     @Override
     public LinkedList<TappaEntity> getTappeByPercorsoId(int percorsoId, Connection db) {
         LinkedList<TappaEntity> tappe = new LinkedList<>();
@@ -42,12 +53,22 @@ public class TappaDAO implements TappaDAOInterface {
         return tappe;
     }
 
+    /**
+     * Rimuove tutti gli elementi dalla tabella
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void removeAllTappe(Connection db) {
         tabella.delete();
         tabella.execute(db);
     }
 
+    /**
+     * Permette di aggiornare le tappe associate ad un determinato percorso
+     * @param percorsoId identificatore del percorso
+     * @param tappeOttime lista di oggetti di tipo TappaEntity che contiene le info delle nuove tappe
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void aggiornaTappe(int percorsoId, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
@@ -85,6 +106,12 @@ public class TappaDAO implements TappaDAOInterface {
         }
     }
 
+    /**
+     * Permette di creare un percorso che parte da un determinato beacon con le relative tappe associate
+     * @param partenza oggetto di tipo BeaconEntity che contiene le info del beacon di partenza del percorso
+     * @param tappeOttime lista di tappe di cui sarà composto il percorso
+     * @param db parametro utilizzato per la connessione al database
+     */
     @Override
     public void creaPercorsoConTappe(BeaconEntity partenza, LinkedList<TappaEntity> tappeOttime, Connection db) {
         try {
