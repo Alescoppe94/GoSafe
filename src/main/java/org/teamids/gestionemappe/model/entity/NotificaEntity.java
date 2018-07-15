@@ -77,7 +77,7 @@ public class NotificaEntity {
 
     /**
      * metodo setter per il Percorso.
-     * @param percorso
+     * @param percorso percorso da impostare nell'oggetto
      */
     public void setPercorso(PercorsoEntity percorso) {
         this.percorso = percorso;
