@@ -215,7 +215,7 @@ public class GestioneDB implements GestioneDBInterface {
 
                     boolean isPuntodiRaccolta = "1".equals(field[1]);
 
-                    BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, Integer.parseInt(field[2]), Integer.parseInt(field[3]), Integer.parseInt(field[4]));
+                    BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, piano_id, Integer.parseInt(field[2]), Integer.parseInt(field[3]));
 
                     nuoviBeacon.add(beacon);
                 }
