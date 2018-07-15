@@ -242,12 +242,12 @@ public class GestioneDB implements GestioneDBInterface {
                     String[] field = line.split(cvsSplitBy);
 
                     ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();
+                    beaconEstremi.add(new BeaconEntity(field[0]));
                     beaconEstremi.add(new BeaconEntity(field[1]));
-                    beaconEstremi.add(new BeaconEntity(field[2]));
 
-                    boolean agibile = "1".equals(field[3]);
+                    boolean agibile = "1".equals(field[2]);
 
-                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[4]));
+                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[3]));
 
                     nuoviTronchi.add(tronco);
                 }
