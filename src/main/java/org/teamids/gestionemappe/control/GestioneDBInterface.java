@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Interfaccia della classe GestioneDB,
+ * Interfaccia della classe GestioneDB, 
  * include l'elenco delle funzionalità che la classe GestioneDB implementa
  */
 public interface GestioneDBInterface {
