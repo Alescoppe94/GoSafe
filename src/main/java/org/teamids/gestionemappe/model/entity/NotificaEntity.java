@@ -74,4 +74,12 @@ public class NotificaEntity {
     public String getMessaggio() {
         return messaggio;
     }
+
+    /**
+     * metodo setter per il Percorso.
+     * @param percorso
+     */
+    public void setPercorso(PercorsoEntity percorso) {
+        this.percorso = percorso;
+    }
 }
