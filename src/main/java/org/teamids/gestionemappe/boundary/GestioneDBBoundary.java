@@ -156,7 +156,10 @@ public class GestioneDBBoundary {
             String theKey = (String)it.next();
             String nomePeso = theKey.split("-")[0];
             int idTronco = Integer.parseInt(theKey.split("-")[1]);
-            float valorePeso = Float.parseFloat(formParams.getFirst(theKey));
+            float valorePeso = 0;
+            if(!formParams.getFirst(theKey).isEmpty()) {
+                valorePeso = Float.parseFloat(formParams.getFirst(theKey));
+            }
             gestionedb.aggiornaPesiTronco(nomePeso, idTronco, valorePeso);
         }
 
