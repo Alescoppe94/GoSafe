@@ -245,9 +245,9 @@ public class GestioneDB implements GestioneDBInterface {
                     beaconEstremi.add(new BeaconEntity(field[0]));
                     beaconEstremi.add(new BeaconEntity(field[1]));
 
-                    boolean agibile = "1".equals(field[2]);
+                    boolean agibile = true; //tutti i tronchi sono agibili, dal momento che non consideriamo più questa caratteristica
 
-                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[3]));
+                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[2]));
 
                     nuoviTronchi.add(tronco);
                 }
