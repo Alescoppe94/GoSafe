@@ -82,4 +82,16 @@ public class NotificaEntity {
     public void setPercorso(PercorsoEntity percorso) {
         this.percorso = percorso;
     }
+
+    public void setUtenteId(int utenteId) {
+        this.utenteId = utenteId;
+    }
+
+    public void setDataorario(LocalDateTime dataorario) {
+        this.dataorario = dataorario;
+    }
+
+    public void setMessaggio(String messaggio) {
+        this.messaggio = messaggio;
+    }
 }

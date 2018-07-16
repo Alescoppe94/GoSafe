@@ -57,7 +57,6 @@ public class GestioneUtente implements GestioneUtenteInterface {
                 boolean emergenza = GestioneMappe.isEmergenza();
                 String utenteJson = gson.toJson(utente);
                 esito = "{\"utente\":"+ utenteJson+", \"emergenza\":\""+emergenza+"\"}";
-                System.out.println(esito);
             }
             /* altrimenti si comunica all'utente che la password inserita è errata */
             else

@@ -133,4 +133,24 @@ public class UtenteEntity {
     public void setIdsessione(String idsessione) {
         this.idsessione = idsessione;
     }
+
+    public void setBeaconId(String beaconId) {
+        this.beaconId = beaconId;
+    }
+
+    public PercorsoEntity getPercorso() {
+        return percorso;
+    }
+
+    public void setPercorso(PercorsoEntity percorso) {
+        this.percorso = percorso;
+    }
+
+    public boolean is_autenticato() {
+        return is_autenticato;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
