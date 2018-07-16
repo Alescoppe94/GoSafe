@@ -113,7 +113,7 @@ public class BeaconEntity {
 
     /**
      * metodo getter per il piano del beacon
-     * @return
+     * @return il piano del beacon
      */
     public int getPiano() {
         return piano;

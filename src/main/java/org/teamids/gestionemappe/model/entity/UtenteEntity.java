@@ -134,22 +134,42 @@ public class UtenteEntity {
         this.idsessione = idsessione;
     }
 
+    /**
+     * metodo setter per l'id del beacon
+     * @param beaconId id del beacon
+     */
     public void setBeaconId(String beaconId) {
         this.beaconId = beaconId;
     }
 
+    /**
+     * metodo getter per il percorso dell'utente
+     * @return percorso
+     */
     public PercorsoEntity getPercorso() {
         return percorso;
     }
 
+    /**
+     * metodo setter per il percorso dell'utente
+     * @param percorso percorso
+     */
     public void setPercorso(PercorsoEntity percorso) {
         this.percorso = percorso;
     }
 
+    /**
+     * metodo getter per sapere se l'utente è autenticato
+     * @return booleano che dice se l'utente è autenticato o meno
+     */
     public boolean is_autenticato() {
         return is_autenticato;
     }
 
+    /**
+     * metodo setter per il token
+     * @param token token
+     */
     public void setToken(String token) {
         this.token = token;
     }

@@ -83,14 +83,26 @@ public class NotificaEntity {
         this.percorso = percorso;
     }
 
+    /**
+     * metodo setter per l'id dell'utente
+     * @param utenteId id dell'utente
+     */
     public void setUtenteId(int utenteId) {
         this.utenteId = utenteId;
     }
 
+    /**
+     * metodo setter per l'orario della notifica
+     * @param dataorario orario della notifica
+     */
     public void setDataorario(LocalDateTime dataorario) {
         this.dataorario = dataorario;
     }
 
+    /**
+     * metodo setter per il messaggio della notifica
+     * @param messaggio messaggio della notifica
+     */
     public void setMessaggio(String messaggio) {
         this.messaggio = messaggio;
     }

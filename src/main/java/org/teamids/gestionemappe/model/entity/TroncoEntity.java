@@ -126,10 +126,18 @@ public class TroncoEntity implements TroncoEntityInterface {
         return 1;
     }
 
+    /**
+     * metodo setter per i beacon estremi del tronco
+     * @param beaconEstremi beacon estremi
+     */
     public void setBeaconEstremi(ArrayList<BeaconEntity> beaconEstremi) {
         this.beaconEstremi = beaconEstremi;
     }
 
+    /**
+     * metodo setter per l'area del tronco
+     * @param area area del tronco
+     */
     public void setArea(float area) {
         this.area = area;
     }

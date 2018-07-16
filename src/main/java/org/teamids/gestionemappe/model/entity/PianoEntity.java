@@ -86,10 +86,18 @@ public class PianoEntity {
         this.piano = piano;
     }
 
+    /**
+     * metodo getter per i tronchi del piano
+     * @return tronchi del piano
+     */
     public TroncoEntity[] getTronchi() {
         return tronchi;
     }
 
+    /**
+     * metodo setter per i tronchi del piano
+     * @param tronchi tronchi del piano
+     */
     public void setTronchi(TroncoEntity[] tronchi) {
         this.tronchi = tronchi;
     }
