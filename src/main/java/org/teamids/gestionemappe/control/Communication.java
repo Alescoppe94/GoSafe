@@ -51,8 +51,6 @@ public class Communication {
 
             post.setEntity(new StringEntity(message.toString(), "UTF-8"));
             HttpResponse response = client.execute(post);
-            System.out.println(response);
-            System.out.println(message);
         }catch(Exception e){
             e.printStackTrace();
         }

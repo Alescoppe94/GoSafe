@@ -215,7 +215,7 @@ public class GestioneDB implements GestioneDBInterface {
 
                     boolean isPuntodiRaccolta = "1".equals(field[1]);
 
-                    BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, Integer.parseInt(field[2]), Integer.parseInt(field[3]), Integer.parseInt(field[4]));
+                    BeaconEntity beacon = new BeaconEntity(field[0], isPuntodiRaccolta, piano_id, Integer.parseInt(field[2]), Integer.parseInt(field[3]));
 
                     nuoviBeacon.add(beacon);
                 }
@@ -242,12 +242,12 @@ public class GestioneDB implements GestioneDBInterface {
                     String[] field = line.split(cvsSplitBy);
 
                     ArrayList<BeaconEntity> beaconEstremi = new ArrayList<>();
+                    beaconEstremi.add(new BeaconEntity(field[0]));
                     beaconEstremi.add(new BeaconEntity(field[1]));
-                    beaconEstremi.add(new BeaconEntity(field[2]));
 
-                    boolean agibile = "1".equals(field[3]);
+                    boolean agibile = true; //tutti i tronchi sono agibili, dal momento che non consideriamo più questa caratteristica
 
-                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[4]));
+                    TroncoEntity tronco = new TroncoEntity(agibile, beaconEstremi, Float.parseFloat(field[2]));
 
                     nuoviTronchi.add(tronco);
                 }

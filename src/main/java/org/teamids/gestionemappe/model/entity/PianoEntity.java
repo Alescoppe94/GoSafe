@@ -86,4 +86,12 @@ public class PianoEntity {
         this.piano = piano;
     }
 
+    public TroncoEntity[] getTronchi() {
+        return tronchi;
+    }
+
+    public void setTronchi(TroncoEntity[] tronchi) {
+        this.tronchi = tronchi;
+    }
+
 }

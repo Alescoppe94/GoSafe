@@ -96,4 +96,12 @@ public class TappaEntity {
         return direzione;
     }
 
+    public void setPercorsoId(int percorsoId) {
+        this.percorsoId = percorsoId;
+    }
+
+    public void setDirezione(boolean direzione) {
+        this.direzione = direzione;
+    }
+
 }

@@ -125,4 +125,12 @@ public class TroncoEntity implements TroncoEntityInterface {
         }
         return 1;
     }
+
+    public void setBeaconEstremi(ArrayList<BeaconEntity> beaconEstremi) {
+        this.beaconEstremi = beaconEstremi;
+    }
+
+    public void setArea(float area) {
+        this.area = area;
+    }
 }

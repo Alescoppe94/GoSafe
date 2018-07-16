@@ -111,4 +111,14 @@ public class BeaconEntity {
         this.coordy = coordy;
     }
 
+    /**
+     * metodo getter per il piano del beacon
+     * @return
+     */
+    public int getPiano() {
+        return piano;
+    }
+
+
+
 }

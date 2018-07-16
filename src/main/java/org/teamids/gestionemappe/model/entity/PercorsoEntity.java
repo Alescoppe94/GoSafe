@@ -55,4 +55,16 @@ public class PercorsoEntity {
         return tappe;
     }
 
+    public void setTappe(LinkedList<TappaEntity> tappe) {
+        this.tappe = tappe;
+    }
+
+    public BeaconEntity getBeaconPartenza() {
+        return beaconPartenza;
+    }
+
+    public void setBeaconPartenza(BeaconEntity beaconPartenza) {
+        this.beaconPartenza = beaconPartenza;
+    }
+
 }
